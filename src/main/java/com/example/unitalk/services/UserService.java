@@ -10,8 +10,6 @@ import com.example.unitalk.models.User;
 @Service
 public class UserService {
     public void newUser(int id, String username, String email){}
-    public User getUserById(int id){}
-    public User getUserByUsername(String username){}
     public void deleteUser(int id){}
     public void modifyUser(int id){}
 }

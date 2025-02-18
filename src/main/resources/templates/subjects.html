@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asignaturas - Red Universitaria</title>
+    <link rel="stylesheet" href="../css/subjects.css">
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar de asignaturas -->
+    <div class="sidebar">
+        <h2>Asignaturas</h2>
+        <ul id="subjectList">
+            <li data-subject="Matemáticas" class="active">Matemáticas</li>
+            <li data-subject="Historia">Historia</li>
+            <li data-subject="Programación">Programación</li>
+            <li data-subject="Biología">Biología</li>
+        </ul>
+    </div>
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <div class="tabs">
+            <button id="chatTab" class="active">Chat</button>
+            <button id="filesTab">Archivos</button>
+        </div>
+        <div class="content" id="contentArea">
+            <!-- Se cargará el contenido correspondiente mediante JS -->
+        </div>
+    </div>
+</div>
+<script src="subjects.js"></script>
+</body>
+</html>
