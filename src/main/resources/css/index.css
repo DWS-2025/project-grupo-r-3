@@ -5,9 +5,9 @@ body {
     background: #f4f4f4;
 }
 header {
-    background: #333;
+    background: #fff;
     color: #fff;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
 }
 section {
@@ -29,4 +29,9 @@ section {
 }
 .btn:hover {
     background: #0056b3;
+}
+#logounitalkindex{
+    width: 150px; 
+    height: auto;
+    /* padding-right: 80%; */
 }
