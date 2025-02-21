@@ -1,4 +1,5 @@
 package com.example.unitalk.models;
+import com.example.unitalk.services.SubjectService;
 
 public class Test {
     public static void main(String[] args) {
