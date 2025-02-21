@@ -29,6 +29,13 @@ public class SubjectService {
     public void deleteSubject(Subject subject){
         this.subjects.remove(subject.getId());
     }
+    public SubjectService(){
+        addSubject(new Subject("Metodologías de desarrollo seguro"));
+        addSubject(new Subject("Cálculo"));
+        addSubject(new Subject("Desarrollo Web Seguro"));
+
+
+    }
 
 
 }
