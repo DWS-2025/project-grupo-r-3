@@ -16,7 +16,6 @@ public class SubjectController {
     @GetMapping
     public String showAllSubjects(Model model){
         model.addAttribute("subjects",subjects.findAll());
-
         return "subjects";
     }
 
