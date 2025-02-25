@@ -22,6 +22,14 @@ public class Subject {
         this.name = name;
     }
 
+    public void addUser(User user){
+        users.add(user);
+    }
+
+    public void removeUser(User user){
+        users.remove(user);
+    }
+
     public List<User> getUsers() {
         return users;
     }
@@ -36,6 +44,14 @@ public class Subject {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public void addPost(Post post){
+        posts.add(post);
+    }
+
+    public void removePost(Post post){
+        posts.remove(post);
     }
 
     public int getId() {

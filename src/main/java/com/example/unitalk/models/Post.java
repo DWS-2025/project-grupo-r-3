@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Post {
+    private int id;
     private String title;
     private String description;
     private Subject subject;
     private User user;
     private List<Comment> comments;
+    private static int idCounter = 0;
 
     public Post(String title, String description, Subject subject, User user) {
         this.title = title;
@@ -17,6 +19,7 @@ public class Post {
         this.subject = subject;
         this.user = user;
         this.comments = new ArrayList<>();
+        this.id = idCounter++;
     }
 
     //Comments methods
@@ -29,7 +32,7 @@ public class Post {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
-    public void deleteComment(Comment c){
+    public void removeComment(Comment c){
         comments.remove(c);
     }
 
@@ -63,5 +66,13 @@ public class Post {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

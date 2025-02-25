@@ -62,6 +62,10 @@ public class User {
         posts.add(post);
     }
 
+    public void removePost(Post post){
+        posts.remove(post);
+    }
+
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
