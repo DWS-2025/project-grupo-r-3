@@ -1,31 +1,73 @@
 package com.example.unitalk.models;
+
 import org.yaml.snakeyaml.comments.CommentEventsCollector;
 
 import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     private int id;
     private String username;
     private String email;
-    private ArrayList<Subject> subjects;
-    private ArrayList<Comment> comments;
+    private List<Subject> subjects;
+    private List<Comment> comments;
+    private List<Post> posts;
 
-    public User(int id, String username, String email){
+    public User(int id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.subjects = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.posts = new ArrayList<>();
     }
 
-    public void addSubject(Subject s){
+    //Subjects Handling
+    public void addSubject(Subject s) {
         subjects.add(s);
     }
 
-    public ArrayList<Subject> getSubjects(){
+    public List<Subject> getSubjects() {
         return subjects;
     }
-    public String getUsername(){
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    //Comments handling
+    public void addComment(Comment c) {
+        comments.add(c);
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void removeComment(Comment c) {
+        comments.remove(c);
+    }
+    //Posts handling
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    //Getters and Setters
+    public String getUsername() {
         return username;
     }
 
@@ -53,17 +95,4 @@ public class User {
         this.subjects = subjects;
     }
 
-    public ArrayList<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(ArrayList<Comment> comments) {
-        this.comments = comments;
-    }
-    public void addComment(Comment c){
-        comments.add(c);
-    }
-    public void removeComment(Comment c){
-        comments.remove(c);
-    }
 }
