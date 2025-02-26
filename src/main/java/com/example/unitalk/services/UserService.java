@@ -1,15 +1,23 @@
 package com.example.unitalk.services;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
 import com.example.unitalk.models.User;
-
-
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    public void newUser(int id, String username, String email){}
-    public void deleteUser(int id){}
-    public void modifyUser(int id){}
+
+    private User user;
+
+    public UserService() {
+        this.user = new User(1, "defaultUser", "usuario@example.com");
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

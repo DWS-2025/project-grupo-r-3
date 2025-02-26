@@ -35,6 +35,9 @@ public class User {
     public void setSubjects(List<Subject> subjects) {
         this.subjects = subjects;
     }
+    public void removeSubject(Subject s){
+        subjects.remove(s);
+    }
 
     //Comments handling
     public void addComment(Comment c) {

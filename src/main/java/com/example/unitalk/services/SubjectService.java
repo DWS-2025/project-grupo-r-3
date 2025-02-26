@@ -4,6 +4,8 @@ import com.example.unitalk.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.unitalk.models.Subject;
+import org.springframework.web.bind.annotation.PostMapping;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +16,23 @@ public class SubjectService {
     private Map<Integer, Subject> subjects = new HashMap<>();
     private static int subjectCounter = 0;
     public void applySubject(User user, Subject subject){
-        user.addSubject(subject);
-        subject.addUser(user);
+        if (!subject.getUsers().contains(user)) {
+            user.addSubject(subject);
+            subject.addUser(user);
+        }
+    }
+    public void unnaplySubject(User user, int id){
+        Subject subject = findById(id);
+        if(subject!=null){
+            user.removeSubject(subject);
+            subject.removeUser(user);
+        }
     }
     public Collection<Subject> findAll(){
         return subjects.values();
+    }
+    public Subject findById(int id) {
+        return subjects.get(id);
     }
     public void addSubject(Subject subject){
         int uniqueID = subjectCounter;

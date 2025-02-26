@@ -1,0 +1,21 @@
+<body>
+{{>header}}
+<h1>User Details</h1>
+<p><strong>Username:</strong> {{user.username}}</p>
+<p><strong>Email:</strong> {{user.email}}</p>
+
+<h2>Applied Subjects</h2>
+{{#user.subjects}}
+<div class="subject">
+    <h3>{{name}}</h3>
+    <form action="/user/subjects/unapply" method="post">
+        <input type="hidden" name="subjectId" value="{{id}}">
+        <button type="submit" class="btn">Unapply</button>
+    </form>
+</div>
+{{/user.subjects}}
+{{^user.subjects}}
+<p>You have not applied to any subjects.</p>
+{{/user.subjects}}
+{{>footer}}
+</body>
