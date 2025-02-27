@@ -1,23 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UniTalk - Subjects</title>
+    <link rel="stylesheet" href="/css/subjects.css">
+</head>
 <body>
 {{>header}}
-<h1>Available Subjects</h1>
-{{#subjects}}
-<div class="subject">
-    <h3>{{name}}</h3>
-    <form action="/subjects/apply" method="post">
-        <input type="hidden" name="id" value="{{id}}">
-        <button type="submit" class="btn">Apply</button>
-    </form>
-    <form action="/subjects/modify" method="post">
-        <input type="hidden" name="id" value="{{id}}">
-        <input type="text" name="newName" placeholder="New name">
-        <button type="submit" class="btn">Modify</button>
-    </form>
-    <form action="/subjects/delete" method="post">
-        <input type="hidden" name="id" value="{{id}}">
-        <button type="submit" class="btn">Delete</button>
-    </form>
+
+<div class="container">
+    <h1 class="title">Available Subjects</h1>
+    <div class="subjects-container">
+        {{#subjects}}
+        <div class="subject-card">
+            <h3 class="subject-title">{{name}}</h3>
+            <div class="actions">
+                <button class="btn apply" onclick="applySubject('{{id}}')">Apply</button>
+                <button class="btn modify" onclick="openModifyModal('{{id}}', '{{name}}')">Modify</button>
+                <button class="btn delete" onclick="deleteSubject('{{id}}')">Delete</button>
+            </div>
+        </div>
+        {{/subjects}}
+    </div>
 </div>
-{{/subjects}}
+
+<!-- Modal para modificar el nombre de la asignatura -->
+<div id="modifyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModifyModal()">&times;</span>
+        <h2>Modify Subject</h2>
+        <form id="modifyForm" action="/subjects/modify" method="post">
+            <input type="hidden" name="id" id="subjectId">
+            <label for="newName">New Name:</label>
+            <input type="text" name="newName" id="newName" required>
+            <button type="submit" class="btn save">Save</button>
+        </form>
+    </div>
+</div>
+
 {{>footer}}
+<script src="/js/subjects.js"></script>
 </body>
+</html>

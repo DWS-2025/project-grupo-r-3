@@ -1,12 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UniTalk - Home</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
 <body>
-{{>header}}
-<section>
-    <h2>Welcome to UniTalk</h2>
-    <p>
-        This platform offers a comprehensive service for university students, including a real-time chat and dedicated file sharing for each subject.
-        Connect with your peers, share resources, and collaborate on projects easily and securely.
-    </p>
-    <p>Access your subjects: <a href="/chat" class="btn">View Subjects</a></p>
+<header>
+    <div class="logo">
+        <img src="/images/unitalklogo1.png" alt="Unitalk Logo">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chat.html">Chat</a></li>
+            <li><a href="subjects.html">Subjects</a></li>
+            <li><a href="user.html">Profile</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to UniTalk</h1>
+        <p>Connect with your classmates, share files, and collaborate in real time.</p>
+        <a href="chat.html" class="btn">View Subjects</a>
+    </div>
 </section>
-{{>footer}}
+
+<section class="features">
+    <div class="feature">
+        <h2>Real-Time Chat</h2>
+        <p>Communicate with your group anytime.</p>
+    </div>
+    <div class="feature">
+        <h2>File Management</h2>
+        <p>Share and store files securely.</p>
+    </div>
+    <div class="feature">
+        <h2>Secure Platform</h2>
+        <p>Your data is protected with advanced encryption.</p>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 UniTalk. All rights reserved.</p>
+    <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms and Conditions</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+</footer>
 </body>
+</html>

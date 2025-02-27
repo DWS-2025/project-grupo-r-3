@@ -1,21 +1,35 @@
 <body>
 {{>header}}
-<h1>User Details</h1>
-<p><strong>Username:</strong> {{user.username}}</p>
-<p><strong>Email:</strong> {{user.email}}</p>
+<link rel="stylesheet" href="/css/user.css>
+<section class="profile-container">
+    <div class="profile-header">
+        <div class="profile-info">
+            <h1>{{user.username}}'s Profile</h1>
+            <p><strong>Email:</strong> {{user.email}}</p>
+        </div>
+        {{! TODO: METER FOTO USER}}
+        {{! <div class="profile-image">
+            <img src="{{user.profileImage}}" alt="User Profile Picture">
+        </div>}}
+    </div>
 
-<h2>Applied Subjects</h2>
-{{#user.subjects}}
-<div class="subject">
-    <h3>{{name}}</h3>
-    <form action="/user/subjects/unapply" method="post">
-        <input type="hidden" name="subjectId" value="{{id}}">
-        <button type="submit" class="btn">Unapply</button>
-    </form>
-</div>
-{{/user.subjects}}
-{{^user.subjects}}
-<p>You have not applied to any subjects.</p>
-{{/user.subjects}}
+    <h2>Enrolled Subjects</h2>
+    <div class="subjects-list">
+        {{#user.subjects}}
+        <div class="subject-card">
+            <h3>{{name}}</h3>
+            <form action="/user/subjects/unapply" method="post">
+                <input type="hidden" name="subjectId" value="{{id}}">
+                <button type="submit" class="btn unenroll">Unenroll</button>
+            </form>
+        </div>
+        {{/user.subjects}}
+        {{^user.subjects}}
+        <p class="no-subjects">You are not enrolled in any subjects.</p>
+        {{/user.subjects}}
+    </div>
+</section>
+
 {{>footer}}
 </body>
+</html>
