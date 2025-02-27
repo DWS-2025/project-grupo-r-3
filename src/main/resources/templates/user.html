@@ -1,16 +1,17 @@
-<body>
 {{>header}}
-<link rel="stylesheet" href="/css/user.css>
+<link rel="stylesheet" href="/css/user.css">
+
 <section class="profile-container">
     <div class="profile-header">
         <div class="profile-info">
             <h1>{{user.username}}'s Profile</h1>
             <p><strong>Email:</strong> {{user.email}}</p>
         </div>
-        {{! TODO: METER FOTO USER}}
-        {{! <div class="profile-image">
+        {{#user.profileImage}}
+        <div class="profile-image">
             <img src="{{user.profileImage}}" alt="User Profile Picture">
-        </div>}}
+        </div>
+        {{/user.profileImage}}
     </div>
 
     <h2>Enrolled Subjects</h2>
@@ -19,7 +20,7 @@
         <div class="subject-card">
             <h3>{{name}}</h3>
             <form action="/user/subjects/unapply" method="post">
-                <input type="hidden" name="subjectId" value="{{id}}">
+                <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn unenroll">Unenroll</button>
             </form>
         </div>
@@ -31,5 +32,3 @@
 </section>
 
 {{>footer}}
-</body>
-</html>

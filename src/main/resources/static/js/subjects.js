@@ -1,17 +1,36 @@
 document.addEventListener("DOMContentLoaded", function () {
-    closeModifyModal();
+    // Asegurar que el modal esté completamente oculto al cargar la página
+    let modal = document.getElementById("modifyModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
 });
 
 function openModifyModal(id, name) {
-    document.getElementById("modifyModal").style.display = "flex";
-    document.getElementById("subjectId").value = id;
-    document.getElementById("newName").value = name;
+    let modal = document.getElementById("modifyModal");
+    if (modal) {
+        modal.style.display = "flex";
+        document.getElementById("subjectId").value = id;
+        document.getElementById("newName").value = name;
+    }
 }
 
 function closeModifyModal() {
-    document.getElementById("modifyModal").style.display = "none";
+    let modal = document.getElementById("modifyModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
 }
 
+// Cerrar modal si el usuario hace clic fuera de él
+window.onclick = function(event) {
+    let modal = document.getElementById("modifyModal");
+    if (event.target === modal) {
+        closeModifyModal();
+    }
+};
+
+// Funciones para aplicar y eliminar asignaturas
 function deleteSubject(id) {
     fetch('/subjects/delete', {
         method: 'POST',

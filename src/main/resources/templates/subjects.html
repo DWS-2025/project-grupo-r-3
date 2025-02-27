@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>UniTalk - Subjects</title>
-    <link rel="stylesheet" href="/css/subjects.css">
-</head>
-<body>
 {{>header}}
+<link rel="stylesheet" href="/css/subjects.css">
 
-<div class="container">
+<section class="subjects-container">
     <h1 class="title">Available Subjects</h1>
-    <div class="subjects-container">
+    <div class="subjects-list">
         {{#subjects}}
         <div class="subject-card">
             <h3 class="subject-title">{{name}}</h3>
@@ -22,10 +14,13 @@
             </div>
         </div>
         {{/subjects}}
+        {{^subjects}}
+        <p class="no-subjects">No subjects available at the moment.</p>
+        {{/subjects}}
     </div>
-</div>
+</section>
 
-<!-- Modal para modificar el nombre de la asignatura -->
+<!-- MODAL PARA MODIFICAR ASIGNATURAS -->
 <div id="modifyModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModifyModal()">&times;</span>
@@ -34,12 +29,13 @@
             <input type="hidden" name="id" id="subjectId">
             <label for="newName">New Name:</label>
             <input type="text" name="newName" id="newName" required>
-            <button type="submit" class="btn save">Save</button>
+            <div class="modal-actions">
+                <button type="submit" class="btn save">Save</button>
+                <button type="button" class="btn cancel" onclick="closeModifyModal()">Cancel</button>
+            </div>
         </form>
     </div>
 </div>
-
-{{>footer}}
 <script src="/js/subjects.js"></script>
-</body>
-</html>
+{{>footer}}
+
