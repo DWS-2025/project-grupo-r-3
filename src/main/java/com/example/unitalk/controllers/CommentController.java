@@ -57,5 +57,7 @@ public class CommentController {
         user.removeComment(comment);
         post.removeComment(comment);
         comments.removeById(commentId);
+        return "redirect:/subjects/{id1}/posts/{id2}";
+
     }
 }
