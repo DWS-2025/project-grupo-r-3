@@ -62,6 +62,12 @@ public class SubjectController {
         return "redirect:/subjects";
 
     }
+    @GetMapping("/my")
+    public String userSubjects(Model model){
+        User user = userService.getUser();
+        model.addAttribute("subjects",user.getSubjects());
+        return "userSubjects";
+    }
 
 
 }

@@ -1,0 +1,20 @@
+{{>header}}
+<link rel="stylesheet" href="/css/userSubjects.css">
+
+<section class="subjects-container">
+    <h1 class="title">Your Applied Subjects</h1>
+    <div class="subjects-list">
+        {{#subjects}}
+        <div class="subject-card">
+            <a href="/subjects/{{id}}"><h3 class="subject-title">{{name}}</h3></a>
+        {{/subjects}}
+        {{^subjects}}
+        <p class="no-subjects">No subjects available at the moment.</p>
+        {{/subjects}}
+        </div>
+    </div>
+</section>
+
+<script src="/js/subjects.js"></script>
+{{>footer}}
+

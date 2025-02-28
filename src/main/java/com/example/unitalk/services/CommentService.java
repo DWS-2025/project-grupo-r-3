@@ -5,34 +5,36 @@ import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class CommentService {
-    private static long commentCounter = 0;
-    public void createComment(User user, String title, String text, Post post){
-        Comment newComment = new Comment(user, title,text,commentCounter);
+    private static int commentCounter = 0;
+    private Map<Integer, Comment> comments = new HashMap<>();
+
+    // Find comment by ID
+    public Comment findById(int commentId) {
+        return comments.get(commentId);
+    }
+
+    // Remove comment
+    public void removeById(int commentId) {
+        comments.remove(commentId);
+    }
+
+    public void createComment(User user, String text, Post post) {
+        Comment newComment = new Comment(user, text, commentCounter);
         commentCounter++;
         user.addComment(newComment);
         post.addComment(newComment);
+        comments.put(newComment.getId(), newComment);
     }
-    public void deleteComment(User user, Comment comment, Post post){
+
+    public void deleteComment(User user, Comment comment, Post post) {
         user.removeComment(comment);
         post.removeComment(comment);
-    }
-    public void deleteCommentById(int commentId, User user, Post post) {
-        Comment commentToDelete = null;
-        for (Comment comment : user.getComments()) {
-            if (comment.getId() == commentId) {
-                commentToDelete= comment;
-                break;
-            }
-        }
-        if (commentToDelete != null) {
-            user.getComments().remove(commentToDelete);
-            post.getComments().remove(commentToDelete);
-        } else {
-
-            //TODO:CAMBIAR ESTO!!! MANEJAR CON EXCEPCIONES
-            System.out.println("No se encontró el comment con id: " + commentId);
-        }
+        comments.remove(comment.getId());
     }
 }
+

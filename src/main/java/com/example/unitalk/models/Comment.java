@@ -3,21 +3,18 @@ import com.example.unitalk.models.User;
 
 public class Comment {
     private String text;
-    private Long id;
+    private int id;
     private User user;
-    private String title;
 
     public Comment(){
     }
-    public Comment(User user, String title, String text){
+    public Comment(User user, String text){
         this.text=text;
         this.user=user;
-        this.title=title;
     }
-    public Comment(User user, String title, String text, long id){
+    public Comment(User user, String text, int id){
         this.text=text;
         this.user=user;
-        this.title=title;
         this.id=id;
     }
 
@@ -29,14 +26,6 @@ public class Comment {
         this.text = text;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public User getUser() {
         return user;
     }
@@ -45,11 +34,11 @@ public class Comment {
         this.user = user;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

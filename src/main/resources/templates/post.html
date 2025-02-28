@@ -1,0 +1,61 @@
+{{>header}}
+<link rel="stylesheet" href="/css/post.css">
+
+<section class="post-container">
+    <div class="post-header">
+        <h1 class="post-title">{{post.title}}</h1>
+        <p class="post-meta">By {{post.user.username}} | {{post.formattedCreatedAt}}</p>
+    </div>
+
+    <div class="post-content">
+        <p>{{post.description}}</p>
+    </div>
+
+    <hr>
+
+    <h2>Comments</h2>
+    <div class="comments-list">
+        {{#comments}}
+        <div class="comment">
+            <div class="comment-header">
+                <p class="comment-meta"><strong>{{user.username}}</strong> | {{formattedCreatedAt}}</p>
+                <div class="comment-actions">
+                    <span class="edit-icon" onclick="openEditCommentModal('{{id}}', '{{text}}')">🖊️</span>
+                    <span class="delete-icon" onclick="deleteComment('{{post.id}}', '{{id}}')">❌</span>
+                </div>
+            </div>
+            <p class="comment-text">{{text}}</p>
+        </div>
+        {{/comments}}
+        {{^comments}}
+        <p class="no-comments">No comments yet. Be the first to comment!</p>
+        {{/comments}}
+    </div>
+
+    <hr>
+
+    <h2>Add a Comment</h2>
+    <form action="/subjects/{{subject.id}}/posts/{{post.id}}/comment" method="post">
+        <textarea name="commentText" required placeholder="Write your comment here..."></textarea>
+        <button type="submit" class="btn comment-btn">Post Comment</button>
+    </form>
+</section>
+
+<!-- Edit Comment Modal -->
+<div id="editCommentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditCommentModal()">&times;</span>
+        <h2>Edit Comment</h2>
+        <form id="editCommentForm" action="/subjects/{{subject.id}}/posts/{{post.id}}/edit-comment" method="post">
+            <input type="hidden" name="commentId" id="editCommentId">
+            <textarea name="commentText" id="editCommentText" required></textarea>
+            <div class="modal-actions">
+                <button type="submit" class="btn save">Save</button>
+                <button type="button" class="btn cancel" onclick="closeEditCommentModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/post.js"></script>
+{{>footer}}

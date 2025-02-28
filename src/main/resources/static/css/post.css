@@ -1,0 +1,240 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Post Container */
+.post-container {
+    width: 80%;
+    margin: 40px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+/* Post Header */
+.post-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.post-title {
+    font-size: 2em;
+    color: #0044cc;
+}
+
+.post-meta {
+    font-size: 1em;
+    color: #666;
+}
+
+/* Post Content */
+.post-content {
+    font-size: 1.2em;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+/* Comments Section */
+h2 {
+    font-size: 1.5em;
+    color: #2c3e50;
+}
+
+/* Comment List */
+.comments-list {
+    margin-top: 20px;
+}
+
+/* Individual Comment */
+.comment {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Comment Header (Username + Edit/Delete Icons) */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-meta {
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* Comment Text */
+.comment-text {
+    font-size: 1.1em;
+}
+
+/* No Comments Message */
+.no-comments {
+    text-align: center;
+    font-size: 1.2em;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* Comment Actions (Edit & Delete Buttons) */
+.comment-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Edit & Delete Icons */
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: color 0.2s;
+}
+
+.edit-icon:hover {
+    color: #0066ff;
+}
+
+.delete-icon:hover {
+    color: red;
+}
+
+/* Add Comment Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    resize: vertical;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    font-weight: bold;
+}
+
+/* Submit Comment Button */
+.btn.comment-btn {
+    background: #0044cc;
+    color: white;
+}
+
+.btn.comment-btn:hover {
+    background: #0033aa;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: red;
+}
+
+/* Input Fields */
+.modal-content textarea {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+.modal-content textarea:focus {
+    border-color: #0044cc;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.save {
+    background: #0044cc;
+    color: white;
+}
+
+.save:hover {
+    background: #0033aa;
+}
+
+.cancel {
+    background: #999;
+    color: white;
+}
+
+.cancel:hover {
+    background: #777;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .post-container {
+        width: 95%;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}

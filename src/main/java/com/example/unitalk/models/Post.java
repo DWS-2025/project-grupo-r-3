@@ -1,5 +1,6 @@
 package com.example.unitalk.models;
-
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ public class Post {
     private User user;
     private List<Comment> comments;
     private static int idCounter = 0;
+    private LocalDateTime date;
 
     public Post(String title, String description, Subject subject, User user) {
         this.title = title;
@@ -20,8 +22,23 @@ public class Post {
         this.user = user;
         this.comments = new ArrayList<>();
         this.id = idCounter++;
+        this.date = LocalDateTime.now();
     }
 
+
+    // Obtain date formatted as la dd/MM/yyyy
+    public String getFormattedCreatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return date.format(formatter);
+    }
+
+    public String getShortDescription() {
+        int maxLength = 100; // Maximum characters before truncating
+        if (description.length() > maxLength) {
+            return description.substring(0, maxLength) + "..."; // Truncate and add "..."
+        }
+        return description;
+    }
     //Comments methods
     public List<Comment> getComments() {
         return comments;

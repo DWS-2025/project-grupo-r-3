@@ -1,0 +1,45 @@
+{{>header}}
+<link rel="stylesheet" href="/css/subjectPosts.css">
+
+<section class="subject-posts-container">
+    <div class="title-bar">
+        <h1 class="subject-title">{{subject.name}} - Forum</h1>
+        <button class="btn create-post-btn" onclick="openCreatePostModal()">+ Create Post</button>
+    </div>
+
+    <div class="posts-list">
+        {{#posts}}
+        <div class="post-row">
+            <a href="/subjects/{{subject.id}}/posts/{{id}}" class="post-title">{{title}}</a>
+            <p class="post-description">{{shortDescription}}</p>
+            <span class="post-meta">By {{user.username}} | {{formattedCreatedAt}}</span>
+        </div>
+        {{/posts}}
+        {{^posts}}
+        <p class="no-posts">No posts available for this subject.</p>
+        {{/posts}}
+    </div>
+</section>
+
+<div id="createPostModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeCreatePostModal()">&times;</span>
+        <h2>Create New Post</h2>
+        <form id="createPostForm" action="/subjects/{{id}}" method="post">
+            <input type="hidden" name="subjectId" value="{{subject.id}}">
+            <label for="postTitle">Post Title:</label>
+            <input type="text" name="name" id="postTitle" required>
+
+            <label for="postDescription">Description:</label>
+            <textarea name="description" id="postDescription" required></textarea>
+
+            <div class="modal-actions">
+                <button type="submit" class="btn save">Create</button>
+                <button type="button" class="btn cancel" onclick="closeCreatePostModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/subjectPosts.js"></script>
+{{>footer}}
