@@ -1,4 +1,5 @@
 package com.example.unitalk.controllers;
+import com.example.unitalk.services.PostService;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ public class PostController {
     private UserService users;
     @Autowired
     private SubjectService subjects;
-
+    @Autowired
+    private PostService posts;
     @GetMapping
     public String showPosts(Model model, @PathVariable int id){
         Subject subject = subjects.findById(id);
@@ -29,13 +31,18 @@ public class PostController {
         model.addAttribute("user",user);
         return "subjectPosts";
     }
+
     @PostMapping
     public String createPost(@PathVariable int id, @RequestParam("name") String name, @RequestParam("description") String description){
         Subject subject = subjects.findById(id);
         User user = users.getUser();
-        Post post = new Post(name,description,subject,user);
-        user.addPost(post);
-        subject.addPost(post);
+        if(user.getSubjects().contains(subject)){
+            posts.createPost(user, name, subject, description);
+        }
+        else{
+            //TODO:error
+        }
         return "redirect:/subjects/{id}";
+
     }
 }

@@ -10,16 +10,17 @@ import java.util.Map;
 
 @Service
 public class PostService {
-    private Map<Integer, Post> posts = new HashMap<>();
+    private final Map<Integer, Post> posts = new HashMap<>();
     public Post findById(int id){
         return posts.get(id);
     }
     public void createPost(User user, String title, Subject subject, String description){
-        Post newPost = new Post(title,description,subject,user);
-        user.addPost(newPost);
-        subject.addPost(newPost);
-        posts.put(newPost.getId(),newPost);
+        Post post = new Post(title,description,subject,user);
+        user.addPost(post);
+        subject.addPost(post);
+        posts.put(post.getId(),post);
     }
+
     public void deletePost(User user, Subject subject, Post post){
         user.removePost(post);
         subject.removePost(post);

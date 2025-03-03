@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Service
 public class SubjectService {
-    private Map<Integer, Subject> subjects = new HashMap<>();
+    private final Map<Integer, Subject> subjects = new HashMap<>();
     private static int subjectCounter = 0;
     public void applySubject(User user, Subject subject){
         if (!subject.getUsers().contains(user)) {

@@ -7,21 +7,29 @@
         <p class="post-meta">By {{post.user.username}} | {{post.formattedCreatedAt}}</p>
     </div>
 
+    <!-- Tabs Navigation -->
+    <div class="post-tabs">
+        <a href="/subjects/{{subject.id}}/posts/{{post.id}}" class="post-tab active">Chat</a>
+        <a href="/subjects/{{subject.id}}/posts/{{post.id}}/files" class="post-tab">Files</a>
+    </div>
+
+    <!-- Post Description -->
     <div class="post-content">
         <p>{{post.description}}</p>
     </div>
+
 
     <hr>
 
     <h2>Comments</h2>
     <div class="comments-list">
         {{#comments}}
-        <div class="comment">
+        <div class="comment" id="comment-{{id}}">
             <div class="comment-header">
                 <p class="comment-meta"><strong>{{user.username}}</strong> | {{formattedCreatedAt}}</p>
                 <div class="comment-actions">
                     <span class="edit-icon" onclick="openEditCommentModal('{{id}}', '{{text}}')">🖊️</span>
-                    <span class="delete-icon" onclick="deleteComment('{{post.id}}', '{{id}}')">❌</span>
+                    <span class="delete-icon" onclick="deleteComment('{{subject.id}}', '{{post.id}}', '{{id}}')">❌</span>
                 </div>
             </div>
             <p class="comment-text">{{text}}</p>

@@ -11,24 +11,18 @@ import java.util.Map;
 @Service
 public class CommentService {
     private static int commentCounter = 0;
-    private Map<Integer, Comment> comments = new HashMap<>();
+    private final Map<Integer, Comment> comments = new HashMap<>();
 
     // Find comment by ID
     public Comment findById(int commentId) {
         return comments.get(commentId);
     }
-
-    // Remove comment
-    public void removeById(int commentId) {
-        comments.remove(commentId);
-    }
-
     public void createComment(User user, String text, Post post) {
-        Comment newComment = new Comment(user, text, commentCounter);
+        Comment newComment = new Comment(user, text, post,commentCounter);
         commentCounter++;
+        comments.put(newComment.getId(), newComment);
         user.addComment(newComment);
         post.addComment(newComment);
-        comments.put(newComment.getId(), newComment);
     }
 
     public void deleteComment(User user, Comment comment, Post post) {

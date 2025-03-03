@@ -13,7 +13,7 @@ public class Post {
     private User user;
     private List<Comment> comments;
     private static int idCounter = 0;
-    private LocalDateTime date;
+    private final LocalDateTime date;
 
     public Post(String title, String description, Subject subject, User user) {
         this.title = title;
@@ -26,7 +26,7 @@ public class Post {
     }
 
 
-    // Obtain date formatted as la dd/MM/yyyy
+    // Obtain date formatted as dd/MM/yyyy
     public String getFormattedCreatedAt() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return date.format(formatter);
