@@ -1,4 +1,5 @@
 package com.example.unitalk.models;
+
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,17 +40,21 @@ public class Post {
         }
         return description;
     }
+
     //Comments methods
     public List<Comment> getComments() {
         return comments;
     }
-    public void addComment(Comment comment){
+
+    public void addComment(Comment comment) {
         comments.add(comment);
     }
+
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
-    public void removeComment(Comment c){
+
+    public void removeComment(Comment c) {
         comments.remove(c);
     }
 

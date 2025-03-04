@@ -1,4 +1,5 @@
 package com.example.unitalk.services;
+
 import com.example.unitalk.models.Comment;
 import com.example.unitalk.models.Post;
 import com.example.unitalk.models.Subject;
@@ -23,7 +24,8 @@ public class CommentService {
     public Comment findById(int commentId) {
         return comments.get(commentId);
     }
-    public void createComment(User user, String text, Post post, MultipartFile image) throws IOException{
+
+    public void createComment(User user, String text, Post post, MultipartFile image) throws IOException {
         String imagePath = null;
         if (text == null || text.trim().isEmpty()) {
             throw new IllegalArgumentException("Comment cannot be empty.");
@@ -35,7 +37,7 @@ public class CommentService {
             image.transferTo(destinationPath);
             imagePath = imageFileName;
         }
-        Comment newComment = new Comment(user, text, post,commentCounter,imagePath);
+        Comment newComment = new Comment(user, text, post, commentCounter, imagePath);
         commentCounter++;
         comments.put(newComment.getId(), newComment);
         user.addComment(newComment);

@@ -1,4 +1,5 @@
 package com.example.unitalk.controllers;
+
 import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
 import com.example.unitalk.services.SubjectService;
@@ -19,53 +20,65 @@ public class SubjectController {
     private UserService userService;
 
     @GetMapping
-    public String showAllSubjects(Model model){
-        model.addAttribute("subjects",subjects.findAll());
+    public String showAllSubjects(Model model) {
+        model.addAttribute("subjects", subjects.findAll());
         return "subjects";
     }
+
     @PostMapping("/apply")
-    public String applySubject(@RequestParam("id") int id, Model model){
+    public String applySubject(@RequestParam("id") int id, Model model) {
         Subject subject = subjects.findById(id);
-        if(subject != null){
-            subjects.applySubject(userService.getUser(),subject);
-            model.addAttribute("status","Subject applied succesfully!");
-        }
-        else{
-            model.addAttribute("status","Error, subject not found");
+        if (subject != null) {
+            subjects.applySubject(userService.getUser(), subject);
+            model.addAttribute("status", "Subject applied succesfully!");
+        } else {
+            model.addAttribute("status", "Error, subject not found");
         }
         return "redirect:/subjects";
     }
+
     @PostMapping("/delete")
-    public String deleteSubject(@RequestParam("id") int id, Model model){
+    public String deleteSubject(@RequestParam("id") int id, Model model) {
         Subject subject = subjects.findById(id);
         User user = userService.getUser();
-        if(subject != null){
+        if (subject != null) {
             subjects.deleteSubject(subject);
             user.removeSubject(subject);
-            model.addAttribute("status","Subject deleted succesfully!");
-        }
-        else{
-            model.addAttribute("status","Error, subject not found");
+            model.addAttribute("status", "Subject deleted succesfully!");
+        } else {
+            model.addAttribute("status", "Error, subject not found");
         }
         return "redirect:/subjects";
     }
+
     @PostMapping("/modify")
-    public String modifySubject(@RequestParam("id") int id, @RequestParam("newName") String name,Model model){
+    public String modifySubject(@RequestParam("id") int id, @RequestParam("newName") String name, Model model) {
         Subject subject = subjects.findById(id);
-        if(subject!=null){
+        if (subject != null) {
             subject.setName(name);
-            model.addAttribute("status","Subject deleted succesfully!");
-        }
-        else{
-            model.addAttribute("status","Error, subject not found");
+            model.addAttribute("status", "Subject deleted succesfully!");
+        } else {
+            model.addAttribute("status", "Error, subject not found");
         }
         return "redirect:/subjects";
 
     }
+    @PostMapping("/create")
+    public String createSubject(@RequestParam("name") String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Subject name cannot be empty.");
+        }
+        Subject subject = new Subject(name);
+        subjects.addSubject(subject);
+
+        return "redirect:/subjects";
+    }
+
+
     @GetMapping("/my")
-    public String userSubjects(Model model){
+    public String userSubjects(Model model) {
         User user = userService.getUser();
-        model.addAttribute("subjects",user.getSubjects());
+        model.addAttribute("subjects", user.getSubjects());
         return "userSubjects";
     }
 

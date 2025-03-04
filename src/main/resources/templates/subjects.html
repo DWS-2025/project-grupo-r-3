@@ -2,7 +2,9 @@
 <link rel="stylesheet" href="/css/subjects.css">
 
 <section class="subjects-container">
+    <button class="btn add-subject-btn" onclick="openCreateSubjectModal()">+ Add</button>
     <h1 class="title">Available Subjects</h1>
+
     <div class="subjects-list">
         {{#subjects}}
         <div class="subject-card">
@@ -35,6 +37,21 @@
         </form>
     </div>
 </div>
+
+<div id="createSubjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeCreateSubjectModal()">&times;</span>
+        <h2>Create New Subject</h2>
+        <form id="createSubjectForm" action="/subjects/create" method="post">
+            <label for="subjectName">Subject Name:</label>
+            <input type="text" name="name" id="subjectName" required>
+            <div class="modal-actions">
+                <button type="submit" class="btn save">Create</button>
+                <button type="button" class="btn cancel" onclick="closeCreateSubjectModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="/js/subjects.js"></script>
 {{>footer}}
-

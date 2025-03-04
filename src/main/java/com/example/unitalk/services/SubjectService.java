@@ -15,38 +15,45 @@ import java.util.Map;
 public class SubjectService {
     private final Map<Integer, Subject> subjects = new HashMap<>();
     private static int subjectCounter = 0;
-    public void applySubject(User user, Subject subject){
+
+    public void applySubject(User user, Subject subject) {
         if (!subject.getUsers().contains(user)) {
             user.addSubject(subject);
             subject.addUser(user);
         }
     }
-    public void unnaplySubject(User user, int id){
+
+    public void unnaplySubject(User user, int id) {
         Subject subject = findById(id);
-        if(subject!=null){
+        if (subject != null) {
             user.removeSubject(subject);
             subject.removeUser(user);
         }
     }
-    public Collection<Subject> findAll(){
+
+    public Collection<Subject> findAll() {
         return subjects.values();
     }
+
     public Subject findById(int id) {
         return subjects.get(id);
     }
-    public void addSubject(Subject subject){
+
+    public void addSubject(Subject subject) {
         int uniqueID = subjectCounter;
         subjectCounter++;
         subject.setId(uniqueID);
-        this.subjects.put(uniqueID,subject);
+        this.subjects.put(uniqueID, subject);
     }
-    public void deleteSubject(Subject subject){
+
+    public void deleteSubject(Subject subject) {
         this.subjects.remove(subject.getId());
     }
-    public SubjectService(){
-        addSubject(new Subject("Metodologías de desarrollo seguro"));
-        addSubject(new Subject("Cálculo"));
-        addSubject(new Subject("Desarrollo Web Seguro"));
+
+    public SubjectService() {
+        addSubject(new Subject("Introduction to Artificial Intelligence"));
+        addSubject(new Subject("Algorithms"));
+        addSubject(new Subject("Arts"));
     }
 
 

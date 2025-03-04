@@ -18,7 +18,7 @@ function closeCreatePostModal() {
 }
 
 // Close modal when clicking outside of it
-window.onclick = function(event) {
+window.onclick = function (event) {
     let modal = document.getElementById("createPostModal");
     if (event.target === modal) {
         closeCreatePostModal();

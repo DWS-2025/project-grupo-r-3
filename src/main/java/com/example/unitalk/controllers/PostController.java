@@ -1,4 +1,5 @@
 package com.example.unitalk.controllers;
+
 import com.example.unitalk.exceptions.UserNotEnrolledException;
 import com.example.unitalk.services.PostService;
 import com.example.unitalk.services.SubjectService;
@@ -22,31 +23,33 @@ public class PostController {
     private SubjectService subjects;
     @Autowired
     private PostService posts;
+
     @GetMapping
-    public String showPosts(Model model, @PathVariable int id){
+    public String showPosts(Model model, @PathVariable int id) {
         Subject subject = subjects.findById(id);
         List<Post> posts = subject.getPosts();
         User user = users.getUser();
-        model.addAttribute("posts",posts);
-        model.addAttribute("subject",subject);
-        model.addAttribute("user",user);
+        model.addAttribute("posts", posts);
+        model.addAttribute("subject", subject);
+        model.addAttribute("user", user);
         return "subjectPosts";
     }
 
     @PostMapping("/create-post")
-    public String createPost(@PathVariable int id, @RequestParam("name") String name, @RequestParam("description") String description, Model model){
+    public String createPost(@PathVariable int id, @RequestParam("name") String name, @RequestParam("description") String description, Model model) {
         Subject subject = subjects.findById(id);
         User user = users.getUser();
-        if(user.getSubjects().contains(subject)){
+        if (user.getSubjects().contains(subject)) {
             posts.createPost(user, name, subject, description);
+        } else {
+            throw new UserNotEnrolledException("You are not enrolled in this subject.");
         }
-        else{
-            throw new UserNotEnrolledException("You are not enrolled in this subject.");        }
         return "redirect:/subjects/{id}";
 
     }
+
     @PostMapping("/delete-post")
-    public String deletePost(@PathVariable int id, @RequestParam("idPost") int idPost){
+    public String deletePost(@PathVariable int id, @RequestParam("idPost") int idPost) {
         User user = users.getUser();
         Subject subject = subjects.findById(id);
         Post post = posts.findById(idPost);

@@ -1,4 +1,3 @@
-/* Asegura que el footer quede siempre abajo */
 html, body {
     height: 100%;
     margin: 0;
@@ -7,9 +6,8 @@ html, body {
     flex-direction: column;
 }
 
-/* Contenedor principal de la página */
 .container {
-    flex: 1; /* Hace que el contenido ocupe todo el espacio disponible */
+    flex: 1;
 }
 
 /* Footer */
@@ -21,10 +19,9 @@ footer {
     color: #333;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
-    margin-top: auto; /* Mantiene el footer pegado abajo */
+    margin-top: auto;
 }
 
-/* Contenedor del footer */
 .footer-container {
     display: flex;
     justify-content: space-between;
@@ -33,12 +30,12 @@ footer {
     margin: 0 auto;
 }
 
-/* Texto de copyright */
+
 .footer-container p {
     margin: 0;
 }
 
-/* Enlaces del footer */
+
 .footer-links {
     list-style: none;
     display: flex;

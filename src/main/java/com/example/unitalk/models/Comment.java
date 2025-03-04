@@ -12,14 +12,15 @@ public class Comment {
     private final LocalDateTime date;
     private String imagePath;
 
-    public Comment(User user, String text, Post post, int id, String imagePath){
-        this.text=text;
-        this.user=user;
+    public Comment(User user, String text, Post post, int id, String imagePath) {
+        this.text = text;
+        this.user = user;
         this.date = LocalDateTime.now();
         this.post = post;
-        this.id=id;
+        this.id = id;
         this.imagePath = imagePath;
     }
+
     // Obtain date formatted as dd/MM/yyyy
     public String getFormattedCreatedAt() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

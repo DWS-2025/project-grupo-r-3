@@ -1,4 +1,5 @@
 package com.example.unitalk.models;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class Subject {
     private List<Post> posts;
     private int id;
 
-    public Subject(String name){
+    public Subject(String name) {
         this.name = name;
         this.users = new ArrayList<>();
         this.posts = new ArrayList<>();
@@ -22,11 +23,11 @@ public class Subject {
         this.name = name;
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         users.add(user);
     }
 
-    public void removeUser(User user){
+    public void removeUser(User user) {
         users.remove(user);
     }
 
@@ -46,11 +47,11 @@ public class Subject {
         this.posts = posts;
     }
 
-    public void addPost(Post post){
+    public void addPost(Post post) {
         posts.add(post);
     }
 
-    public void removePost(Post post){
+    public void removePost(Post post) {
         posts.remove(post);
     }
 

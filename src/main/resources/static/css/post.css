@@ -35,9 +35,11 @@ body {
 
 /* Post Content */
 .post-content {
-    font-size: 1.2em;
-    line-height: 1.5;
-    margin-bottom: 30px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+    padding: 10px;
 }
 
 /* Comments Section */
@@ -75,6 +77,11 @@ h2 {
 /* Comment Text */
 .comment-text {
     font-size: 1.1em;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+
 }
 
 /* No Comments Message */
@@ -237,6 +244,7 @@ textarea {
         width: 90%;
     }
 }
+
 /* Tabs Navigation - Keep it visible and aligned */
 .post-tabs {
     display: flex;
@@ -268,7 +276,7 @@ textarea {
 }
 
 
-    .post-tab {
-        font-size: 1em;
-        padding: 8px 15px;
-    }
+.post-tab {
+    font-size: 1em;
+    padding: 8px 15px;
+}

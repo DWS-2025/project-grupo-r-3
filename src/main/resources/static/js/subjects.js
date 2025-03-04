@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Asegurar que el modal esté completamente oculto al cargar la página
+    
     let modal = document.getElementById("modifyModal");
     if (modal) {
         modal.style.display = "none";
@@ -22,19 +22,19 @@ function closeModifyModal() {
     }
 }
 
-// Cerrar modal si el usuario hace clic fuera de él
-window.onclick = function(event) {
+
+window.onclick = function (event) {
     let modal = document.getElementById("modifyModal");
     if (event.target === modal) {
         closeModifyModal();
     }
 };
 
-// Funciones para aplicar y eliminar asignaturas
+
 function deleteSubject(id) {
     fetch('/subjects/delete', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `id=${id}`
     }).then(() => location.reload());
 }
@@ -42,7 +42,15 @@ function deleteSubject(id) {
 function applySubject(id) {
     fetch('/subjects/apply', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `id=${id}`
     }).then(() => location.reload());
 }
+function openCreateSubjectModal() {
+    document.getElementById("createSubjectModal").style.display = "flex";
+}
+
+function closeCreateSubjectModal() {
+    document.getElementById("createSubjectModal").style.display = "none";
+}
+

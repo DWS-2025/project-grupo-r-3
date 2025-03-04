@@ -35,7 +35,7 @@ function closeEditCommentModal() {
 }
 
 // Function to delete a comment and update UI dynamically
-function deleteComment(subjectId,postId, commentId) {
+function deleteComment(subjectId, postId, commentId) {
     fetch(`/subjects/${subjectId}/posts/${postId}/delete-comment`, {
         method: "POST",
         headers: {

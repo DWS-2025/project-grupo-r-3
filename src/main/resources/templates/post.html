@@ -10,7 +10,7 @@
     <!-- Tabs Navigation -->
     <div class="post-tabs">
         <a href="/subjects/{{subject.id}}/posts/{{post.id}}" class="post-tab active">Chat</a>
-        <a href="/subjects/{{subject.id}}/posts/{{post.id}}/files" class="post-tab">Files</a>
+        <a href="/" class="post-tab">Files</a>
     </div>
 
     <!-- Post Description -->
@@ -29,7 +29,8 @@
                 <p class="comment-meta"><strong>{{user.username}}</strong> | {{formattedCreatedAt}}</p>
                 <div class="comment-actions">
                     <span class="edit-icon" onclick="openEditCommentModal('{{id}}', '{{text}}')">🖊️</span>
-                    <span class="delete-icon" onclick="deleteComment('{{subject.id}}', '{{post.id}}', '{{id}}')">❌</span>
+                    <span class="delete-icon"
+                          onclick="deleteComment('{{subject.id}}', '{{post.id}}', '{{id}}')">❌</span>
                 </div>
             </div>
             <p class="comment-text">{{text}}</p>

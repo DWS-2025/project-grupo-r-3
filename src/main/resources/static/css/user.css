@@ -1,4 +1,4 @@
-/* General */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -7,7 +7,7 @@ body {
     padding: 0;
 }
 
-/* Contenedor principal del perfil */
+
 .profile-container {
     width: 80%;
     margin: 40px auto;
@@ -17,7 +17,7 @@ body {
     border-radius: 10px;
 }
 
-/* Cabecera del perfil */
+
 .profile-header {
     display: flex;
     align-items: center;
@@ -27,7 +27,7 @@ body {
     margin-bottom: 20px;
 }
 
-/* Información del usuario */
+
 .profile-info h1 {
     font-size: 2em;
     margin-bottom: 5px;
@@ -38,7 +38,7 @@ body {
     color: #555;
 }
 
-/* Imagen del usuario */
+
 .profile-image img {
     width: 100px;
     height: 100px;
@@ -47,7 +47,7 @@ body {
     object-fit: cover;
 }
 
-/* Lista de asignaturas */
+
 .subjects-list {
     display: flex;
     flex-wrap: wrap;
@@ -55,7 +55,7 @@ body {
     justify-content: center;
 }
 
-/* Tarjeta de asignatura */
+
 .subject-card {
     background: #ffffff;
     padding: 15px;
@@ -65,22 +65,22 @@ body {
     width: 250px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Asegura que el botón quede alineado */
-    min-height: 180px; /* Todas las tarjetas tienen la misma altura */
+    justify-content: space-between; 
+    min-height: 180px; 
 }
 
-/* Título de la asignatura */
+
 .subject-card h3 {
     font-size: 1.2em;
     color: #2c3e50;
-    flex-grow: 1; /* Ocupa todo el espacio disponible sin empujar el botón */
+    flex-grow: 1; 
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
 }
 
-/* Botón de desmatriculación */
+
 .btn.unenroll {
     background: #cc0000;
     color: white;
@@ -96,7 +96,7 @@ body {
     background: #a00000;
 }
 
-/* Mensaje cuando no hay asignaturas */
+
 .no-subjects {
     text-align: center;
     font-size: 1.2em;
@@ -104,7 +104,7 @@ body {
     margin-top: 20px;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
     .profile-header {
         flex-direction: column;
