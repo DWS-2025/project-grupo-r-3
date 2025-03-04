@@ -33,6 +33,10 @@
                 </div>
             </div>
             <p class="comment-text">{{text}}</p>
+            {{#imagePath}}
+            <img src="/subjects/{{subject.id}}/posts/{{post.id}}/comment-image/{{imagePath}}"
+                 alt="Comment Image" class="comment-image">
+            {{/imagePath}}
         </div>
         {{/comments}}
         {{^comments}}
@@ -43,10 +47,12 @@
     <hr>
 
     <h2>Add a Comment</h2>
-    <form action="/subjects/{{subject.id}}/posts/{{post.id}}/comment" method="post">
+    <form action="/subjects/{{subject.id}}/posts/{{post.id}}/comment" method="post" enctype="multipart/form-data">
         <textarea name="commentText" required placeholder="Write your comment here..."></textarea>
+        <input type="file" name="image" accept="image/*">
         <button type="submit" class="btn comment-btn">Post Comment</button>
     </form>
+
 </section>
 
 <!-- Edit Comment Modal -->

@@ -26,14 +26,5 @@ public class PostService {
         subject.removePost(post);
         posts.remove(post.getId());
     }
-    public void deletePostById(int postId, User user, Subject subject) {
-        Post postToDelete = findById(postId);
-        if (postToDelete != null) {
-            user.removePost(postToDelete);
-            subject.removePost(postToDelete);
-            posts.remove(postId);
-        } else {
-            throw new RuntimeException("No post found with ID: " + postId);
-        }
-    }
+
 }

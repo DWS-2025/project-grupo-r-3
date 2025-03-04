@@ -7,6 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/subjects/{id1}/posts/{id2}")
@@ -35,10 +44,10 @@ public class CommentController {
         return "post";
     }
     @PostMapping("/comment")
-    public String addComment(@PathVariable("id1") int idSubject, @PathVariable("id2") int idPost, @RequestParam("commentText") String commentText){
+    public String addComment(@PathVariable("id1") int idSubject, @PathVariable("id2") int idPost, @RequestParam("commentText") String commentText, @RequestParam(value = "image", required = false) MultipartFile image) throws IOException{
         User user = users.getUser();
         Post post = posts.findById(idPost);
-        comments.createComment(user, commentText, post);
+        comments.createComment(user, commentText, post, image);
             return "redirect:/subjects/{id1}/posts/{id2}";
     }
     @PostMapping("/edit-comment")
@@ -59,4 +68,18 @@ public class CommentController {
         }
         return "redirect:/subjects/{id1}/posts/{id2}";
     }
+    @GetMapping("/comment-image/{imageName}")
+    public ResponseEntity<Resource> getCommentImage(@PathVariable("id1") int idSubject, @PathVariable("id2") int idPost, @PathVariable String imageName) throws IOException {
+        Path imagePath = Paths.get("uploads/comments").resolve(imageName);
+
+        if (Files.exists(imagePath)) {
+            Resource imageResource = new UrlResource(imagePath.toUri());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .body(imageResource);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
 }

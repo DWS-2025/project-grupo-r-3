@@ -1,4 +1,5 @@
 package com.example.unitalk.controllers;
+import com.example.unitalk.exceptions.UserNotEnrolledException;
 import com.example.unitalk.services.PostService;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
@@ -32,17 +33,27 @@ public class PostController {
         return "subjectPosts";
     }
 
-    @PostMapping
-    public String createPost(@PathVariable int id, @RequestParam("name") String name, @RequestParam("description") String description){
+    @PostMapping("/create-post")
+    public String createPost(@PathVariable int id, @RequestParam("name") String name, @RequestParam("description") String description, Model model){
         Subject subject = subjects.findById(id);
         User user = users.getUser();
         if(user.getSubjects().contains(subject)){
             posts.createPost(user, name, subject, description);
         }
         else{
-            //TODO:error
-        }
+            throw new UserNotEnrolledException("You are not enrolled in this subject.");        }
         return "redirect:/subjects/{id}";
 
+    }
+    @PostMapping("/delete-post")
+    public String deletePost(@PathVariable int id, @RequestParam("idPost") int idPost){
+        User user = users.getUser();
+        Subject subject = subjects.findById(id);
+        Post post = posts.findById(idPost);
+        if (!user.getSubjects().contains(subject)) {
+            throw new UserNotEnrolledException("You are not enrolled in this subject.");
+        }
+        posts.deletePost(user, subject, post);
+        return "redirect:/subjects/{id}";
     }
 }

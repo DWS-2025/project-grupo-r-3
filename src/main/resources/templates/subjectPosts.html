@@ -10,9 +10,16 @@
     <div class="posts-list">
         {{#posts}}
         <div class="post-row">
-            <a href="/subjects/{{subject.id}}/posts/{{id}}" class="post-title">{{title}}</a>
-            <p class="post-description">{{shortDescription}}</p>
-            <span class="post-meta">By {{user.username}} | {{formattedCreatedAt}}</span>
+            <div class="post-info">
+                <a href="/subjects/{{subject.id}}/posts/{{id}}" class="post-title">{{title}}</a>
+                <p class="post-description">{{shortDescription}}</p>
+                <span class="post-meta">By {{user.username}} | {{formattedCreatedAt}}</span>
+            </div>
+
+            <form action="/subjects/{{subject.id}}/delete-post" method="post" class="delete-post-form">
+                <input type="hidden" name="idPost" value="{{id}}">
+                <button type="submit" class="btn delete-post-btn">🗑 Delete</button>
+            </form>
         </div>
         {{/posts}}
         {{^posts}}
@@ -25,7 +32,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeCreatePostModal()">&times;</span>
         <h2>Create New Post</h2>
-        <form id="createPostForm" action="/subjects/{{id}}" method="post">
+        <form id="createPostForm" action="/subjects/{{id}}/create-post" method="post">
             <input type="hidden" name="subjectId" value="{{subject.id}}">
             <label for="postTitle">Post Title:</label>
             <input type="text" name="name" id="postTitle" required>
