@@ -10,14 +10,15 @@ public class Comment {
     private User user;
     private Post post;
     private final LocalDateTime date;
+    private String imagePath;
 
-    public Comment(User user, String text, Post post, int id){
+    public Comment(User user, String text, Post post, int id, String imagePath){
         this.text=text;
         this.user=user;
         this.date = LocalDateTime.now();
         this.post = post;
         this.id=id;
-
+        this.imagePath = imagePath;
     }
     // Obtain date formatted as dd/MM/yyyy
     public String getFormattedCreatedAt() {
@@ -59,6 +60,14 @@ public class Comment {
 
     public LocalDateTime getDate() {
         return date;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
 
