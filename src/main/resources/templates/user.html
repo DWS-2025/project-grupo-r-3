@@ -6,6 +6,8 @@
         <div class="profile-info">
             <h1>{{user.username}}'s Profile</h1>
             <p><strong>Email:</strong> {{user.email}}</p>
+            <p><strong>Posts:</strong> {{user.posts.size}}</p> 
+            <p><strong>Comments:</strong> {{user.comments.size}}</p>
         </div>
         {{#user.profileImage}}
         <div class="profile-image">
