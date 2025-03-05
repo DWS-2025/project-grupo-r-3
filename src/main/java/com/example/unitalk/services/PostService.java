@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+
 
 @Service
 public class PostService {
@@ -30,4 +32,7 @@ public class PostService {
         posts.remove(post.getId());
     }
 
+    public void deletePostComments(List<Comment> comments) {
+        comments.clear();
+    }
 }

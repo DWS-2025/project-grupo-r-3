@@ -57,6 +57,8 @@ public class PostController {
             throw new UserNotEnrolledException("You are not enrolled in this subject.");
         }
         posts.deletePost(user, subject, post);
+        post.getComments().clear();
+        user.getComments().clear();
         return "redirect:/subjects/{id}";
     }
 }
