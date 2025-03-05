@@ -21,7 +21,7 @@
 
     <div class="posts-list">
         {{#posts}}
-        <div class="post-row">
+        <div class="post-row" onclick="window.location.href='/subjects/{{subject.id}}/posts/{{id}}'">
             <div class="post-info">
                 <a href="/subjects/{{subject.id}}/posts/{{id}}" class="post-title">{{title}}</a>
                 <p class="post-description">{{shortDescription}}</p>
