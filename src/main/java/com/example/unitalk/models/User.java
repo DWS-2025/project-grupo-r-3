@@ -100,4 +100,7 @@ public class User {
         this.subjects = subjects;
     }
 
+    public void deletePostComments(int postId){
+        comments.removeIf(comment -> comment.getPost().getId() == postId);
+    }
 }

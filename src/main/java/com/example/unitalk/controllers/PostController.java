@@ -58,7 +58,7 @@ public class PostController {
         }
         posts.deletePost(user, subject, post);
         post.getComments().clear();
-        user.getComments().clear();
+        user.deletePostComments(idPost);
         return "redirect:/subjects/{id}";
     }
 }
