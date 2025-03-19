@@ -49,6 +49,7 @@ public class SubjectService {
     public void deleteSubject(Subject subject) {
         this.subjects.remove(subject.getId());
     }
+
     public SubjectService() {
         addSubject(new Subject("Introduction to Artificial Intelligence"));
         addSubject(new Subject("Algorithms"));
