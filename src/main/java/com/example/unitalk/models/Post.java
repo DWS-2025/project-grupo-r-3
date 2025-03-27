@@ -1,5 +1,9 @@
 package com.example.unitalk.models;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,8 +14,11 @@ public class Post {
     private int id;
     private String title;
     private String description;
+    @ManyToOne
     private Subject subject;
+    @ManyToOne
     private User user;
+    @OneToMany(mappedBy="comments", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
     private static int idCounter = 0;
     private final LocalDateTime date;

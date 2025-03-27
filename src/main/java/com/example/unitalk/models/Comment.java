@@ -1,13 +1,19 @@
 package com.example.unitalk.models;
 import com.example.unitalk.models.*;
+import jakarta.persistence.*;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 
+@Entity
 public class Comment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String text;
-    private int id;
+    @ManyToOne
     private User user;
+
     private Post post;
     private final LocalDateTime date;
     private String imagePath;
