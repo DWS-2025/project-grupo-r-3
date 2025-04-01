@@ -9,22 +9,30 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String text;
     @ManyToOne
     private User user;
-
+    @ManyToOne
     private Post post;
     private final LocalDateTime date;
-    private String imagePath;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] imageData;
 
-    public Comment(User user, String text, Post post, int id, String imagePath) {
-        this.text = text;
+    private String imageName;
+
+    public Comment(User user, String text, Post post, byte[] imageData, String imageName) {
         this.user = user;
-        this.date = LocalDateTime.now();
+        this.text = text;
         this.post = post;
-        this.id = id;
-        this.imagePath = imagePath;
+        this.imageData = imageData;
+        this.imageName = imageName;
+        this.date = LocalDateTime.now();
+    }
+
+    public Comment() {
+        this.date = LocalDateTime.now();
     }
 
     // Obtain date formatted as dd/MM/yyyy
@@ -49,11 +57,11 @@ public class Comment {
         this.user = user;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,12 +77,24 @@ public class Comment {
         return date;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public byte[] getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }
 

@@ -1,8 +1,6 @@
 package com.example.unitalk.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -10,17 +8,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Entity
 public class Post {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String title;
     private String description;
     @ManyToOne
     private Subject subject;
     @ManyToOne
     private User user;
-    @OneToMany(mappedBy="comments", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    private static int idCounter = 0;
     private final LocalDateTime date;
 
     public Post(String title, String description, Subject subject, User user) {
@@ -29,8 +29,12 @@ public class Post {
         this.subject = subject;
         this.user = user;
         this.comments = new ArrayList<>();
-        this.id = idCounter++;
         this.date = LocalDateTime.now();
+    }
+
+    public Post() {
+        this.date = LocalDateTime.now();
+
     }
 
 
@@ -97,11 +101,11 @@ public class Post {
         this.description = description;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

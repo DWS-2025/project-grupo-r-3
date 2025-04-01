@@ -1,18 +1,27 @@
 package com.example.unitalk.models;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
 public class Subject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String name;
+    @ManyToMany(mappedBy = "subjects")
     private List<User> users;
+    @OneToMany(mappedBy="subject", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
-    private int id;
 
     public Subject(String name) {
         this.name = name;
         this.users = new ArrayList<>();
         this.posts = new ArrayList<>();
+    }
+
+    public Subject() {
+
     }
 
     public String getName() {
@@ -55,11 +64,11 @@ public class Subject {
         posts.remove(post);
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

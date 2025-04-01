@@ -1,60 +1,65 @@
 package com.example.unitalk.services;
 
 import com.example.unitalk.models.User;
+import com.example.unitalk.models.Subject;
+import com.example.unitalk.repository.SubjectRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.unitalk.models.Subject;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectService {
-    private final Map<Integer, Subject> subjects = new HashMap<>();
-    private static int subjectCounter = 0;
+
+    private final SubjectRepository subjectRepository;
+
+    @Autowired
+    public SubjectService(SubjectRepository subjectRepository) {
+        this.subjectRepository = subjectRepository;
+    }
 
     public void applySubject(User user, Subject subject) {
         if (!subject.getUsers().contains(user)) {
             user.addSubject(subject);
             subject.addUser(user);
+            subjectRepository.save(subject);
         }
     }
 
-    public void unnaplySubject(User user, int id) {
-        Subject subject = findById(id);
-        if (subject != null) {
+    public void unnaplySubject(User user, Long id) {
+        Optional<Subject> optionalSubject = findById(id);
+        if (optionalSubject.isPresent()) {
+            Subject subject = optionalSubject.get();
             user.removeSubject(subject);
             subject.removeUser(user);
+            subjectRepository.save(subject);
         }
     }
 
-    public Collection<Subject> findAll() {
-        return subjects.values();
+    public List<Subject> findAll() {
+        return subjectRepository.findAll();
     }
 
-    public Subject findById(int id) {
-        return subjects.get(id);
+    public Optional<Subject> findById(Long id) {
+        return subjectRepository.findById(id);
     }
 
     public void addSubject(Subject subject) {
-        int uniqueID = subjectCounter;
-        subjectCounter++;
-        subject.setId(uniqueID);
-        this.subjects.put(uniqueID, subject);
+        subjectRepository.save(subject);
     }
 
     public void deleteSubject(Subject subject) {
-        this.subjects.remove(subject.getId());
+        subjectRepository.delete(subject);
     }
 
-    public SubjectService() {
-        addSubject(new Subject("Introduction to Artificial Intelligence"));
-        addSubject(new Subject("Algorithms"));
-        addSubject(new Subject("Arts"));
+    @PostConstruct
+    public void initDefaultSubjects() {
+        if (subjectRepository.findAll().isEmpty()) {
+            addSubject(new Subject("Introduction to Artificial Intelligence"));
+            addSubject(new Subject("Algorithms"));
+            addSubject(new Subject("Arts"));
+        }
     }
-
-
 }

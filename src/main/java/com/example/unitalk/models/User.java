@@ -4,28 +4,33 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String username;
     private String email;
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(name = "user_subject",joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name="subject_id"))
     private List<Subject> subjects;
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
-    public User(int id, String username, String email) {
-        this.id = id;
+    public User(String username, String email) {
         this.username = username;
         this.email = email;
         this.subjects = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.posts = new ArrayList<>();
+    }
+
+    public User() {
+
     }
 
     //Subjects Handling
@@ -84,11 +89,11 @@ public class User {
         return username;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -108,7 +113,7 @@ public class User {
         this.subjects = subjects;
     }
 
-    public void deletePostComments(int postId){
-        comments.removeIf(comment -> comment.getPost().getId() == postId);
+    public void deletePostComments(Long postId){
+        comments.removeIf(comment -> Objects.equals(comment.getPost().getId(), postId));
     }
 }

@@ -2,12 +2,16 @@ package com.example.unitalk.controllers;
 
 import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
+import com.example.unitalk.repository.SubjectRepository;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/subjects")
@@ -18,6 +22,8 @@ public class SubjectController {
     private UserService user;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @GetMapping
     public String showAllSubjects(Model model) {
@@ -26,9 +32,10 @@ public class SubjectController {
     }
 
     @PostMapping("/apply")
-    public String applySubject(@RequestParam("id") int id, Model model) {
-        Subject subject = subjects.findById(id);
-        if (subject != null) {
+    public String applySubject(@RequestParam("id") Long id, Model model) {
+        Optional<Subject> optionalSubject = subjects.findById(id);
+        if (optionalSubject.isPresent()) {
+            Subject subject = optionalSubject.get();
             subjects.applySubject(userService.getUser(), subject);
             model.addAttribute("status", "Subject applied succesfully!");
         } else {
@@ -38,10 +45,11 @@ public class SubjectController {
     }
 
     @PostMapping("/delete")
-    public String deleteSubject(@RequestParam("id") int id, Model model) {
-        Subject subject = subjects.findById(id);
+    public String deleteSubject(@RequestParam("id") Long id, Model model) {
+        Optional<Subject> optionalSubject = subjects.findById(id);
         User user = userService.getUser();
-        if (subject != null) {
+        if (optionalSubject.isPresent()) {
+            Subject subject = optionalSubject.get();
             subjects.deleteSubject(subject);
             user.removeSubject(subject);
             model.addAttribute("status", "Subject deleted succesfully!");
@@ -52,9 +60,10 @@ public class SubjectController {
     }
 
     @PostMapping("/modify")
-    public String modifySubject(@RequestParam("id") int id, @RequestParam("newName") String name, Model model) {
-        Subject subject = subjects.findById(id);
-        if (subject != null) {
+    public String modifySubject(@RequestParam("id") Long id, @RequestParam("newName") String name, Model model) {
+        Optional<Subject> optionalSubject = subjects.findById(id);
+        if (optionalSubject.isPresent()) {
+            Subject subject = optionalSubject.get();
             subject.setName(name);
             model.addAttribute("status", "Subject deleted succesfully!");
         } else {
@@ -81,6 +90,12 @@ public class SubjectController {
         model.addAttribute("subjects", user.getSubjects());
         return "userSubjects";
     }
-
-
+    @PostConstruct
+    public void init() {
+        if (subjectRepository.count() == 0) {
+            subjectRepository.save(new Subject("Introduction to Artificial Intelligence"));
+            subjectRepository.save(new Subject("Algorithms"));
+            subjectRepository.save(new Subject("Arts"));
+        }
+    }
 }

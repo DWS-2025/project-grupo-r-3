@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/subjects/unapply")
-    public String unapplySubject(@RequestParam("id") int id, Model model) {
+    public String unapplySubject(@RequestParam("id") Long id, Model model) {
         User user = users.getUser();
         if (user.getSubjects() != null) {
             subjects.unnaplySubject(user, id);

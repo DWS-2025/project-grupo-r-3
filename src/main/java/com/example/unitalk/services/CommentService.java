@@ -2,8 +2,9 @@ package com.example.unitalk.services;
 
 import com.example.unitalk.models.Comment;
 import com.example.unitalk.models.Post;
-import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
+import com.example.unitalk.repository.CommentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,16 +14,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CommentService {
+
+    @Autowired
+    private CommentRepository commentRepository;
+
     private static final Path IMAGES_FOLDER = Paths.get("uploads/comments");
-    private static int commentCounter = 0;
-    private final Map<Integer, Comment> comments = new HashMap<>();
 
     // Find comment by ID
-    public Comment findById(int commentId) {
-        return comments.get(commentId);
+    public Optional<Comment> findById(Long commentId) {
+        return commentRepository.findById(commentId);
     }
 
     public void createComment(User user, String text, Post post, MultipartFile image) throws IOException {
@@ -30,24 +34,23 @@ public class CommentService {
         if (text == null || text.trim().isEmpty()) {
             throw new IllegalArgumentException("Comment cannot be empty.");
         }
+        byte[] imageData = null;
+        String imageName = null;
+
         if (image != null && !image.isEmpty()) {
-            Files.createDirectories(IMAGES_FOLDER);
-            String imageFileName = commentCounter + "_" + image.getOriginalFilename();
-            Path destinationPath = IMAGES_FOLDER.resolve(imageFileName);
-            image.transferTo(destinationPath);
-            imagePath = imageFileName;
+            imageData = image.getBytes();
+            imageName = image.getOriginalFilename();
         }
-        Comment newComment = new Comment(user, text, post, commentCounter, imagePath);
-        commentCounter++;
-        comments.put(newComment.getId(), newComment);
+        Comment newComment = new Comment(user, text, post, imageData, imageName);
         user.addComment(newComment);
         post.addComment(newComment);
+        commentRepository.save(newComment);
     }
 
     public void deleteComment(User user, Comment comment, Post post) {
         user.removeComment(comment);
         post.removeComment(comment);
-        comments.remove(comment.getId());
+        commentRepository.delete(comment);
     }
 }
 
