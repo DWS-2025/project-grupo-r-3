@@ -65,7 +65,8 @@ public class SubjectController {
         if (optionalSubject.isPresent()) {
             Subject subject = optionalSubject.get();
             subject.setName(name);
-            model.addAttribute("status", "Subject deleted succesfully!");
+            subjects.addSubject(subject);
+            model.addAttribute("status", "Subject modified succesfully!");
         } else {
             model.addAttribute("status", "Error, subject not found");
         }

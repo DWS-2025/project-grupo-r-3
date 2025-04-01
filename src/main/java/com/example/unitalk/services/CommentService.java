@@ -46,6 +46,9 @@ public class CommentService {
         post.addComment(newComment);
         commentRepository.save(newComment);
     }
+    public void setComment(Comment comment){
+        commentRepository.save(comment);
+    }
 
     public void deleteComment(User user, Comment comment, Post post) {
         user.removeComment(comment);

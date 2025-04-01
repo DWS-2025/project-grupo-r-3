@@ -74,6 +74,7 @@ public class CommentController {
         }
         Comment comment = optionalComment.get();
         comment.setText(commentText);
+        comments.setComment(comment);
         return "redirect:/subjects/{id1}/posts/{id2}";
     }
 

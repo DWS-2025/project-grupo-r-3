@@ -53,7 +53,6 @@ public class SubjectService {
     public void deleteSubject(Subject subject) {
         subjectRepository.delete(subject);
     }
-
     @PostConstruct
     public void initDefaultSubjects() {
         if (subjectRepository.findAll().isEmpty()) {
