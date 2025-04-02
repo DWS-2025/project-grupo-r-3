@@ -51,6 +51,10 @@ public class SubjectService {
     }
 
     public void deleteSubject(Subject subject) {
+        for (User user : subject.getUsers()) {
+            user.removeSubject(subject);
+        }
+        subject.getUsers().clear();
         subjectRepository.delete(subject);
     }
     @PostConstruct
