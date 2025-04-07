@@ -1,5 +1,6 @@
 package com.example.unitalk.controllers;
 
+import com.example.unitalk.DTOS.UserDTO;
 import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
 import com.example.unitalk.services.SubjectService;
@@ -19,17 +20,16 @@ public class UserController {
 
     @GetMapping
     public String showUser(Model model) {
-        User user = users.getUser();
-        model.addAttribute("user", user);
+        UserDTO userDTO = users.getUser();
+        model.addAttribute("user", userDTO);
         return "user";
     }
 
     @PostMapping("/subjects/unapply")
     public String unapplySubject(@RequestParam("id") Long id, Model model) {
-        User user = users.getUser();
-        if (user.getSubjects() != null) {
-            subjects.unnaplySubject(user, id);
-        }
+        UserDTO userDTO = users.getUser();
+        subjects.unapplySubject(userDTO, id);
+
         return "redirect:/user";
     }
 }

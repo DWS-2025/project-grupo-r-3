@@ -38,7 +38,6 @@ public class Post {
     }
 
 
-    // Obtain date formatted as dd/MM/yyyy
     public String getFormattedCreatedAt() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return date.format(formatter);
