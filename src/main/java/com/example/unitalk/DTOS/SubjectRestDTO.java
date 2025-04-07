@@ -4,10 +4,10 @@ import com.example.unitalk.models.User;
 
 import java.util.List;
 
-public record SubjectDTO(
-    Long id,
-    String name,
-    List<User> users,
-    List<Post> post
-    ) {
+public record SubjectRestDTO(
+        Long id,
+        String name,
+        Long userId,
+        List<Post> posts
+) {
 }
