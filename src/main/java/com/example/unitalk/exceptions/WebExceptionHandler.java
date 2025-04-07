@@ -6,9 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ControllerAdvice
-public class GlobalExceptionHandler {
+@ControllerAdvice(basePackages = "com.example.unitalk.web")
+public class WebExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class})
     public String handleIllegalArgumentException(IllegalArgumentException e, Model model) {

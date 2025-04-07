@@ -1,9 +1,6 @@
 package com.example.unitalk.services;
 
-import com.example.unitalk.DTOS.CommentDTO;
-import com.example.unitalk.DTOS.CommentInputDTO;
-import com.example.unitalk.DTOS.PostDTO;
-import com.example.unitalk.DTOS.UserDTO;
+import com.example.unitalk.DTOS.*;
 import com.example.unitalk.mappers.PostMapper;
 import com.example.unitalk.mappers.UserMapper;
 import com.example.unitalk.models.Comment;
@@ -13,11 +10,11 @@ import com.example.unitalk.models.User;
 import com.example.unitalk.repository.CommentRepository;
 import com.example.unitalk.repository.PostRepository;
 import com.example.unitalk.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +48,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public void createComment(UserDTO userDTO, CommentInputDTO commentInputDTO, PostDTO postDTO) {
+    public CommentDTO createComment(UserDTO userDTO, CommentInputDTO commentInputDTO, PostDTO postDTO) {
         if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {
             throw new IllegalArgumentException("Comment cannot be empty.");
         }
@@ -62,14 +59,19 @@ public class CommentService {
         comment.setPost(post);
         user.addComment(comment);
         post.addComment(comment);
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        return commentMapper.toDTO(savedComment);
     }
 
-    public void editComment(Long commentId, CommentInputDTO commentInputDTO) {
+    public CommentDTO editComment(Long commentId, CommentInputDTO commentInputDTO) {
+        if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {
+            throw new IllegalArgumentException("Comment text cannot be empty or null.");
+        }
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId));
         comment.setText(commentInputDTO.text());
-        commentRepository.save(comment);
+        Comment updatedComment = commentRepository.save(comment);
+        return commentMapper.toDTO(updatedComment);
     }
     @Transactional
     public void deleteComment(UserDTO userDTO, Long commentId, PostDTO postDTO) {
@@ -85,5 +87,11 @@ public class CommentService {
         user.removeComment(comment);
         post.removeComment(comment);
         commentRepository.delete(comment);
+    }
+    public CommentRestDTO toRest(CommentDTO commentDTO){
+        return commentMapper.toRestDTO(commentDTO);
+    }
+    public List<CommentRestDTO> toRest(List<CommentDTO> commentDTO){
+        return commentMapper.toRestDTOs(commentDTO);
     }
 }

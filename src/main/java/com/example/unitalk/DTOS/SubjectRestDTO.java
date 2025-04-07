@@ -8,6 +8,6 @@ public record SubjectRestDTO(
         Long id,
         String name,
         Long userId,
-        List<Post> posts
+        List<PostDTO> posts
 ) {
 }

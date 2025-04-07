@@ -1,9 +1,6 @@
 package com.example.unitalk.services;
 
-import com.example.unitalk.DTOS.PostDTO;
-import com.example.unitalk.DTOS.PostInputDTO;
-import com.example.unitalk.DTOS.SubjectDTO;
-import com.example.unitalk.DTOS.UserDTO;
+import com.example.unitalk.DTOS.*;
 import com.example.unitalk.mappers.UserMapper;
 import com.example.unitalk.models.Post;
 import com.example.unitalk.models.Subject;
@@ -38,10 +35,8 @@ public class PostService {
     }
 
     public List<PostDTO> findAllBySubject(Long subjectId) {
-        return postRepository.findAll().stream()
-                .filter(post -> post.getSubject() != null && post.getSubject().getId().equals(subjectId))
-                .map(postMapper::toDTO)
-                .collect(Collectors.toList());
+        List<Post> posts = postRepository.findBySubjectId(subjectId);
+        return postMapper.toDTOs(posts);
     }
 
     public Optional<PostDTO> findById(Long id) {
@@ -51,7 +46,7 @@ public class PostService {
     public PostDTO createPost(UserDTO userDTO, SubjectDTO subjectDTO, PostInputDTO postDTO) {
         Subject subject = subjectRepository.findById(subjectDTO.id())
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
-        if (!userMapper.toEntity(userDTO).getSubjects().contains(subject)) {
+        if (!userDTO.subjects().contains(subject)) {
             throw new RuntimeException("User not enrolled in this subject");
         }
         User user = userMapper.toEntity(userDTO);
@@ -85,4 +80,9 @@ public class PostService {
         post.getComments().clear();
         postRepository.save(post);
     }
-}
+    public PostRestDTO toRest(PostDTO postDTO){
+        return postMapper.toRestDTO(postDTO);
+    }
+    public List<PostRestDTO> toRest(List<PostDTO> postDTOS){
+        return postMapper.toRestDTOs(postDTOS);
+    }}

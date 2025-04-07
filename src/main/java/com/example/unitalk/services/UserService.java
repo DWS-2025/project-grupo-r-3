@@ -35,7 +35,7 @@ public class UserService {
             userRepository.save(user);
         }
     }
-
+    
     public UserDTO getUser() {
         Optional<User> user = userRepository.findByUsername("defaultUser");
         if(user.isPresent()) {

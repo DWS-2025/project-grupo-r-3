@@ -1,13 +1,16 @@
 package com.example.unitalk.mappers;
-import com.example.unitalk.DTOS.PostRestDTO;
-import com.example.unitalk.DTOS.PostDTO;
-import com.example.unitalk.DTOS.PostInputDTO;
+
+import com.example.unitalk.DTOS.*;
+import com.example.unitalk.models.Comment;
 import com.example.unitalk.models.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
-@Mapper(componentModel = "spring")
+import java.util.stream.Collectors;
+
+@Mapper(componentModel = "spring", uses = CommentMapper.class)
 public interface PostMapper {
 
     PostDTO toDTO(Post post);
@@ -15,15 +18,30 @@ public interface PostMapper {
     Post toEntity(PostDTO postDTO);
     Post toEntity(PostInputDTO postDTO);
 
-    // Methods for rest
-    @Mapping(target = "subjectId", expression = "java(post.getSubject() != null ? post.getSubject().getId() : null)")
-    @Mapping(target = "userId", expression = "java(post.getUser() != null ? post.getUser().getId() : null)")
-    PostRestDTO toRestDTO(Post post);
-    List<PostRestDTO> toRestDTOs(List<Post> posts);
+    @Mapping(target = "subjectId", expression = "java(postDTO.subject() != null ? postDTO.subject().getId() : null)")
+    @Mapping(target = "userId", expression = "java(postDTO.user() != null ? postDTO.user().getId() : null)")
+    @Mapping(target = "comments", qualifiedByName = "mapCommentsToRestDTOs")
+    PostRestDTO toRestDTO(PostDTO postDTO);
+
+    List<PostRestDTO> toRestDTOs(List<PostDTO> postsDTO);
+
+    @Named("mapCommentsToRestDTOs")
+    default List<CommentRestDTO> mapCommentsToRestDTOs(List<Comment> comments) {
+        if (comments == null) {
+            return null;
+        }
+        CommentMapper commentMapper = PostMapperInstance.commentMapper(); 
+        return comments.stream()
+                .map(comment -> commentMapper.toRestDTO(commentMapper.toDTO(comment)))
+                .collect(Collectors.toList());
+    }
+}
 
 
-    @Mapping(target = "subject", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "comments", ignore = true)
-    Post toEntity(PostRestDTO postRestDTO);
+class PostMapperInstance {
+    private static final CommentMapper commentMapper = new CommentMapperImpl(); 
+
+    public static CommentMapper commentMapper() {
+        return commentMapper;
+    }
 }

@@ -13,5 +13,5 @@ public record PostRestDTO(
         LocalDateTime date,
         Long subjectId,
         Long userId,
-        List<Comment> comments
+        List<CommentRestDTO> comments
 ) {}

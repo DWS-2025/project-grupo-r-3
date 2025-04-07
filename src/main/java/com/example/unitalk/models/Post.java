@@ -21,7 +21,6 @@ public class Post {
     private User user;
     @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    private final LocalDateTime date;
 
     public Post(String title, String description, Subject subject, User user) {
         this.title = title;
@@ -29,19 +28,13 @@ public class Post {
         this.subject = subject;
         this.user = user;
         this.comments = new ArrayList<>();
-        this.date = LocalDateTime.now();
     }
 
     public Post() {
-        this.date = LocalDateTime.now();
 
     }
 
 
-    public String getFormattedCreatedAt() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return date.format(formatter);
-    }
 
     public String getShortDescription() {
         int maxLength = 100; // Maximum characters before truncating
