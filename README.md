@@ -15,7 +15,7 @@ UniTalk is a web platform specifically designed for university students, creatin
 
 ## 🔧 Technologies
 
-- **Frontend**: HTML, CSS, JavaScript, Thymeleaf
+- **Frontend**: HTML, CSS, JavaScript, Mustache
 - **Backend**: Java, Spring Boot
 - **Database**: JPA (compatible with MySQL/PostgreSQL)
 - **Dependency Management**: Maven
