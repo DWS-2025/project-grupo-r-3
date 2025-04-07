@@ -1,7 +1,5 @@
-# 🚀 UniTalk
-
 <p align="center">
-  <img src="src/main/static/images/unitalklogo1.png" alt="UniTalk Logo" width="200" height="auto">
+  <img src="src/main/resources/static/images/unitalklogo1.png" alt="UniTalk Logo" width="200" height="auto">
 </p>
 
 <p align="center">
