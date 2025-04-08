@@ -39,7 +39,7 @@ public class PostController {
             throw new RuntimeException("Subject not found");
         }
         SubjectDTO subjectDTO = optionalSubjectDTO.get();
-        List<PostDTO> postsDTO = postService.findByDynamicFilters(titleFilter, descriptionFilter);
+        List<PostDTO> postsDTO = postService.findByDynamicFilters(id,titleFilter, descriptionFilter);
         UserDTO userDTO = userService.getUser();
         model.addAttribute("posts", postsDTO);
         model.addAttribute("subject", subjectDTO);

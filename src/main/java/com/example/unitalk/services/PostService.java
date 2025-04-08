@@ -86,11 +86,11 @@ public class PostService {
     public List<PostRestDTO> toRest(List<PostDTO> postDTOS){
         return postMapper.toRestDTOs(postDTOS);
     }
-    public List<PostDTO> findByDynamicFilters(String title, String description) {
+    public List<PostDTO> findByDynamicFilters(Long subjectId, String title, String description) {
         String filteredTitle = (title != null && !title.trim().isEmpty()) ? title : null;
         String filteredDescription = (description != null && !description.trim().isEmpty()) ? description : null;
 
-        List<Post> posts = postRepository.findByDynamicFilters(filteredTitle, filteredDescription);
+        List<Post> posts = postRepository.findBySubjectIdAndDynamicFilters(subjectId, filteredTitle, filteredDescription);
         return postMapper.toDTOs(posts);
     }
 }

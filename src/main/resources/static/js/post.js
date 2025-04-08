@@ -66,13 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
         commentDiv.id = `comment-${comment.id}`;
 
         const text = comment.text ? comment.text.replace(/'/g, "\\'").replace(/"/g, '\\"') : '';
-        const username = comment.username || 'Unknown';
-
         const imageSrc = comment.id ? `/api/comments/${comment.id}/image` : '';
 
         commentDiv.innerHTML = `
             <div class="comment-header">
-                <p class="comment-meta"><strong>${username}</strong></p>
+                <p class="comment-meta"><strong>Loading...</strong></p>
                 <div class="comment-actions">
                     <span class="edit-icon" onclick="openEditCommentModal('${comment.id}', '${text}')">🖊️</span>
                     <span class="delete-icon" onclick="deleteComment('${subjectId}', '${postId}', '${comment.id}')">❌</span>
@@ -81,6 +79,27 @@ document.addEventListener("DOMContentLoaded", function () {
             <p class="comment-text">${text}</p>
             ${imageSrc ? `<img src="${imageSrc}" alt="" class="comment-image">` : ''}
         `;
+
+        fetch('/api/users/current', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current user: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(user => {
+                const username = user.username || 'Unknown';
+                commentDiv.querySelector('.comment-meta strong').textContent = username;
+            })
+            .catch(error => {
+                console.error('Error fetching current user:', error);
+                commentDiv.querySelector('.comment-meta strong').textContent = 'Unknown';
+            });
 
         return commentDiv;
     }
@@ -144,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     commentsList.innerHTML = '';
                     loadMoreComments();
 
-                    
+
                     const commentInput = commentForm.querySelector("textarea, input[type='text']");
                     const imageInput = commentForm.querySelector("input[type='file']");
                     if (commentInput) commentInput.value = '';
