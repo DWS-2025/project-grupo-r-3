@@ -21,6 +21,14 @@ UniTalk is a web platform specifically designed for university students, creatin
 - **Dependency Management**: Maven
 - **Version Control**: Git, GitHub
 
+## 🫂 Relations
+
+- User - Subject: **N:M**
+- User - Post: **1:N**
+- User - Comment: **1:N**
+- Subject - Post: **1:N**
+- Post - Comment: **1:N**
+
 ## 📁 Structure
 
 ```
