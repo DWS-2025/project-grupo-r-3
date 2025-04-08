@@ -16,8 +16,8 @@ UniTalk is a web platform specifically designed for university students, creatin
 ## 🔧 Technologies
 
 - **Frontend**: HTML, CSS, JavaScript, Mustache
-- **Backend**: Java, Spring Boot
-- **Database**: JPA (compatible with MySQL/PostgreSQL)
+- **Backend**: Java, Spring Boot, API Rest, AJAX
+- **Database**: MySQL
 - **Dependency Management**: Maven
 - **Version Control**: Git, GitHub
 
@@ -37,51 +37,25 @@ project-grupo-r-3/
 │   ├── main/                                # Main application code
 │   │   ├── java/com/example/unitalk/        # Main Java package
 │   │   │   ├── controllers/                 # REST and MVC controllers
+│   │   │   ├── DTOS/                        # REST and Web DTOs
 │   │   │   ├── exceptions/                  # Custom exception handling
 │   │   │   ├── models/                      # Entities and data models
 │   │   │   ├── repository/                  # Repository interfaces for persistence
+│   │   │   ├── restControllers/             # Controllers for the API Rest
 │   │   │   ├── services/                    # Business services
 │   │   │   └── UniTalkApplication.java      # Main Spring Boot application class
 │   │   │
 │   │   ├── resources/                       # Application resources
 │   │   │   ├── static/                      # Static files
 │   │   │   │   ├── css/                     # CSS stylesheets
-│   │   │   │   │   ├── footer.css           # Footer styles
-│   │   │   │   │   ├── header.css           # Header styles
-│   │   │   │   │   ├── index.css            # Main page styles
-│   │   │   │   │   ├── post.css             # Post view styles
-│   │   │   │   │   ├── postFiles.css        # Post files view styles
-│   │   │   │   │   ├── subjectPosts.css     # Subject posts styles
-│   │   │   │   │   ├── subjects.css         # Subjects view styles
-│   │   │   │   │   ├── user.css             # User view styles
-│   │   │   │   │   └── userSubjects.css     # User subjects styles
-│   │   │   │   │
 │   │   │   │   ├── images/                  # Images and graphic resources
-│   │   │   │   │   ├── mini.png             # Thumbnail image
-│   │   │   │   │   └── unitalklogo1.png     # Main application logo
-│   │   │   │   │
 │   │   │   │   └── js/                      # JavaScript scripts
-│   │   │   │       ├── post.js              # Post functionality
-│   │   │   │       ├── subjectsPosts.js     # Subject posts functionality
-│   │   │   │       └── subjects.js          # Subjects view functionality
-│   │   │   │
-│   │   │   ├── templates/                   # Thymeleaf templates
-│   │   │   │   ├── error.html               # Error page
-│   │   │   │   ├── files.html               # Files view
-│   │   │   │   ├── footer.html              # Footer fragment
-│   │   │   │   ├── header.html              # Header fragment
-│   │   │   │   ├── index.html               # Main page
-│   │   │   │   ├── post.html                # Individual post view
-│   │   │   │   ├── subjectPosts.html        # Subject posts view
-│   │   │   │   ├── subjects.html            # Subjects list view
-│   │   │   │   ├── user.html                # User profile view
-│   │   │   │   └── userSubjects.html        # User subjects view
-│   │   │   │
+│   │   │   ├── templates/                   # HTML templates
 │   │   │   └── application.properties       # Spring Boot application configuration
 │   │   │
 │   ├── test/java/com/example/unitalk/       # Automated tests
-│   │   └── UniTalkApplicationTests.java     # Main application tests
-│   │
+│   └───┴── UniTalkApplicationTests.java     # Main application tests
+│   
 │
 ├── target/                                  # Compilation directory (generated)
 ├── .gitattributes                           # Git attributes configuration
