@@ -47,7 +47,7 @@ public class SubjectService {
     public void applySubject(UserDTO userDTO, Long subjectId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
-        User user = userMapper.toEntity(userDTO);
+        User user = userRepository.findById(userDTO.id()).get();
         if (!subject.getUsers().contains(user)) {
             user.addSubject(subject);
             subject.addUser(user);
