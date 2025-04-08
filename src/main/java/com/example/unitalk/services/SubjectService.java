@@ -89,6 +89,8 @@ public class SubjectService {
             subjectRepository.save(new Subject("Introduction to Artificial Intelligence"));
             subjectRepository.save(new Subject("Algorithms"));
             subjectRepository.save(new Subject("Arts"));
+            subjectRepository.save(new Subject("Economy"));
+            subjectRepository.save(new Subject("Networks"));
         }
     }
 

@@ -25,6 +25,16 @@ public class UserService {
         this.userMapper = userMapper;
         this.subjectRepository = subjectRepository;
     }
+
+    @PostConstruct
+    public void initializeDefaultUser() {
+        Optional<User> existingUser = userRepository.findByUsername("defaultUser");
+
+        if (existingUser.isEmpty()) {
+            User user = new User("defaultUser", "usuario@example.com");
+            userRepository.save(user);
+        }
+    }
     
     public UserDTO getUser() {
         Optional<User> user = userRepository.findByUsername("defaultUser");
