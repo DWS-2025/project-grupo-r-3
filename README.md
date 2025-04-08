@@ -5,6 +5,7 @@
 <p align="center">
   <a href="#-description">Description</a> •
   <a href="#-technologies">Technologies</a> •
+  <a href="#-relations">Relations</a> •
   <a href="#-structure">Structure</a> •
   <a href="#-collaborators">Collaborators</a>
 </p>
@@ -20,6 +21,14 @@ UniTalk is a web platform specifically designed for university students, creatin
 - **Database**: MySQL
 - **Dependency Management**: Maven
 - **Version Control**: Git, GitHub
+
+## 🫂 Relations
+
+- User - Subject: **N:M**
+- User - Post: **1:N**
+- User - Comment: **1:N**
+- Subject - Post: **1:N**
+- Post - Comment: **1:N**
 
 ## 📁 Structure
 
