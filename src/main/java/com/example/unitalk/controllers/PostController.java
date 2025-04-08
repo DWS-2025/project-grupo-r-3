@@ -30,17 +30,22 @@ public class PostController {
     private PostService postService;
 
     @GetMapping
-    public String showPosts(@PathVariable Long id, Model model) {
+    public String showPosts(@PathVariable Long id,
+                            @RequestParam(required = false) String titleFilter,
+                            @RequestParam(required = false) String descriptionFilter,
+                            Model model) {
         Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(id);
         if (optionalSubjectDTO.isEmpty()) {
             throw new RuntimeException("Subject not found");
         }
         SubjectDTO subjectDTO = optionalSubjectDTO.get();
-        List<PostDTO> postsDTO = postService.findAllBySubject(id);
+        List<PostDTO> postsDTO = postService.findByDynamicFilters(titleFilter, descriptionFilter);
         UserDTO userDTO = userService.getUser();
         model.addAttribute("posts", postsDTO);
         model.addAttribute("subject", subjectDTO);
         model.addAttribute("user", userDTO);
+        model.addAttribute("titleFilter", titleFilter != null ? titleFilter : "");
+        model.addAttribute("descriptionFilter", descriptionFilter != null ? descriptionFilter : "");
         return "subjectPosts";
     }
 

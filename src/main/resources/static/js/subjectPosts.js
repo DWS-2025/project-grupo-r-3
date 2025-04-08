@@ -1,23 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Ensure modal is hidden on page load
+    
     closeCreatePostModal();
 });
+function clearFilters() {
+    document.getElementById('titleFilter').value = '';
+    document.getElementById('descriptionFilter').value = '';
+    document.querySelector('.filter-form').submit(); 
+}
 
 function openCreatePostModal() {
-    let modal = document.getElementById("createPostModal");
-    if (modal) {
-        modal.style.display = "flex";
-    }
+    const modal = document.getElementById('createPostModal');
+    modal.style.display = 'flex';
+    
+    modal.style.position = 'fixed';
+    modal.style.left = '50%';
+    modal.style.top = '50%';
+    modal.style.transform = 'translate(-50%, -50%)'; 
 }
 
 function closeCreatePostModal() {
-    let modal = document.getElementById("createPostModal");
-    if (modal) {
-        modal.style.display = "none";
-    }
+    document.getElementById('createPostModal').style.display = 'none';
 }
 
-// Close modal when clicking outside of it
 window.onclick = function (event) {
     let modal = document.getElementById("createPostModal");
     if (event.target === modal) {

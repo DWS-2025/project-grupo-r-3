@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -24,12 +26,15 @@ public class CommentRestController {
     @Autowired
     private PostService postService;
 
-
     @GetMapping
-    public ResponseEntity<List<CommentRestDTO>> getAllComments(@RequestParam Long postId) {
-        List<CommentDTO> commentsDTO = commentService.findAllByPost(postId);
-        List<CommentRestDTO> comments = commentService.toRest(commentsDTO);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+    public ResponseEntity<Page<CommentRestDTO>> getAllComments(
+            @RequestParam Long postId,
+            Pageable pageable) {
+
+        Page<CommentDTO> commentPage = commentService.findAllByPost(postId, pageable);
+        Page<CommentRestDTO> restPage = commentPage.map(commentService::toRest);
+
+        return ResponseEntity.ok(restPage);
     }
     @GetMapping("/{id}")
     public ResponseEntity<CommentRestDTO> getComment(@PathVariable Long id) {
@@ -71,6 +76,15 @@ public class CommentRestController {
         PostDTO postDTO = optionalPostDTO.get();
         commentService.deleteComment(userDTO, id, postDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getCommentImage(@PathVariable Long id) {
+        return commentService.findById(id)
+                .filter(commentDTO -> commentDTO.imageData() != null)
+                .map(commentDTO -> ResponseEntity.ok()
+                        .header("Content-Type", "image/jpeg") // Ajusta según el tipo de imagen (puede ser "image/png", etc.)
+                        .body(commentDTO.imageData()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

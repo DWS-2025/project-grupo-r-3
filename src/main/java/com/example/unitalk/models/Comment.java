@@ -31,15 +31,19 @@ public class Comment {
         this.date = LocalDateTime.now();
     }
 
+    public Comment(String text, User user, Post post) {
+        this.user = user;
+        this.text = text;
+        this.post = post;
+        this.imageData = null;
+        this.imageName = null;
+        this.date = LocalDateTime.now();
+    }
+
     public Comment() {
         this.date = LocalDateTime.now();
     }
 
-    // Obtain date formatted as dd/MM/yyyy
-    public String getFormattedCreatedAt() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return date.format(formatter);
-    }
 
     public String getText() {
         return text;

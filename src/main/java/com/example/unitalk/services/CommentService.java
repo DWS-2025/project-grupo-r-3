@@ -12,7 +12,9 @@ import com.example.unitalk.repository.PostRepository;
 import com.example.unitalk.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -41,11 +43,9 @@ public class CommentService {
         return commentRepository.findById(commentId).map(commentMapper::toDTO);
     }
 
-    public List<CommentDTO> findAllByPost(Long postId) {
-        return commentRepository.findAll().stream()
-                .filter(comment -> comment.getPost() != null && comment.getPost().getId().equals(postId))
-                .map(commentMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<CommentDTO> findAllByPost(Long postId, Pageable pageable) {
+        return commentRepository.findByPostId(postId, pageable)
+                .map(commentMapper::toDTO);
     }
 
     public CommentDTO createComment(UserDTO userDTO, CommentInputDTO commentInputDTO, PostDTO postDTO) {

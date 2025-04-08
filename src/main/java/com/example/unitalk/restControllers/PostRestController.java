@@ -35,8 +35,11 @@ public class PostRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostRestDTO>> getAllPosts(@RequestParam Long subjectId) {
-        List<PostDTO> postDTOs = postService.findAllBySubject(subjectId);
+    public ResponseEntity<List<PostRestDTO>> getAllPosts(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam Long subjectId) {
+        List<PostDTO> postDTOs = postService.findByDynamicFilters(title, description);
         List<PostRestDTO> postRestDTOs = postService.toRest(postDTOs);
         return new ResponseEntity<>(postRestDTOs, HttpStatus.OK);
     }

@@ -11,8 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,25 +32,32 @@ public class CommentController {
     private CommentService comments;
 
     @GetMapping
-    public String showPostComments(@PathVariable("id1") Long idSubject, @PathVariable("id2") Long idPost, Model model) {
+    public String showPostComments(
+            @PathVariable("id1") Long idSubject,
+            @PathVariable("id2") Long idPost,
+            Model model) {
+
         UserDTO userDTO = users.getUser();
         Optional<SubjectDTO> optionalSubject = subjects.findById(idSubject);
         if (optionalSubject.isEmpty()) {
             throw new RuntimeException("Subject not found");
         }
+
         SubjectDTO subjectDTO = optionalSubject.get();
         Optional<PostDTO> optionalPost = posts.findById(idPost);
         if (optionalPost.isEmpty()) {
             throw new RuntimeException("Post not found");
         }
+
         PostDTO postDTO = optionalPost.get();
+
         if (userDTO != null && users.isUserEnrolledInSubject(userDTO, idSubject)) {
-            model.addAttribute("comments", comments.findAllByPost(idPost));
             model.addAttribute("post", postDTO);
             model.addAttribute("subject", subjectDTO);
         } else {
             model.addAttribute("error", "You have not applied to this subject");
         }
+
         return "post";
     }
 
@@ -80,16 +90,7 @@ public class CommentController {
             throw new RuntimeException("Post not found");
         }
         PostDTO postDTO = optionalPostDTO.get();
-         comments.deleteComment(userDTO, commentId, postDTO);
+        comments.deleteComment(userDTO, commentId, postDTO);
         return "redirect:/subjects/{id1}/posts/{id2}";
-    }
-
-    @GetMapping("/comment-image/{id}")
-    public ResponseEntity<byte[]> getCommentImage(@PathVariable Long id) {
-        Optional<CommentDTO> optionalCommentDTO = comments.findById(id);
-        if (optionalCommentDTO.isPresent() && optionalCommentDTO.get().imageData() != null) {
-            return ResponseEntity.ok().body(optionalCommentDTO.get().imageData());
-        }
-        return ResponseEntity.notFound().build();
     }
 }

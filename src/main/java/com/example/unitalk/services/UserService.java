@@ -1,6 +1,7 @@
 package com.example.unitalk.services;
 
 import com.example.unitalk.DTOS.UserDTO;
+import com.example.unitalk.DTOS.UserRestDTO;
 import com.example.unitalk.mappers.UserMapper;
 import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
@@ -8,8 +9,6 @@ import com.example.unitalk.repository.SubjectRepository;
 import com.example.unitalk.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import jakarta.annotation.PostConstruct;
 import java.util.Optional;
 
 @Service
@@ -25,17 +24,6 @@ public class UserService {
         this.userMapper = userMapper;
         this.subjectRepository = subjectRepository;
     }
-
-    @PostConstruct
-    public void initializeDefaultUser() {
-        Optional<User> existingUser = userRepository.findByUsername("defaultUser");
-
-        if (existingUser.isEmpty()) {
-            User user = new User("defaultUser", "usuario@example.com");
-            userRepository.save(user);
-        }
-    }
-    
     public UserDTO getUser() {
         Optional<User> user = userRepository.findByUsername("defaultUser");
         if(user.isPresent()) {
@@ -55,5 +43,9 @@ public class UserService {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
         return user.getSubjects().contains(subject);
+    }
+    public UserRestDTO getUserRestDTO() {
+        UserDTO userDTO = getUser();
+        return userMapper.toRestDTO(userDTO);
     }
 }

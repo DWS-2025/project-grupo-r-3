@@ -7,6 +7,5 @@ public record CommentRestDTO(
         Long userId,
         Long postId,
         LocalDateTime date,
-        byte[] imageData,
         String imageName
 ) {}

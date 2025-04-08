@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = CommentMapper.class)
 public interface PostMapper {
-
     PostDTO toDTO(Post post);
     List<PostDTO> toDTOs(List<Post> posts);
     Post toEntity(PostDTO postDTO);

@@ -1,8 +1,6 @@
 package com.example.unitalk.controllers;
 
 import com.example.unitalk.DTOS.UserDTO;
-import com.example.unitalk.models.Subject;
-import com.example.unitalk.models.User;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

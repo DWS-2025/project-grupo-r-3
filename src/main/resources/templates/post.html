@@ -7,42 +7,25 @@
         <p class="post-meta">By {{post.user.username}} </p>
     </div>
 
-    <!-- Tabs Navigation -->
+    
     <div class="post-tabs">
         <a href="/subjects/{{subject.id}}/posts/{{post.id}}" class="post-tab active">Chat</a>
-        <a href="/" class="post-tab">Files</a>
     </div>
 
-    <!-- Post Description -->
+    
     <div class="post-content">
         <p>{{post.description}}</p>
     </div>
 
-
     <hr>
 
     <h2>Comments</h2>
-    <div class="comments-list">
-        {{#comments}}
-        <div class="comment" id="comment-{{id}}">
-            <div class="comment-header">
-                <p class="comment-meta"><strong>{{user.username}}</strong></p>
-                <div class="comment-actions">
-                    <span class="edit-icon" onclick="openEditCommentModal('{{id}}', '{{text}}')">🖊️</span>
-                    <span class="delete-icon"
-                          onclick="deleteComment('{{subject.id}}', '{{post.id}}', '{{id}}')">❌</span>
-                </div>
-            </div>
-            <p class="comment-text">{{text}}</p>
-            {{#imagePath}}
-            <img src="/subjects/{{subject.id}}/posts/{{post.id}}/comment-image/{{imagePath}}"
-                 alt="Comment Image" class="comment-image">
-            {{/imagePath}}
-        </div>
-        {{/comments}}
-        {{^comments}}
-        <p class="no-comments">No comments yet. Be the first to comment!</p>
-        {{/comments}}
+    <div class="comments-list" id="comments-list" data-post-id="{{post.id}}" data-subject-id="{{subject.id}}">
+        
+    </div>
+    <div class="load-more-container">
+        <button id="loadMoreBtn" class="btn">More comments</button>
+        <div id="spinner" class="spinner" style="display:none;"></div>
     </div>
 
     <hr>
@@ -53,13 +36,12 @@
         <input type="file" name="image" accept="image/*">
         <button type="submit" class="btn comment-btn">Post Comment</button>
     </form>
-
 </section>
 
-<!-- Edit Comment Modal -->
+
 <div id="editCommentModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeEditCommentModal()">&times;</span>
+        <span class="close" onclick="closeEditCommentModal()">×</span>
         <h2>Edit Comment</h2>
         <form id="editCommentForm" action="/subjects/{{subject.id}}/posts/{{post.id}}/edit-comment" method="post">
             <input type="hidden" name="commentId" id="editCommentId">
