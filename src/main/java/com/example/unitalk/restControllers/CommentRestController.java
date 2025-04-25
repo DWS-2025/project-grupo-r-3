@@ -49,8 +49,8 @@ public class CommentRestController {
         CommentRestDTO comment = commentService.toRest(commentDTO);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
-    @PostMapping
-    public ResponseEntity<Void> createComment(@Valid @RequestParam String commentText, @RequestParam(value = "image", required = false) MultipartFile image, @RequestParam Long postId) {
+    @PostMapping("/{postId}")
+    public ResponseEntity<Void> createComment(@Valid @RequestParam String commentText, @RequestParam(value = "image", required = false) MultipartFile image, @PathVariable Long postId) {
         UserDTO userDTO = userService.getUser();
         Optional<PostDTO> optionalPostDTO = postService.findById(postId);
         if(optionalPostDTO.isEmpty()){
