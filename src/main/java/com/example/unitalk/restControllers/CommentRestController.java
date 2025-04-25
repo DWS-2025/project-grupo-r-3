@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -47,16 +50,21 @@ public class CommentRestController {
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<Void> createComment(@Valid @RequestBody CommentInputDTO commentInputDTO, @RequestParam Long postId) {
+    public ResponseEntity<Void> createComment(@Valid @RequestParam String commentText, @RequestParam(value = "image", required = false) MultipartFile image, @RequestParam Long postId) {
         UserDTO userDTO = userService.getUser();
         Optional<PostDTO> optionalPostDTO = postService.findById(postId);
         if(optionalPostDTO.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         PostDTO postDTO = optionalPostDTO.get();
-        CommentDTO createdComment = commentService.createComment(userDTO,commentInputDTO, postDTO);
-        URI location = URI.create("/api/comments/" + createdComment.id());
-        return ResponseEntity.created(location).build();
+        try {
+            CommentInputDTO commentInputDTO = new CommentInputDTO(commentText, image != null ? image.getBytes() : null, image != null ? image.getOriginalFilename() : null);
+            CommentDTO createdComment = commentService.createComment(userDTO,commentInputDTO, postDTO);
+            URI location = URI.create("/api/comments/" + createdComment.id());
+            return ResponseEntity.created(location).build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")
