@@ -36,7 +36,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
 // PUBLIC PAGES
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/", "/login", "/loginerror").permitAll()
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
 // PRIVATE PAGES
