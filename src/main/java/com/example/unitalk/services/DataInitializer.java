@@ -15,6 +15,7 @@ import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -31,11 +32,12 @@ public class DataInitializer implements CommandLineRunner {
     private final UserService userService;
     private final SubjectService subjectService;
     private final PostService postService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public DataInitializer(UserRepository userRepository, SubjectRepository subjectRepository,
                            PostRepository postRepository, CommentRepository commentRepository,
-                           UserService userService, SubjectService subjectService, PostService postService) {
+                           UserService userService, SubjectService subjectService, PostService postService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.subjectRepository = subjectRepository;
         this.postRepository = postRepository;
@@ -43,6 +45,7 @@ public class DataInitializer implements CommandLineRunner {
         this.userService = userService;
         this.subjectService = subjectService;
         this.postService = postService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -51,8 +54,13 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() == 0 && subjectRepository.count() == 0 && postRepository.count() == 0) {
             System.out.println("Initializing sample data...");
 
-            User user = new User("defaultUser", "usuario@example.com");
+            User user = new User("defaultUser", passwordEncoder.encode("user"),"user@gmail.com","USER");
+            User user2 = new User("defaultUser2", passwordEncoder.encode("user2"),"user2@gmail.com","USER");
             userRepository.save(user);
+            userRepository.save(user2);
+
+
+
 
             Subject subject1 = new Subject("Initialized Subject");
             Subject subject2 = new Subject("Physics");

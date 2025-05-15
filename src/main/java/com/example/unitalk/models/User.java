@@ -12,6 +12,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
+    private String password;
     private String email;
     @ManyToMany
     @JoinTable(name = "user_subject",joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name="subject_id"))
@@ -21,8 +22,13 @@ public class User {
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
-    public User(String username, String email) {
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
+    public User(String username, String password,  String email, String... roles) {
         this.username = username;
+        this.password = password;
+        this.roles = List.of(roles);
         this.email = email;
         this.subjects = new ArrayList<>();
         this.comments = new ArrayList<>();
@@ -115,5 +121,21 @@ public class User {
 
     public void deletePostComments(Long postId){
         comments.removeIf(comment -> Objects.equals(comment.getPost().getId(), postId));
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
