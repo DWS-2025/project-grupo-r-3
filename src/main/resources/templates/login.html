@@ -17,10 +17,10 @@
         <div>
             <button type="submit">Login</button>
         </div>
-        <!-- Mostrar mensaje de error si hay fallo de login -->
-        <div th:if="${param.error}">
-            <p style="color:red;">Invalid username or password.</p>
-        </div>
+        {{#message}}
+        <p style="color: red">{{message}}</p>
+        {{/message}}
+
     </form>
 </body>
 </html>
