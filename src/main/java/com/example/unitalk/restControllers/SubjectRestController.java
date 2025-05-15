@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -74,7 +76,9 @@ public class SubjectRestController {
 
     @GetMapping(params = "userId")
     public ResponseEntity<List<SubjectRestDTO>> getUserSubjects(@RequestParam Long userId) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         if (!userDTO.id().equals(userId)) {
             throw new ResourceNotFoundException("User ID does not match authenticated user");
         }

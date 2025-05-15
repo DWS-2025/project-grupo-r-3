@@ -6,6 +6,8 @@ import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
 import com.example.unitalk.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +39,9 @@ public class CommentController {
             @PathVariable("id2") Long idPost,
             Model model) {
 
-        UserDTO userDTO = users.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
         Optional<SubjectDTO> optionalSubject = subjects.findById(idSubject);
         if (optionalSubject.isEmpty()) {
             throw new RuntimeException("Subject not found");
@@ -63,7 +67,9 @@ public class CommentController {
 
     @PostMapping("/comment")
     public String addComment(@PathVariable("id1") Long idSubject, @PathVariable("id2") Long idPost, @RequestParam("commentText") String commentText, @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-        UserDTO userDTO = users.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
         Optional<PostDTO> optionalPostDTO = posts.findById(idPost);
         if (optionalPostDTO.isEmpty()) {
             throw new RuntimeException("Post not found");
@@ -84,7 +90,9 @@ public class CommentController {
 
     @PostMapping("/delete-comment")
     public String deleteComment(@PathVariable("id1") Long idSubject, @PathVariable("id2") Long idPost, @RequestParam("commentId") Long commentId) {
-        UserDTO userDTO = users.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
         Optional<PostDTO> optionalPostDTO = posts.findById(idPost);
         if (optionalPostDTO.isEmpty()) {
             throw new RuntimeException("Post not found");

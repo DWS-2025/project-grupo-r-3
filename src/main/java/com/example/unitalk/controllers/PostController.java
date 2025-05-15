@@ -10,6 +10,8 @@ import com.example.unitalk.services.PostService;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +42,9 @@ public class PostController {
         }
         SubjectDTO subjectDTO = optionalSubjectDTO.get();
         List<PostDTO> postsDTO = postService.findByDynamicFilters(id,titleFilter, descriptionFilter);
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         model.addAttribute("posts", postsDTO);
         model.addAttribute("subject", subjectDTO);
         model.addAttribute("user", userDTO);
@@ -51,7 +55,9 @@ public class PostController {
 
     @PostMapping("/create-post")
     public String createPost(@PathVariable Long id, @ModelAttribute PostInputDTO postDTO, RedirectAttributes redirectAttributes) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         Optional<SubjectDTO> optionalSubject = subjectService.findById(id);
         if (optionalSubject.isEmpty()) {
             throw new RuntimeException("Subject not found");
@@ -68,7 +74,9 @@ public class PostController {
 
     @PostMapping("/delete-post")
     public String deletePost(@PathVariable Long id, @RequestParam("idPost") Long idPost, RedirectAttributes redirectAttributes) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         Optional<SubjectDTO> optionalSubject = subjectService.findById(id);
         if (optionalSubject.isEmpty()) {
             throw new RuntimeException("Subject not found");

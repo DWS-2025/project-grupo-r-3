@@ -8,6 +8,9 @@ import com.example.unitalk.models.User;
 import com.example.unitalk.repository.SubjectRepository;
 import com.example.unitalk.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -24,16 +27,15 @@ public class UserService {
         this.userMapper = userMapper;
         this.subjectRepository = subjectRepository;
     }
-    public UserDTO getUser() {
-        Optional<User> user = userRepository.findByUsername("defaultUser");
+    public UserDTO getUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
         if(user.isPresent()) {
             return userMapper.toDTO(user.get());
         }
         else {
-            throw new RuntimeException("User default not found");
+            throw new RuntimeException("User not found");
         }
     }
-
     public void setUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         userRepository.save(user);
@@ -45,7 +47,9 @@ public class UserService {
         return user.getSubjects().contains(subject);
     }
     public UserRestDTO getUserRestDTO() {
-        UserDTO userDTO = getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = getUser(username);
         return userMapper.toRestDTO(userDTO);
     }
 }

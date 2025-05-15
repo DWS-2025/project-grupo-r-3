@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -51,7 +53,9 @@ public class CommentRestController {
     }
     @PostMapping("/{postId}")
     public ResponseEntity<Void> createComment(@Valid @RequestParam String commentText, @RequestParam(value = "image", required = false) MultipartFile image, @PathVariable Long postId) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         Optional<PostDTO> optionalPostDTO = postService.findById(postId);
         if(optionalPostDTO.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -76,7 +80,9 @@ public class CommentRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestParam Long userId, @RequestParam Long postId) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         Optional<PostDTO> optionalPostDTO = postService.findById(postId);
         if(optionalPostDTO.isEmpty()){
             return ResponseEntity.notFound().build();

@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -57,7 +59,9 @@ public class PostRestController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(@Valid @RequestBody PostInputDTO postInputDTO, @RequestParam Long subjectId) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(subjectId);
         if (optionalSubjectDTO.isEmpty()) {
             throw new ResourceNotFoundException("Subject not found with ID: " + subjectId);
@@ -70,7 +74,9 @@ public class PostRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id, @RequestParam Long subjectId) {
-        UserDTO userDTO = userService.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
         Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(subjectId);
         if (optionalSubjectDTO.isEmpty()) {
             throw new ResourceNotFoundException("Subject not found with ID: " + subjectId);

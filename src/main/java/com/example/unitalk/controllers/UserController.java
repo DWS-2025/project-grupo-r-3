@@ -4,6 +4,8 @@ import com.example.unitalk.DTOS.UserDTO;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +20,18 @@ public class UserController {
 
     @GetMapping
     public String showUser(Model model) {
-        UserDTO userDTO = users.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
         model.addAttribute("user", userDTO);
         return "user";
     }
 
     @PostMapping("/subjects/unapply")
     public String unapplySubject(@RequestParam("id") Long id, Model model) {
-        UserDTO userDTO = users.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
         subjects.unapplySubject(userDTO, id);
 
         return "redirect:/user";
