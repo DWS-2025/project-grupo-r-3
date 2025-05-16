@@ -72,11 +72,26 @@ public class CommentRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommentRestDTO> updateComment(@PathVariable Long id, @Valid @RequestBody CommentInputDTO commentInputDTO) {
-        CommentDTO updatedComment = commentService.editComment(id, commentInputDTO);
-        CommentRestDTO comment = commentService.toRest(updatedComment);
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+public ResponseEntity<CommentRestDTO> updateComment(
+        @PathVariable Long id,
+        @Valid @RequestBody CommentInputDTO commentInputDTO,
+        @RequestParam Long postId) {
+
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String username = auth.getName();
+    UserDTO userDTO = userService.getUser(username);
+
+    Optional<PostDTO> optionalPostDTO = postService.findById(postId);
+    if(optionalPostDTO.isEmpty()){
+        return ResponseEntity.notFound().build();
     }
+    PostDTO postDTO = optionalPostDTO.get();
+
+    CommentDTO updatedComment = commentService.editComment(userDTO, id, commentInputDTO, postDTO);
+    CommentRestDTO comment = commentService.toRest(updatedComment);
+    return new ResponseEntity<>(comment, HttpStatus.OK);
+}
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestParam Long userId, @RequestParam Long postId) {

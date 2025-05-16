@@ -63,31 +63,52 @@ public class CommentService {
         return commentMapper.toDTO(savedComment);
     }
 
-    public CommentDTO editComment(Long commentId, CommentInputDTO commentInputDTO) {
-        if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {
-            throw new IllegalArgumentException("Comment text cannot be empty or null.");
-        }
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId));
-        comment.setText(commentInputDTO.text());
-        Comment updatedComment = commentRepository.save(comment);
-        return commentMapper.toDTO(updatedComment);
+    public CommentDTO editComment(UserDTO userDTO, Long commentId, CommentInputDTO commentInputDTO, PostDTO postDTO) {
+    if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {
+        throw new IllegalArgumentException("Comment text cannot be empty or null.");
     }
+    Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId));
+    User user = userRepository.findById(userDTO.id())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    Post post = postRepository.findById(postDTO.id())
+            .orElseThrow(() -> new RuntimeException("Post not found"));
+
+    boolean isAdmin = user.getRoles().contains("ADMIN");
+    boolean isAuthor = comment.getUser().getId().equals(user.getId());
+    boolean isCommentOfPost = comment.getPost().getId().equals(post.getId());
+
+    if ((!isAdmin && !isAuthor) || !isCommentOfPost) {
+        throw new RuntimeException("No tienes permisos para editar este comentario o el comentario no está asociado al post");
+    }
+
+    comment.setText(commentInputDTO.text());
+    Comment updatedComment = commentRepository.save(comment);
+    return commentMapper.toDTO(updatedComment);
+}
+
     @Transactional
-    public void deleteComment(UserDTO userDTO, Long commentId, PostDTO postDTO) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
-        User user = userRepository.findById(userDTO.id())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Post post = postRepository.findById(postDTO.id())
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-        if (!comment.getUser().getId().equals(user.getId()) || !comment.getPost().getId().equals(post.getId())) {
-            throw new RuntimeException("User not authorized to delete this comment or comment not associated with the post");
-        }
-        user.removeComment(comment);
-        post.removeComment(comment);
-        commentRepository.delete(comment);
+public void deleteComment(UserDTO userDTO, Long commentId, PostDTO postDTO) {
+    Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new RuntimeException("Comment not found"));
+    User user = userRepository.findById(userDTO.id())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    Post post = postRepository.findById(postDTO.id())
+            .orElseThrow(() -> new RuntimeException("Post not found"));
+
+    boolean isAdmin = user.getRoles().contains("ADMIN");
+    boolean isAuthor = comment.getUser().getId().equals(user.getId());
+    boolean isCommentOfPost = comment.getPost().getId().equals(post.getId());
+
+    if ((!isAdmin && !isAuthor) || !isCommentOfPost) {
+        throw new RuntimeException("No tienes permisos para borrar este comentario o el comentario no está asociado al post");
     }
+
+    user.removeComment(comment);
+    post.removeComment(comment);
+    commentRepository.delete(comment);
+}
+
     public CommentRestDTO toRest(CommentDTO commentDTO){
         return commentMapper.toRestDTO(commentDTO);
     }
