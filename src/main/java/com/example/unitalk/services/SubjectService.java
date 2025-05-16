@@ -11,6 +11,7 @@ import com.example.unitalk.mappers.SubjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,9 +46,22 @@ public class SubjectService {
     }
 
     public void applySubject(UserDTO userDTO, Long subjectId) {
+        if (userDTO == null || userDTO.id() == null) {
+            throw new IllegalArgumentException("UserDTO or user ID cannot be null");
+        }
+        if (subjectId == null) {
+            throw new IllegalArgumentException("Subject ID cannot be null");
+        }
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-        User user = userRepository.findById(userDTO.id()).get();
+                .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + subjectId));
+        User user = userRepository.findById(userDTO.id())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userDTO.id()));
+        if (subject.getUsers() == null) {
+            subject.setUsers(new ArrayList<>());
+        }
+        if (user.getSubjects() == null) {
+            user.setSubjects(new ArrayList<>());
+        }
         if (!subject.getUsers().contains(user)) {
             user.addSubject(subject);
             subject.addUser(user);
@@ -74,7 +88,24 @@ public class SubjectService {
     }
 
     public SubjectDTO createSubject(SubjectInputDTO subjectDTO) {
+        if (subjectDTO == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
         Subject subject = subjectMapper.toEntity(subjectDTO);
+        subjectRepository.save(subject);
+        List<User> adminUsers = userRepository.findAllByRolesContaining("ADMIN");
+        for (User adminUser : adminUsers) {
+            if (adminUser == null || adminUser.getId() == null) {
+                throw new IllegalStateException("Invalid admin user found");
+            }
+            try {
+                UserDTO adminUserDTO = userMapper.toDTO(adminUser);
+                applySubject(adminUserDTO, subject.getId());
+            } catch (Exception e) {
+                // Continuamos con el siguiente usuario, pero lanzaremos una excepción al final si todos fallan
+            }
+        }
+
         subjectRepository.save(subject);
         return subjectMapper.toDTO(subject);
     }
