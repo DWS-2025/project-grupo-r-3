@@ -10,6 +10,9 @@ import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@EnableMethodSecurity
 @RequestMapping("/subjects")
 public class SubjectController {
     @Autowired
@@ -43,6 +47,7 @@ public class SubjectController {
         return "redirect:/subjects";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete")
     public String deleteSubject(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         subjectService.deleteSubject(id);
@@ -50,6 +55,7 @@ public class SubjectController {
         return "redirect:/subjects";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/modify")
     public String modifySubject(@RequestParam("id") Long id, @RequestParam("newName") String newName, RedirectAttributes redirectAttributes) {
         SubjectInputDTO subjectDTO = new SubjectInputDTO(id, newName);
