@@ -37,7 +37,7 @@
             {{#isAdmin}}
             <form action="/subjects/{{subject.id}}/delete-post" method="post" class="delete-post-form">
                 <input type="hidden" name="idPost" value="{{post.id}}">
-                <button type="submit" id="delete-post-btn noselect">
+                <button type="submit" class="delete-post-btn noselect">
                     <span class="text">Delete</span>
                     <span class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

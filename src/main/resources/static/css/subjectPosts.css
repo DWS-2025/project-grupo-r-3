@@ -82,7 +82,7 @@ body {
 }
 
 /* Post delete button */
-#delete-post-btn {
+.delete-post-btn {
     font-family: 'Inter';
     width: 150px;
     height: 50px;
@@ -94,19 +94,20 @@ body {
     border-radius: 5px;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
     background: #e62222;
-   }
-   
-   #delete-post-btn, #delete-post-btn span {
+    position: relative; /* Asegura que .icon se posicione correctamente */
+}
+
+.delete-post-btn, .delete-post-btn span {
     transition: 200ms;
-   }
-   
-   #delete-post-btn .text {
+}
+
+.delete-post-btn .text {
     transform: translateX(30px);
     color: white;
     font-weight: bold;
-   }
-   
-   #delete-post-btn .icon {
+}
+
+.delete-post-btn .icon {
     position: absolute;
     border-left: 1px solid #c41b1b;
     transform: translateX(103px);
@@ -115,34 +116,34 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-   }
-   
-   #delete-post-btn svg {
+}
+
+.delete-post-btn svg {
     width: 15px;
     fill: #eee;
-   }
-   
-   #delete-post-btn:hover {
+}
+
+.delete-post-btn:hover {
     background: #ff3636;
-   }
-   
-   #delete-post-btn:hover .text {
+}
+
+.delete-post-btn:hover .text {
     color: transparent;
-   }
-   
-   #delete-post-btn:hover .icon {
+}
+
+.delete-post-btn:hover .icon {
     width: 150px;
     border-left: none;
     transform: translateX(-5px);
-   }
-   
-   #delete-post-btn:focus {
+}
+
+.delete-post-btn:focus {
     outline: none;
-   }
-   
-   #delete-post-btn:active .icon svg {
+}
+
+.delete-post-btn:active .icon svg {
     transform: scale(0.8);
-   }
+}
 
 /* Form container for delete button */
 .delete-post-form {
