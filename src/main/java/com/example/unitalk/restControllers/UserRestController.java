@@ -63,7 +63,7 @@ public class UserRestController {
         if (!userId.equals(userDTO.id())) {
             throw new ResourceNotFoundException("User ID does not match authenticated user");
         }
-        subjectService.unapplySubject(userDTO, subjectId);
+        subjectService.unapplySubject(username, subjectId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -87,7 +87,7 @@ public class PostController {
             redirectAttributes.addFlashAttribute("status", "Post deleted successfully!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("status", "Error: " + e.getMessage());
-            return "error";
+            return "redirect:/error";
         }
         return "redirect:/subjects/{id}";
     }

@@ -55,14 +55,16 @@ public class SubjectService {
         }
     }
 
-    public void unapplySubject(UserDTO userDTO, Long subjectId) {
+    public void unapplySubject(String username, Long subjectId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
-        User user = userMapper.toEntity(userDTO);
         user.removeSubject(subject);
         subject.removeUser(user);
         userRepository.save(user);
     }
+
 
     public void modifySubject(SubjectInputDTO subjectDTO) {
         Subject subject = subjectRepository.findById(subjectDTO.id())
@@ -93,9 +95,9 @@ public class SubjectService {
     public List<SubjectRestDTO> toRest(List<SubjectDTO> subjectDTOS){
         return subjectMapper.toRestDTOs(subjectDTOS);
     }
-    public List<SubjectDTO> getUserSubjects() {
-        User user = userRepository.findByUsername("defaultUser")
-                .orElseThrow(() -> new RuntimeException("Default user not found"));
+    public List<SubjectDTO> getUserSubjects(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return subjectMapper.toDTOs(user.getSubjects());
     }
 }

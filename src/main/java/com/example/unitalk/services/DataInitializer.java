@@ -54,10 +54,12 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() == 0 && subjectRepository.count() == 0 && postRepository.count() == 0) {
             System.out.println("Initializing sample data...");
 
-            User user = new User("defaultUser", passwordEncoder.encode("user"),"user@gmail.com","USER");
-            User user2 = new User("defaultUser2", passwordEncoder.encode("user2"),"user2@gmail.com","USER");
+            User user = new User("user1", passwordEncoder.encode("user"),"user@gmail.com","USER");
+            User user2 = new User("user2", passwordEncoder.encode("user2"),"user2@gmail.com","USER");
+            User user3 = new User("admin", passwordEncoder.encode("admin"),"user2@gmail.com","USER", "ADMIN");
             userRepository.save(user);
             userRepository.save(user2);
+            userRepository.save(user3);
 
 
 

@@ -82,7 +82,7 @@ public class SubjectRestController {
         if (!userDTO.id().equals(userId)) {
             throw new ResourceNotFoundException("User ID does not match authenticated user");
         }
-        List<SubjectDTO> userSubjects = subjectService.getUserSubjects();
+        List<SubjectDTO> userSubjects = subjectService.getUserSubjects(username);
         List<SubjectRestDTO> userSubjectRestDTOs = new ArrayList<>();
         for (SubjectDTO subjectDTO : userSubjects) {
             if (subjectDTO != null) {

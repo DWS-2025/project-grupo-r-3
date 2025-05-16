@@ -28,12 +28,13 @@ public class UserController {
     }
 
     @PostMapping("/subjects/unapply")
-    public String unapplySubject(@RequestParam("id") Long id, Model model) {
+    public String unapplySubject(@RequestParam("id") Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        UserDTO userDTO = users.getUser(username);
-        subjects.unapplySubject(userDTO, id);
+
+        subjects.unapplySubject(username, id);
 
         return "redirect:/user";
     }
+
 }

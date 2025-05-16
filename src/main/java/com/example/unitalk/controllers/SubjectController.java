@@ -72,7 +72,10 @@ public class SubjectController {
 
     @GetMapping("/my")
     public String userSubjects(Model model) {
-        List<SubjectDTO> userSubjects = subjectService.getUserSubjects();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = userService.getUser(username);
+        List<SubjectDTO> userSubjects = subjectService.getUserSubjects(username);
         model.addAttribute("subjects", userSubjects);
         return "userSubjects";
     }

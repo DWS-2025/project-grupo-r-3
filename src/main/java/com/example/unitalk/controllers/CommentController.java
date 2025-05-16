@@ -59,7 +59,8 @@ public class CommentController {
             model.addAttribute("post", postDTO);
             model.addAttribute("subject", subjectDTO);
         } else {
-            model.addAttribute("error", "You have not applied to this subject");
+            model.addAttribute("message", "You have not applied to this subject");
+            return "redirect:/error";
         }
 
         return "post";
