@@ -40,12 +40,10 @@ public class CommentController {
         Model model,
         Authentication authentication) {
 
-    // Obtener usuario autenticado
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String username = auth.getName();
     UserDTO userDTO = users.getUser(username);
 
-    // Buscar subject y post
     Optional<SubjectDTO> optionalSubject = subjects.findById(idSubject);
     if (optionalSubject.isEmpty()) {
         throw new RuntimeException("Subject not found");
@@ -58,12 +56,10 @@ public class CommentController {
     }
     PostDTO postDTO = optionalPost.get();
 
-    // Comprobar si el usuario está matriculado en la asignatura
     if (userDTO != null && users.isUserEnrolledInSubject(userDTO, idSubject)) {
-        // Determinar si el usuario es dueño del post
+
         boolean isOwner = userDTO.id().equals(postDTO.user().getId());
 
-        // Calcular si es admin
         boolean isAdmin = authentication != null &&
                 authentication.getAuthorities().stream()
                         .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
@@ -105,22 +101,18 @@ public String editComment(
         @RequestParam("commentId") Long commentId,
         @RequestParam("commentText") String commentText) {
 
-    // Obtener usuario autenticado
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String username = auth.getName();
     UserDTO userDTO = users.getUser(username);
 
-    // Obtener el post asociado
     Optional<PostDTO> optionalPostDTO = posts.findById(idPost);
     if (optionalPostDTO.isEmpty()) {
         throw new RuntimeException("Post not found");
     }
     PostDTO postDTO = optionalPostDTO.get();
 
-    // Crear el DTO de entrada
-    CommentInputDTO commentInputDTO = new CommentInputDTO(commentText, null, null); // No se permite editar la imagen
+    CommentInputDTO commentInputDTO = new CommentInputDTO(commentText, null, null);
 
-    // Llamar al método de servicio modificado
     comments.editComment(userDTO, commentId, commentInputDTO, postDTO);
 
     return "redirect:/subjects/{id1}/posts/{id2}";

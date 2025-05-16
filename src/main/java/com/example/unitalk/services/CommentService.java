@@ -79,7 +79,7 @@ public class CommentService {
     boolean isCommentOfPost = comment.getPost().getId().equals(post.getId());
 
     if ((!isAdmin && !isAuthor) || !isCommentOfPost) {
-        throw new RuntimeException("No tienes permisos para editar este comentario o el comentario no está asociado al post");
+        throw new RuntimeException("You do not have permission to edit this comment or the comment is not associated with the post");
     }
 
     comment.setText(commentInputDTO.text());
@@ -101,7 +101,7 @@ public void deleteComment(UserDTO userDTO, Long commentId, PostDTO postDTO) {
     boolean isCommentOfPost = comment.getPost().getId().equals(post.getId());
 
     if ((!isAdmin && !isAuthor) || !isCommentOfPost) {
-        throw new RuntimeException("No tienes permisos para borrar este comentario o el comentario no está asociado al post");
+        throw new RuntimeException("You do not have permission to edit this comment or the comment is not associated with the post");
     }
 
     user.removeComment(comment);
