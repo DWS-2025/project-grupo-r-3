@@ -32,8 +32,12 @@ public class SubjectController {
     private UserService userService;
 
     @GetMapping
-    public String showAllSubjects(Model model) {
+    public String showAllSubjects(Model model, Authentication authentication) {
         model.addAttribute("subjects", subjectService.findAll());
+        boolean isAdmin = authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
         return "subjects";
     }
 
@@ -63,7 +67,7 @@ public class SubjectController {
         redirectAttributes.addFlashAttribute("status", "Subject modified successfully!");
         return "redirect:/subjects";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public String createSubject(@RequestParam("name") String name, RedirectAttributes redirectAttributes) {
         if (name == null || name.trim().isEmpty()) {

@@ -2,7 +2,9 @@
 <link rel="stylesheet" href="/css/subjects.css">
 
 <section class="subjects-container">
+    {{#isAdmin}}
     <button class="btn add-subject-btn" onclick="openCreateSubjectModal()">+ Add</button>
+    {{/isAdmin}}
     <h1 class="title">Available Subjects</h1>
 
     <div class="subjects-list">
@@ -11,8 +13,10 @@
             <h3 class="subject-title">{{name}}</h3>
             <div class="actions">
                 <button class="btn apply" onclick="applySubject('{{id}}')">Apply</button>
+                {{#isAdmin}}
                 <button class="btn modify" onclick="openModifyModal('{{id}}', '{{name}}')">Modify</button>
                 <button class="btn delete" onclick="deleteSubject('{{id}}')">Delete</button>
+                {{/isAdmin}}
             </div>
         </div>
         {{/subjects}}

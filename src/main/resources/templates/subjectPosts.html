@@ -17,14 +17,11 @@
 
     <!-- Formulario de filtrado -->
     <div class="filter-container">
-        <form action="" method="get" class="filter-form">
-            <input type="hidden" name="id" value="{{subject.id}}">
+        <form action="/subjects/{{subject.id}}" method="get" class="filter-form">
             <label for="titleFilter">Filter by Title:</label>
             <input type="text" name="titleFilter" id="titleFilter" value="{{titleFilter}}">
-
             <label for="descriptionFilter">Filter by Description:</label>
             <input type="text" name="descriptionFilter" id="descriptionFilter" value="{{descriptionFilter}}">
-
             <button type="submit" class="btn filter-btn">Apply Filters</button>
             <button type="button" class="btn clear-btn" onclick="clearFilters()">Clear Filters</button>
         </form>
@@ -32,14 +29,15 @@
 
     <div class="posts-list">
         {{#posts}}
-        <div class="post-row" onclick="window.location.href='/subjects/{{subject.id}}/posts/{{id}}'">
+        <div class="post-row" onclick="window.location.href='/subjects/{{subject.id}}/posts/{{post.id}}'">
             <div class="post-info">
-                <a href="/subjects/{{subject.id}}/posts/{{id}}" class="post-title">{{title}}</a>
-                <span class="post-meta">By {{user.username}}</span>
+                <a href="/subjects/{{subject.id}}/posts/{{post.id}}" class="post-title">{{post.title}}</a>
+                <span class="post-meta">By {{post.user.username}}</span>
             </div>
+            {{#isAdmin}}
             <form action="/subjects/{{subject.id}}/delete-post" method="post" class="delete-post-form">
-                <input type="hidden" name="idPost" value="{{id}}">
-                <button id="delete-post-btn" class="noselect">
+                <input type="hidden" name="idPost" value="{{post.id}}">
+                <button type="submit" id="delete-post-btn noselect">
                     <span class="text">Delete</span>
                     <span class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -48,6 +46,22 @@
                     </span>
                 </button>
             </form>
+            {{/isAdmin}}
+            {{^isAdmin}}
+            {{#isOwner}}
+            <form action="/subjects/{{subject.id}}/delete-post" method="post" class="delete-post-form">
+                <input type="hidden" name="idPost" value="{{post.id}}">
+                <button type="submit" id="delete-post-btn noselect">
+                    <span class="text">Delete</span>
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </form>
+            {{/isOwner}}
+            {{/isAdmin}}
         </div>
         {{/posts}}
         {{^posts}}
@@ -60,14 +74,11 @@
     <div class="modal-content">
         <span class="close" onclick="closeCreatePostModal()">×</span>
         <h2>Create New Post</h2>
-        <form id="createPostForm" action="/subjects/{{id}}/create-post" method="post">
-            <input type="hidden" name="subjectId" value="{{subject.id}}">
+        <form id="createPostForm" action="/subjects/{{subject.id}}/create-post" method="post">
             <label for="postTitle">Post Title:</label>
             <input type="text" name="title" id="postTitle" required>
-
             <label for="postDescription">Description:</label>
             <textarea name="description" id="postDescription" required></textarea>
-
             <div class="modal-actions">
                 <button type="submit" class="btn save">Create</button>
                 <button type="button" class="btn cancel" onclick="closeCreatePostModal()">Cancel</button>

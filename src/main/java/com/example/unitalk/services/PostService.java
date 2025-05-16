@@ -59,15 +59,19 @@ public class PostService {
         return postMapper.toDTO(post);
     }
 
-    public void deletePost(UserDTO userDTO, SubjectDTO subjectDTO, Long postId) {
+    public void deletePost(String username, SubjectDTO subjectDTO, Long postId) {
         Subject subject = subjectRepository.findById(subjectDTO.id())
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
-        User user = userMapper.toEntity(userDTO);
-        if (!user.getSubjects().contains(subject) || !post.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("User not authorized to delete this post");
+        User user = userRepository.findByUsername(username).get();
+        boolean isAdmin = user.getRoles().contains("ADMIN");
+        boolean isAuthor = post.getUser().getId().equals(user.getId());
+
+        if (!isAdmin && !isAuthor) {
+            throw new RuntimeException("No tienes permisos para borrar este post");
         }
+
         user.removePost(post);
         subject.removePost(post);
         post.getComments().clear();

@@ -76,13 +76,12 @@ public class PostRestController {
     public ResponseEntity<Void> deletePost(@PathVariable Long id, @RequestParam Long subjectId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        UserDTO userDTO = userService.getUser(username);
         Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(subjectId);
         if (optionalSubjectDTO.isEmpty()) {
             throw new ResourceNotFoundException("Subject not found with ID: " + subjectId);
         }
         SubjectDTO subjectDTO = optionalSubjectDTO.get();
-        postService.deletePost(userDTO, subjectDTO, id);
+        postService.deletePost(username, subjectDTO, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

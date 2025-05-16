@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@EnableMethodSecurity
 @RequestMapping("/api/subjects")
 public class SubjectRestController {
 
@@ -47,14 +50,14 @@ public class SubjectRestController {
         SubjectRestDTO subjectRestDTO = subjectService.toRest(subjectDTO);
         return new ResponseEntity<>(subjectRestDTO, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Void> createSubject(@Valid @RequestBody SubjectInputDTO subjectInputDTO) {
         SubjectDTO createdSubject = subjectService.createSubject(subjectInputDTO);
         URI location = URI.create("/api/subjects/" + createdSubject.id());
         return ResponseEntity.created(location).build();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<SubjectRestDTO> updateSubject(@PathVariable Long id, @Valid @RequestBody SubjectInputDTO subjectInputDTO) {
         SubjectInputDTO modificado = new SubjectInputDTO(id,subjectInputDTO.name());
@@ -67,7 +70,7 @@ public class SubjectRestController {
         SubjectRestDTO subjectRestDTO = subjectService.toRest(subjectDTO);
         return new ResponseEntity<>(subjectRestDTO, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
         subjectService.deleteSubject(id);
