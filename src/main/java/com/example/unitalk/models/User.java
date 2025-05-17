@@ -39,7 +39,6 @@ public class User {
 
     }
 
-    //Subjects Handling
     public void addSubject(Subject s) {
         subjects.add(s);
     }
@@ -56,7 +55,6 @@ public class User {
         subjects.remove(s);
     }
 
-    //Comments handling
     public void addComment(Comment c) {
         comments.add(c);
     }
@@ -72,7 +70,6 @@ public class User {
     public void removeComment(Comment c) {
         comments.remove(c);
     }
-    //Posts handling
 
     public List<Post> getPosts() {
         return posts;
@@ -90,7 +87,6 @@ public class User {
         this.posts = posts;
     }
 
-    //Getters and Setters
     public String getUsername() {
         return username;
     }

@@ -53,12 +53,11 @@ public class PostController {
             postMaps.add(postMap);
         }
 
-        // Calcular isAdmin
         boolean isAdmin = authentication != null &&
                 authentication.getAuthorities().stream()
                         .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 
-        model.addAttribute("posts", postMaps); // Usar postMaps en lugar de postsDTO
+        model.addAttribute("posts", postMaps);
         model.addAttribute("subject", subjectDTO);
         model.addAttribute("user", userDTO);
         model.addAttribute("titleFilter", titleFilter != null ? titleFilter : "");

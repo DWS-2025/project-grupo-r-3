@@ -69,7 +69,7 @@ public class PostService {
         boolean isAuthor = post.getUser().getId().equals(user.getId());
 
         if (!isAdmin && !isAuthor) {
-            throw new RuntimeException("No tienes permisos para borrar este post");
+            throw new RuntimeException("You are not authorized to delete this post");
         }
 
         user.removePost(post);

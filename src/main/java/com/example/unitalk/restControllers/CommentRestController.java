@@ -111,7 +111,7 @@ public ResponseEntity<CommentRestDTO> updateComment(
         return commentService.findById(id)
                 .filter(commentDTO -> commentDTO.imageData() != null)
                 .map(commentDTO -> ResponseEntity.ok()
-                        .header("Content-Type", "image/jpeg") // Ajusta según el tipo de imagen (puede ser "image/png", etc.)
+                        .header("Content-Type", "image/jpeg")
                         .body(commentDTO.imageData()))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
