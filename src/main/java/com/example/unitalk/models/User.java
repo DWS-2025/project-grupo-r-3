@@ -108,9 +108,14 @@ public class User {
     }
 
     public void setEmail(String email) {
+        if (email != null && !email.isEmpty()) {
+            String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+            if (!email.matches(emailRegex)) {
+                throw new IllegalArgumentException("Invalid email format: " + email);
+            }
+        }
         this.email = email;
     }
-
     public void setSubjects(ArrayList<Subject> subjects) {
         this.subjects = subjects;
     }

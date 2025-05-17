@@ -8,14 +8,21 @@ import com.example.unitalk.models.User;
 import com.example.unitalk.repository.SubjectRepository;
 import com.example.unitalk.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+
+
+    @Autowired
+    public RepositoryUserDetailsService userDetailService;
 
     private final UserRepository userRepository;
     private UserMapper userMapper;
@@ -26,6 +33,11 @@ public class UserService {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.subjectRepository = subjectRepository;
+    }
+
+    public List<UserDTO> getAllUsers(){
+        List<User> users= userRepository.findAll();
+        return userMapper.toDTO(users);
     }
     public UserDTO getUser(String username) {
         Optional<User> user = userRepository.findByUsername(username);
@@ -60,9 +72,22 @@ public class UserService {
     public UserDTO modifyUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.id())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        String originalUsername = user.getUsername();
         user.setUsername(userDTO.username());
         user.setEmail(userDTO.email());
         userRepository.save(user);
-        return userDTO;
-    } 
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && !userDTO.username().equals(originalUsername)) {
+            UserDetails newUserDetails = userDetailService.loadUserByUsername(userDTO.username());
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    newUserDetails,
+                    auth.getCredentials(),
+                    auth.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
+        return userMapper.toDTO(user);
+    }
+
 }

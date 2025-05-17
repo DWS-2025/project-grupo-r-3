@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDTO toDTO(User user);
+    List<UserDTO> toDTO(List<User> users);
     User toEntity(UserDTO userDTO);
 
     @Mapping(target = "subjectIds", source = "subjects", qualifiedByName = "mapSubjectsToIds")
