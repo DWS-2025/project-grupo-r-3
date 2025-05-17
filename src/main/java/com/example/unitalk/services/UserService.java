@@ -36,6 +36,11 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
     }
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+    }
     public void setUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         userRepository.save(user);
@@ -52,4 +57,14 @@ public class UserService {
         UserDTO userDTO = getUser(username);
         return userMapper.toRestDTO(userDTO);
     }
+    public UserDTO modifyUser(UserDTO userDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String u = auth.getName();
+        User user = userRepository.findByUsername(u)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUsername(userDTO.username());
+        user.setEmail(userDTO.email());
+        userRepository.save(user);
+        return userDTO;
+    } 
 }

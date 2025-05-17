@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -37,4 +38,19 @@ public class UserController {
         return "redirect:/user";
     }
 
+    @PostMapping("/delete")
+    public String deleteCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        users.deleteUser(username);
+        return "redirect:/logout";
+    }
+    
+    @PostMapping("/set")
+    public String setUser(@RequestParam(value = "username", required = false) String username,
+                          @RequestParam(value = "email", required = false) String email) {
+        UserDTO userDTO = new UserDTO(null, username, email, null, null, null);
+        users.modifyUser(userDTO);
+        return "redirect:/user";
+    }
 }
