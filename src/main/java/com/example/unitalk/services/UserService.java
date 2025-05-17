@@ -58,9 +58,7 @@ public class UserService {
         return userMapper.toRestDTO(userDTO);
     }
     public UserDTO modifyUser(UserDTO userDTO) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String u = auth.getName();
-        User user = userRepository.findByUsername(u)
+        User user = userRepository.findById(userDTO.id())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setUsername(userDTO.username());
         user.setEmail(userDTO.email());

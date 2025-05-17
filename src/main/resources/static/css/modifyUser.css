@@ -1,0 +1,58 @@
+.user-edit-form {
+  max-width: 360px;
+  margin: 32px auto;
+  padding: 28px 24px 24px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-edit-form label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #007BFF;
+  letter-spacing: 0.01em;
+}
+
+.user-edit-form input {
+  padding: 9px 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1.05em;
+  transition: border 0.2s;
+  background: #f9fafd;
+  color: #222;
+}
+
+.user-edit-form input:focus {
+  border: 1.5px solid #007BFF;
+  outline: none;
+  background: #fff;
+}
+
+.btn.submit-btn {
+  margin-top: 10px;
+  background: #007BFF;
+  color: #fff;
+  border: none;
+  padding: 11px 0;
+  border-radius: 6px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,123,255,0.07);
+  transition: background 0.2s;
+}
+
+.btn.submit-btn:hover {
+  background: #0056b3;
+}
