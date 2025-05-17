@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private UserMapper userMapper;
     private SubjectRepository subjectRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper, SubjectRepository subjectRepository) {
@@ -74,6 +76,10 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String originalUsername = user.getUsername();
         user.setUsername(userDTO.username());
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if (!userDTO.email().matches(emailRegex)) {
+            throw new IllegalArgumentException("Invalid email format: " + userDTO.email());
+        }
         user.setEmail(userDTO.email());
         userRepository.save(user);
 
@@ -88,6 +94,29 @@ public class UserService {
             SecurityContextHolder.getContext().setAuthentication(newAuth);
         }
         return userMapper.toDTO(user);
+    }
+    public UserDTO newUser(String username, String email, String password) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("Username already exists: " + username);
+        }
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already exists: " + email);
+        }
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if (!email.matches(emailRegex)) {
+            throw new IllegalArgumentException("Invalid email format: " + email);
+        }
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(encodedPassword);
+        user.setRoles(List.of("USER"));
+        User savedUser = userRepository.save(user);
+        return userMapper.toDTO(savedUser);
     }
 
 }

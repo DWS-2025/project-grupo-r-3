@@ -5,20 +5,23 @@
     <title>Login</title>
 </head>
 <body>
-    {{>header}}
-    <div class="login-container">
-        <h2>Login</h2>
-        <form class="login-form" action="/login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <input type="submit" value="Login" class="btn apply">
-        </form>
-        {{#message}}
-        <div class="login-message">{{message}}</div>
-        {{/message}}
+{{>header}}
+<div class="login-container">
+    <h2>Login</h2>
+    <form class="login-form" action="/login" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <input type="submit" value="Login" class="btn apply">
+    </form>
+    {{#message}}
+    <div class="login-message">{{message}}</div>
+    {{/message}}
+    <div class="signup-link">
+        <p>New user? <a href="/login/signup">Sign up here</a></p>
     </div>
-    {{>footer}}
+</div>
+{{>footer}}
 </body>
 </html>

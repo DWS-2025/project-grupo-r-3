@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/error").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/login/signup").permitAll()
 // PRIVATE PAGES
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin

@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 body {
-  font-family: 'Inter', Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.login-container {
+.signup-container {
     margin: 40px auto;
     background: #fff;
     border-radius: 12px;
@@ -25,7 +25,7 @@ body {
     align-items: center;
 }
 
-.login-container h2 {
+.signup-container h2 {
     color: #0044cc;
     margin-bottom: 20px;
     font-size: 2em;
@@ -33,22 +33,23 @@ body {
     letter-spacing: 0.01em;
 }
 
-.login-form {
+.signup-form {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.login-form label {
+.signup-form label {
     font-size: 1em;
     color: #333;
     margin-bottom: 6px;
     font-weight: 500;
 }
 
-.login-form input[type="text"],
-.login-form input[type="password"] {
+.signup-form input[type="text"],
+.signup-form input[type="email"],
+.signup-form input[type="password"] {
     padding: 11px 14px;
     border-radius: 7px;
     border: 1.2px solid #ccd6f6;
@@ -58,8 +59,9 @@ body {
     outline: none;
 }
 
-.login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus {
+.signup-form input[type="text"]:focus,
+.signup-form input[type="email"]:focus,
+.signup-form input[type="password"]:focus {
     border: 1.5px solid #0044cc;
     background: #fff;
 }
@@ -85,7 +87,7 @@ body {
     background: #0033aa;
 }
 
-.login-message {
+.signup-message {
     margin-top: 15px;
     color: #e53935;
     background: #fff3f3;
@@ -96,12 +98,6 @@ body {
     text-align: center;
 }
 
-@media (max-width: 500px) {
-  .login-container {
-    padding: 20px 6px;
-    max-width: 96vw;
-  }
-}
 .login-link {
     margin-top: 20px;
     text-align: center;
@@ -117,4 +113,11 @@ body {
 
 .login-link a:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 500px) {
+    .signup-container {
+        padding: 20px 6px;
+        max-width: 96vw;
+    }
 }
