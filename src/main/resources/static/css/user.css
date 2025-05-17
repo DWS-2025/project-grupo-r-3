@@ -1,124 +1,203 @@
+:root {
+    --primary: #007BFF;
+    --danger: #cc0000;
+    --danger-dark: #a00000;
+    --background: #f7f9fb;
+    --card-bg: #fff;
+    --text-main: #222;
+    --text-secondary: #555;
+    --border-radius: 14px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--background);
+    color: var(--text-main);
     margin: 0;
     padding: 0;
+    letter-spacing: 0.01em;
 }
-
 
 .profile-container {
-    width: 80%;
-    margin: 40px auto;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    max-width: 600px;
+    margin: 48px auto;
+    background: var(--card-bg);
+    padding: 32px 24px 24px 24px;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
-
 
 .profile-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+    gap: 32px;
+    border-bottom: 1.5px solid #eaeaea;
+    padding-bottom: 18px;
 }
 
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
 .profile-info h1 {
-    font-size: 2em;
-    margin-bottom: 5px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
 }
 
 .profile-info p {
-    font-size: 1.2em;
-    color: #555;
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin: 0 0 0.2em 0;
 }
 
+.edit-label {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    opacity: 0.7;
+}
+.edit-label:hover {
+    opacity: 1;
+}
+.edit-label .icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    fill: var(--primary);
+}
 
 .profile-image img {
-    width: 100px;
-    height: 100px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
-    border: 3px solid #007BFF;
+    border: 2.5px solid var(--primary);
     object-fit: cover;
+    background: #e6e6e6;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
 }
 
+.account-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+}
+
+.btn.delete-account {
+    background: var(--danger);
+    color: #fff;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: background 0.2s;
+    box-shadow: 0 1px 4px rgba(204,0,0,0.07);
+}
+.btn.delete-account:hover {
+    background: var(--danger-dark);
+}
+
+h2 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
 
 .subjects-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
+    gap: 18px;
+    justify-content: flex-start;
 }
-
 
 .subject-card {
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background: var(--background);
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.03);
     text-align: center;
-    width: 250px;
+    width: 220px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; 
-    min-height: 180px; 
+    justify-content: space-between;
+    transition: box-shadow 0.2s;
+}
+.subject-card:hover {
+    box-shadow: 0 4px 16px rgba(0,123,255,0.09);
 }
 
-
 .subject-card h3 {
-    font-size: 1.2em;
+    font-size: 1.1rem;
     color: #2c3e50;
-    flex-grow: 1; 
+    margin: 0 0 12px 0;
+    flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
 }
 
-
 .btn.unenroll {
-    background: #cc0000;
-    color: white;
-    padding: 10px;
-    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    padding: 8px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background 0.2s;
 }
-
 .btn.unenroll:hover {
-    background: #a00000;
+    background: #0056b3;
 }
-
 
 .no-subjects {
     text-align: center;
-    font-size: 1.2em;
-    color: #666;
+    font-size: 1.1em;
+    color: #888;
     margin-top: 20px;
+    width: 100%;
 }
 
-
 @media (max-width: 768px) {
+    .profile-container {
+        padding: 16px 6px;
+    }
     .profile-header {
         flex-direction: column;
+        gap: 18px;
         text-align: center;
-        gap: 15px;
     }
-
     .profile-image img {
-        width: 80px;
-        height: 80px;
+        width: 72px;
+        height: 72px;
     }
-
     .subjects-list {
         flex-direction: column;
         align-items: center;
+    }
+    .subject-card {
+        width: 95%;
     }
 }
