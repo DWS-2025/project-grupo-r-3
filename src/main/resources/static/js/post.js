@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
+    const quill = new Quill('#editor-container', {
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'],
+                ['link', 'image'],
+                ['clean']
+            ]
+        },
+        theme: 'snow'
+    });
+
+    
     const commentsList = document.getElementById("comments-list");
     const loadMoreBtn = document.getElementById("loadMoreBtn");
     const spinner = document.getElementById("spinner");
@@ -7,116 +20,87 @@ document.addEventListener("DOMContentLoaded", function () {
     const postId = commentsList.dataset.postId;
     const subjectId = commentsList.dataset.subjectId;
 
-    console.log("postId:", postId, "subjectId:", subjectId);
-
+    
     function loadMoreComments() {
-        if (!postId) {
-            console.error("postId is not available");
-            return;
-        }
+        if (!postId) return;
 
         spinner.style.display = "block";
         loadMoreBtn.style.display = "none";
 
-        fetch(`/api/comments?postId=${postId}&page=${currentPage}&size=${batchSize}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok: " + response.statusText);
-                }
-                return response.json();
-            })
+        fetch(`/api/comments?postId=${postId}&page=${currentPage}&size=${batchSize}`)
+            .then(response => response.json())
             .then(data => {
-                console.log("Response data:", data);
-
-                if (data.content && data.content.length > 0) {
+                if (data.content?.length) {
                     data.content.forEach(comment => {
-                        const commentElement = createCommentElement(comment);
-                        commentsList.appendChild(commentElement);
+                        commentsList.appendChild(createCommentElement(comment));
                     });
-
                     currentPage++;
-
-                    if (data.content.length === batchSize) {
-                        loadMoreBtn.style.display = "inline-block";
-                    } else {
-                        loadMoreBtn.style.display = "none";
-                    }
-                } else {
-                    console.log("No more content or empty response");
-                    loadMoreBtn.style.display = "none";
+                    loadMoreBtn.style.display = data.content.length === batchSize ? "inline-block" : "none";
                 }
-
                 spinner.style.display = "none";
             })
             .catch(error => {
                 console.error("Error loading comments:", error);
                 spinner.style.display = "none";
-                loadMoreBtn.style.display = "inline-block";
             });
     }
 
+    
     function createCommentElement(comment) {
         const commentDiv = document.createElement("div");
         commentDiv.className = "comment";
         commentDiv.id = `comment-${comment.id}`;
 
-        const text = comment.text ? comment.text.replace(/'/g, "\\'").replace(/"/g, '\\"') : '';
+        const text = comment.text?.replace(/"/g, '\\"') || '';
         const imageSrc = comment.id ? `/api/comments/${comment.id}/image` : '';
 
         commentDiv.innerHTML = `
             <div class="comment-header">
                 <p class="comment-meta"><strong>Loading...</strong></p>
                 <div class="comment-actions">
-                    <span class="edit-icon" onclick="openEditCommentModal('${comment.id}', '${text}')">🖊️</span>
-                    <span class="delete-icon" onclick="deleteComment('${subjectId}', '${postId}', '${comment.id}')">❌</span>
+                    <span class="edit-icon" onclick="openEditCommentModal('${comment.id}', '${text}')">\u{1F58A}</span>
+                    <span class="delete-icon" onclick="deleteComment('${subjectId}', '${postId}', '${comment.id}')">\u{274C}</span>
                 </div>
             </div>
-            <p class="comment-text">${text}</p>
+            <div class="comment-text">${text}</div>
             ${imageSrc ? `<img src="${imageSrc}" alt="" class="comment-image">` : ''}
         `;
 
-        fetch('/api/users/current', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch current user: ' + response.statusText);
-                }
-                return response.json();
-            })
+        
+        fetch('/api/users/current')
+            .then(response => response.json())
             .then(user => {
-                const username = user.username || 'Unknown';
-                commentDiv.querySelector('.comment-meta strong').textContent = username;
+                commentDiv.querySelector('.comment-meta strong').textContent = user.username || 'Unknown';
             })
-            .catch(error => {
-                console.error('Error fetching current user:', error);
-                commentDiv.querySelector('.comment-meta strong').textContent = 'Unknown';
-            });
+            .catch(console.error);
 
         return commentDiv;
     }
 
-    loadMoreComments();
-
-    if (loadMoreBtn) {
-        loadMoreBtn.addEventListener("click", loadMoreComments);
-    }
-
+    
+    let editQuill = null;
     const editModal = document.getElementById("editCommentModal");
     const editCommentId = document.getElementById("editCommentId");
-    const editCommentText = document.getElementById("editCommentText");
 
     window.openEditCommentModal = function (id, text) {
         editCommentId.value = id;
-        editCommentText.value = text;
+
+        
+        if (editQuill) editQuill.destroy();
+
+        
+        editQuill = new Quill('#edit-editor-container', {
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            },
+            theme: 'snow'
+        });
+
+        editQuill.root.innerHTML = text;
         editModal.style.display = "flex";
     };
 
@@ -124,54 +108,33 @@ document.addEventListener("DOMContentLoaded", function () {
         editModal.style.display = "none";
     };
 
+    
+    document.querySelector('form').onsubmit = function() {
+        document.querySelector('#hidden-comment-input').value = quill.root.innerHTML;
+    };
+
+    document.getElementById('editCommentForm').onsubmit = function() {
+        document.querySelector('#hidden-edit-comment-input').value = editQuill.root.innerHTML;
+    };
+
+    
+    loadMoreComments();
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener("click", loadMoreComments);
+    }
+
+    
     window.deleteComment = function (subjectId, postId, commentId) {
         fetch(`/subjects/${subjectId}/posts/${postId}/delete-comment`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: `commentId=${commentId}`,
-        })
-            .then(response => {
-                if (response.ok) {
-                    const commentEl = document.getElementById(`comment-${commentId}`);
-                    if (commentEl) commentEl.remove();
-                } else {
-                    console.error("Error deleting comment, reloading page.");
-                    location.reload();
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: `commentId=${commentId}`
+        }).then(response => {
+            if (response.ok) {
+                document.getElementById(`comment-${commentId}`)?.remove();
+            } else {
                 location.reload();
-            });
+            }
+        }).catch(() => location.reload());
     };
-
-    const commentForm = document.querySelector("form[action$='/comment']");
-    if (commentForm) {
-        commentForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-
-            fetch(this.action, {
-                method: "POST",
-                body: formData,
-            })
-                .then(response => response.text())
-                .then(() => {
-                    currentPage = 0;
-                    commentsList.innerHTML = '';
-                    loadMoreComments();
-
-
-                    const commentInput = commentForm.querySelector("textarea, input[type='text']");
-                    const imageInput = commentForm.querySelector("input[type='file']");
-                    if (commentInput) commentInput.value = '';
-                    if (imageInput) imageInput.value = '';
-                })
-                .catch(error => {
-                    console.error("Error posting comment:", error);
-                });
-        });
-    }
 });
