@@ -22,6 +22,12 @@ UniTalk is a web platform specifically designed for university students, creatin
 - **Dependency Management**: Maven
 - **Version Control**: Git, GitHub
 
+## 🏷️ Entities
+- User
+- Subject
+- Post
+- Comment
+
 ## 🫂 Relations
 
 - User - Subject: **N:M**
@@ -29,6 +35,17 @@ UniTalk is a web platform specifically designed for university students, creatin
 - User - Comment: **1:N**
 - Subject - Post: **1:N**
 - Post - Comment: **1:N**
+
+## 🪪 User Permissions
+- Anon: They will not be able to access any content on the website; they will only be able to log in or register.
+- User: They will be able to access all available subjects, create posts, and edit or delete posts they have previously created, as well as view posts from other users. Additionally, they can view comments from other users and add their own comments, but they can only delete and edit comments they have made themselves.
+- Admin: They will be able to see all the subjects, posts, comments, and users, as well as delete or edit them.
+
+## 🖼️ Image
+- Users will can upload image in a comment.
+
+## 🗺️ Diagram
+![Entity-Relation Diagram](/src/main/resources/static/images/diagram.png)
 
 ## 📁 Structure
 
@@ -76,5 +93,9 @@ project-grupo-r-3/
 
 ## 👨‍💻 Collaborators
 
-- **Ignacio Díez Chacón** - [GitHub](https://github.com/netzus1)
-- **Pablo Bardón Alonso** - [GitHub](https://github.com/p4b4al)
+- **Ignacio Díez Chacón** (i.diez.2022@alumnos.urjc.es) - [GitHub](https://github.com/netzus1)
+### Most important commits
+- **Pablo Bardón Alonso** (p.bardon.2022@alumnos.urjc.es) - [GitHub](https://github.com/p4b4al)
+### Most important commits
+  - [API Rest Created](https://github.com/DWS-2025/project-grupo-r-3/commit/cdc7e4cadf03c98dfdfb42a20365eb41fdf985c0)
+  - 
