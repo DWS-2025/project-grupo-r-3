@@ -40,7 +40,7 @@ public class UserRestController {
         Map<String, Object> userData = new HashMap<>();
         userData.put("id", userDTO.id());
         userData.put("username", userDTO.username());
-        // Determinar si es admin basado en los roles
+        
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
         userData.put("isAdmin", isAdmin);
