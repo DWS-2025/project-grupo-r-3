@@ -101,6 +101,12 @@ project-grupo-r-3/
   - [Fully functional DTOS and web](https://github.com/DWS-2025/project-grupo-r-3/commit/fcd8cd1683bb9a8b15fcbc84bf8e69557b26930d)
   - [Fully functional api rest and web](https://github.com/DWS-2025/project-grupo-r-3/commit/98e80b14a80a9bd284ad33d7e1227c36d0344c76)
   - [Implemented local file storage and comment restrictions for users](https://github.com/DWS-2025/project-grupo-r-3/commit/21844c63744f11fff73fcab5c8aa1f68f850a02d)
+### Most edited files
+  - SubjectService.java
+  - SubjectController.java
+  - PostService.java
+  - UserService.java
+  - CommentService.java
   
 - **Pablo Bardón Alonso** (p.bardon.2022@alumnos.urjc.es) - [GitHub](https://github.com/p4b4al)
 - Bug fixes and errors, REST API, user permissions, README
@@ -110,3 +116,9 @@ project-grupo-r-3/
   - [Fix: Solved infinite redirect loop and correctly implemented the login page.](https://github.com/DWS-2025/project-grupo-r-3/commit/e26c955ae696fd6ff9f74588131bdbac11f069f4)
   - [Fixed bug: now when you delete a post, comments are also being deleted from the post and the user](https://github.com/DWS-2025/project-grupo-r-3/commit/c9c296fb430b0ecf7e7e9ebb890e4d5774f70ef3)
   - [Comment user permisions](https://github.com/DWS-2025/project-grupo-r-3/commit/8614af72af8a5e992f8ce95f20352f54b43fea34)
+### Most edited files
+  - UserService.java
+  - subjectPosts.html
+  - CommentRestController.java
+  - user.html
+  - header.html
