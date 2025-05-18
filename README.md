@@ -94,7 +94,14 @@ project-grupo-r-3/
 ## 👨‍💻 Collaborators
 
 - **Ignacio Díez Chacón** (i.diez.2022@alumnos.urjc.es) - [GitHub](https://github.com/netzus1)
+- Bug and error fixes, vulnerabilities, database, error pages, user authentication
 ### Most important commits
+  - [Nearly fully migrated to DB](https://github.com/DWS-2025/project-grupo-r-3/commit/f8668430a848d74fd9310c6875a9a5b53f5d6b5d)
+  - [Major improvements: Various bug fix and added Files html (not functional yet)](https://github.com/DWS-2025/project-grupo-r-3/commit/0acb48114141a550f369e060ec41f3e05b4e9ce9)
+  - [Fully functional DTOS and web](https://github.com/DWS-2025/project-grupo-r-3/commit/fcd8cd1683bb9a8b15fcbc84bf8e69557b26930d)
+  - [Fully functional api rest and web](https://github.com/DWS-2025/project-grupo-r-3/commit/98e80b14a80a9bd284ad33d7e1227c36d0344c76)
+  - [Implemented local file storage and comment restrictions for users](https://github.com/DWS-2025/project-grupo-r-3/commit/21844c63744f11fff73fcab5c8aa1f68f850a02d)
+  
 - **Pablo Bardón Alonso** (p.bardon.2022@alumnos.urjc.es) - [GitHub](https://github.com/p4b4al)
 - Bug fixes and errors, REST API, user permissions, README
 ### Most important commits
