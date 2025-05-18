@@ -101,6 +101,11 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/error").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/login/signup").permitAll()
+// REST API
+        // SUBJECTS
+                        .requestMatchers(HttpMethod.POST, "/api/subjects/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/subjects/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
 // PRIVATE PAGES
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
