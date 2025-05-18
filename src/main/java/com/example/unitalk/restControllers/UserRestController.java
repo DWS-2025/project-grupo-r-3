@@ -82,4 +82,41 @@ public class UserRestController {
         subjectService.unapplySubject(username, subjectId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Object> deleteUser(Authentication authentication, jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) {
+        try {
+            if (authentication == null) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
+                errorResponse.put("message", "User not authenticated");
+                errorResponse.put("timestamp", java.time.LocalDateTime.now());
+                return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+            }
+            String username = authentication.getName();
+            UserDTO userDTO = userService.getUser(username);
+            if (userDTO != null) {
+                userService.deleteUser(userDTO.username());
+                new org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler().logout(request, response, authentication);
+                Map<String, Object> successResponse = new HashMap<>();
+                successResponse.put("status", HttpStatus.OK.value());
+                successResponse.put("message", "Your profile has been deleted");
+                successResponse.put("timestamp", java.time.LocalDateTime.now());
+                return new ResponseEntity<>(successResponse, HttpStatus.OK);
+            } else {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+                errorResponse.put("message", "User not found");
+                errorResponse.put("timestamp", java.time.LocalDateTime.now());
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("message", "An error occurred while deleting the user");
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
