@@ -74,7 +74,9 @@ public class PostService {
         if (!isAdmin && !isAuthor) {
             throw new RuntimeException("You are not authorized to delete this post");
         }
-
+        if(!subject.getPosts().contains(post)){
+            throw new RuntimeException("The post is not in the subject specified");
+        }
         user.removePost(post);
         subject.removePost(post);
         post.getComments().clear();

@@ -94,7 +94,7 @@ public ResponseEntity<CommentRestDTO> updateComment(
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestParam Long userId, @RequestParam Long postId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestParam Long postId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         UserDTO userDTO = userService.getUser(username);
