@@ -11,7 +11,8 @@ import com.example.unitalk.repository.UserRepository;
 import com.example.unitalk.mappers.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,8 @@ public class PostService {
         Post post = postMapper.toEntity(postDTO);
         post.setUser(user);
         post.setSubject(subject);
+        post.setTitle(Jsoup.clean(post.getTitle(), Safelist.basic()));
+        post.setDescription(Jsoup.clean(post.getDescription(), Safelist.basic()));
         user.addPost(post);
         subject.addPost(post);
         postRepository.save(post);
@@ -81,13 +84,6 @@ public class PostService {
         subject.removePost(post);
         post.getComments().clear();
         postRepository.delete(post);
-    }
-
-    public void deletePostComments(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-        post.getComments().clear();
-        postRepository.save(post);
     }
     public PostRestDTO toRest(PostDTO postDTO){
         return postMapper.toRestDTO(postDTO);

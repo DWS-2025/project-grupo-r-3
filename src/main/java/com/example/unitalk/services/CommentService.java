@@ -17,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -59,6 +60,7 @@ public class CommentService {
             throw new IllegalArgumentException("Comment cannot be empty.");
         }
         Comment comment = commentMapper.toEntity(commentInputDTO);
+        comment.setText(Jsoup.clean(comment.getText(), Safelist.basic()));
         User user = userMapper.toEntity(userDTO);
         Post post = postMapper.toEntity(postDTO);
         comment.setUser(user);
@@ -97,8 +99,7 @@ public class CommentService {
     if ((!isAdmin && !isAuthor) || !isCommentOfPost) {
         throw new RuntimeException("You do not have permission to edit this comment or the comment is not associated with the post");
     }
-
-    comment.setText(commentInputDTO.text());
+    comment.setText(Jsoup.clean(commentInputDTO.text(), Safelist.basic()));
     Comment updatedComment = commentRepository.save(comment);
     return commentMapper.toDTO(updatedComment);
 }
