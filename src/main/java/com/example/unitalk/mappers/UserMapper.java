@@ -20,7 +20,7 @@ public interface UserMapper {
     @Mapping(target = "commentIds", source = "comments", qualifiedByName = "mapCommentsToIds")
     @Mapping(target = "postIds", source = "posts", qualifiedByName = "mapPostsToIds")
     UserRestDTO toRestDTO(UserDTO userDTO);
-
+    List<UserRestDTO> toRestDTO(List<UserDTO> userDTO);
     @Named("mapSubjectsToIds")
     default List<Long> mapSubjectsToIds(List<Subject> subjects) {
         if (subjects == null) {
