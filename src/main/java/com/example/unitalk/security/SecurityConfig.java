@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -45,7 +46,7 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/loginerror")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -53,8 +54,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                         .permitAll()
                 );
-            // Disable CSRF at the moment
-        http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 }

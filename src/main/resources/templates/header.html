@@ -19,8 +19,24 @@
                 <li><a href="/subjects">Subjects</a></li>
                 <li><a href="/subjects/my">Forum</a></li>
                 <li><a href="/user">Profile</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li>  <a href="#" onclick="logout()">Logout</a></li>
             </ul>
         </nav>
     </div>
+    <script>
+        function logout() {
+            const token = "{{token}}";
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/logout';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = '_csrf';
+            input.value = token;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+
 </header>

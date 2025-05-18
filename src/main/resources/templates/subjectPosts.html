@@ -23,6 +23,7 @@
             <input type="text" name="descriptionFilter" id="descriptionFilter" value="{{descriptionFilter}}">
             <button type="submit" class="btn filter-btn">Apply Filters</button>
             <button type="button" class="btn clear-btn" onclick="clearFilters()">Clear Filters</button>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
     </div>
 
@@ -44,6 +45,7 @@
                         </svg>
                     </span>
                 </button>
+                <input type="hidden" name="_csrf" value="{{token}}"/>
             </form>
             {{/isAdmin}}
             {{^isAdmin}}
@@ -58,6 +60,7 @@
                         </svg>
                     </span>
                 </button>
+                <input type="hidden" name="_csrf" value="{{token}}"/>
             </form>
             {{/isOwner}}
             {{/isAdmin}}
@@ -82,6 +85,7 @@
                 <button type="submit" class="btn save">Create</button>
                 <button type="button" class="btn cancel" onclick="closeCreatePostModal()">Cancel</button>
             </div>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
     </div>
 </div>

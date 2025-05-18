@@ -39,6 +39,7 @@
     <div class="account-actions">
         <form action="/user/delete" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
             <button type="submit" class="btn delete-account">Delete Account</button>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
     </div>
 
@@ -48,6 +49,7 @@
         <div class="subject-card">
             <h3>{{name}}</h3>
             <form action="/user/subjects/unapply" method="post">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn unenroll">Unenroll</button>
             </form>

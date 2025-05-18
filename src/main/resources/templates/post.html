@@ -39,6 +39,7 @@
         <input type="hidden" name="commentText" id="hidden-comment-input">
         <input type="file" name="image" accept="image/*">
         <button type="submit" class="btn comment-btn">Post Comment</button>
+        <input type="hidden" name="_csrf" value="{{token}}"/>
     </form>
 
 </section>
@@ -56,6 +57,7 @@
                 <button type="submit" class="btn save">Save</button>
                 <button type="button" class="btn cancel" onclick="closeEditCommentModal()">Cancel</button>
             </div>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
     </div>
 </div>

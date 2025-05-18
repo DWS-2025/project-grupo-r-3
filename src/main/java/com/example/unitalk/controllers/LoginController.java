@@ -1,5 +1,6 @@
 package com.example.unitalk.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.unitalk.services.UserService;
 import org.springframework.security.core.Authentication;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Controller
@@ -24,10 +26,12 @@ public class LoginController {
 
 
     @GetMapping("/login")
-    public String login(Authentication authentication) {
+    public String login(Authentication authentication, HttpServletRequest request, Model model) {
         if (authentication != null) {
             return "redirect:/";
         }
+        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+        model.addAttribute("token", token.getToken());
         return "login";
     }
     @GetMapping("/login/signup")

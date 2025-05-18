@@ -10,6 +10,8 @@ import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -61,22 +65,46 @@ public class SubjectController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/modify")
-    public String modifySubject(@RequestParam("id") Long id, @RequestParam("newName") String newName, RedirectAttributes redirectAttributes) {
-        SubjectInputDTO subjectDTO = new SubjectInputDTO(id, newName);
-        subjectService.modifySubject(subjectDTO);
-        redirectAttributes.addFlashAttribute("status", "Subject modified successfully!");
-        return "redirect:/subjects";
+    public ResponseEntity<Void> modifySubject(@RequestParam("id") Long id, @RequestParam("newName") String newName, RedirectAttributes redirectAttributes, Model model) {
+        System.out.println("Received POST /subjects/modify with id: " + id + ", newName: " + newName);
+        try {
+            if (newName == null || newName.trim().isEmpty()) {
+                System.out.println("Error: Subject name is empty");
+                redirectAttributes.addFlashAttribute("error", "Subject name cannot be empty.");
+            } else {
+                SubjectInputDTO subjectDTO = new SubjectInputDTO(id, newName);
+                subjectService.modifySubject(subjectDTO);
+                System.out.println("Subject modified successfully");
+                redirectAttributes.addFlashAttribute("status", "Subject modified successfully!");
+            }
+        } catch (Exception e) {
+            System.out.println("Error modifying subject: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error modifying subject: " + e.getMessage());
+        }
+        model.asMap().clear();
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", "/subjects")
+                .build();
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public String createSubject(@RequestParam("name") String name, RedirectAttributes redirectAttributes) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Subject name cannot be empty.");
+    public RedirectView createSubject(@RequestParam("name") String name, RedirectAttributes redirectAttributes, Model model) {
+        System.out.println("Received POST /subjects/create with name: " + name);
+        try {
+            if (name == null || name.trim().isEmpty()) {
+                System.out.println("Error: Subject name is empty");
+                redirectAttributes.addFlashAttribute("error", "Subject name cannot be empty.");
+                return new RedirectView("/subjects", true);
+            }
+            SubjectInputDTO subjectDTO = new SubjectInputDTO(null, name);
+            subjectService.createSubject(subjectDTO);
+            System.out.println("Subject created successfully");
+            redirectAttributes.addFlashAttribute("status", "Subject created successfully!");
+        } catch (Exception e) {
+            System.out.println("Error creating subject: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error creating subject: " + e.getMessage());
         }
-        SubjectInputDTO subjectDTO = new SubjectInputDTO(null, name);
-        subjectService.createSubject(subjectDTO);
-        redirectAttributes.addFlashAttribute("status", "Subject created successfully!");
-        return "redirect:/subjects";
+        return new RedirectView("/subjects", true);
     }
 
 

@@ -4,6 +4,7 @@ import com.example.unitalk.DTOS.UserDTO;
 import com.example.unitalk.models.User;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,11 +42,13 @@ public class UserController {
     }
 
     @PostMapping("/delete")
-    public String deleteCurrentUser() {
+    public String deleteCurrentUser(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         users.deleteUser(username);
-        return "redirect:/logout";
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
+        return "redirect:/login?logout";
     }
     
     @GetMapping("/modify")

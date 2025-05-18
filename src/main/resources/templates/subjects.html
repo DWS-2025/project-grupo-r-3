@@ -1,5 +1,6 @@
 {{>header}}
 <link rel="stylesheet" href="/css/subjects.css">
+<meta name="csrf-token" content="{{token}}">
 
 <section class="subjects-container">
     {{#isAdmin}}
@@ -31,6 +32,7 @@
         <span class="close" onclick="closeModifyModal()">&times;</span>
         <h2>Modify Subject</h2>
         <form id="modifyForm" action="/subjects/modify" method="post">
+            <input type="hidden" name="_csrf" value="{{token}}"/>
             <input type="hidden" name="id" id="subjectId">
             <label for="newName">New Name:</label>
             <input type="text" name="newName" id="newName" required>
@@ -47,6 +49,7 @@
         <span class="close" onclick="closeCreateSubjectModal()">&times;</span>
         <h2>Create New Subject</h2>
         <form id="createSubjectForm" action="/subjects/create" method="post">
+            <input type="hidden" name="_csrf" value="{{token}}"/>
             <label for="subjectName">Subject Name:</label>
             <input type="text" name="name" id="subjectName" required>
             <div class="modal-actions">
