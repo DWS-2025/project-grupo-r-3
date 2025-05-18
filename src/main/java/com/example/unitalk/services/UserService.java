@@ -14,7 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,8 @@ public class UserService {
     }
     public void setUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
+        user.setUsername(Jsoup.clean(user.getUsername(), Safelist.basic()));
+        user.setEmail(Jsoup.clean(user.getEmail(), Safelist.basic()));
         userRepository.save(user);
     }
     public boolean isUserEnrolledInSubject(UserDTO userDTO, Long subjectId) {
@@ -81,12 +84,12 @@ public class UserService {
         User user = userRepository.findById(userDTO.id())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String originalUsername = user.getUsername();
-        user.setUsername(userDTO.username());
+        user.setUsername(Jsoup.clean(userDTO.username(), Safelist.basic()));
         String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         if (!userDTO.email().matches(emailRegex)) {
             throw new IllegalArgumentException("Invalid email format: " + userDTO.email());
         }
-        user.setEmail(userDTO.email());
+        user.setEmail(Jsoup.clean(userDTO.email(), Safelist.basic()));
         userRepository.save(user);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -117,8 +120,8 @@ public class UserService {
         }
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
+        user.setUsername(Jsoup.clean(username, Safelist.basic()));
+        user.setEmail(Jsoup.clean(email, Safelist.basic()));
         user.setPassword(encodedPassword);
         user.setRoles(List.of("USER"));
         User savedUser = userRepository.save(user);

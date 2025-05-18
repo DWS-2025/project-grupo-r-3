@@ -10,7 +10,8 @@ import com.example.unitalk.repository.UserRepository;
 import com.example.unitalk.mappers.SubjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +84,7 @@ public class SubjectService {
     public void modifySubject(SubjectInputDTO subjectDTO) {
         Subject subject = subjectRepository.findById(subjectDTO.id())
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
-        subject.setName(subjectDTO.name());
+        subject.setName(Jsoup.clean(subjectDTO.name(), Safelist.basic()));
         subjectRepository.save(subject);
     }
 
@@ -105,7 +106,7 @@ public class SubjectService {
                 // Continuamos con el siguiente usuario, pero lanzaremos una excepción al final si todos fallan
             }
         }
-
+        subject.setName(Jsoup.clean(subject.getName(), Safelist.basic()));
         subjectRepository.save(subject);
         return subjectMapper.toDTO(subject);
     }
