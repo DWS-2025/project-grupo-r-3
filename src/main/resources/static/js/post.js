@@ -3,9 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const quill = new Quill('#editor-container', {
         modules: {
             toolbar: [
-                ['bold', 'italic', 'underline'],
-                ['link', 'image'],
-                ['clean']
+                ['bold', 'italic', 'underline', 'strike'], // Basic text formatting
+                ['blockquote', 'code-block'],              // Block formatting
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Lists
+                [{ 'header': [1, 2, 3, false] }],         // Headers
+                ['clean']                                  // Remove formatting button
             ]
         },
         theme: 'snow'
@@ -140,9 +142,11 @@ document.addEventListener("DOMContentLoaded", function () {
         editQuill = new Quill('#edit-editor-container', {
             modules: {
                 toolbar: [
-                    ['bold', 'italic', 'underline'],
-                    ['link', 'image'],
-                    ['clean']
+                    ['bold', 'italic', 'underline', 'strike'], // Basic text formatting
+                    ['blockquote', 'code-block'],              // Block formatting
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Lists
+                    [{ 'header': [1, 2, 3, false] }],         // Headers
+                    ['clean']                                  // Remove formatting button
                 ]
             },
             theme: 'snow'
@@ -156,12 +160,28 @@ document.addEventListener("DOMContentLoaded", function () {
         editModal.style.display = "none";
     };
 
-    document.querySelector('form').onsubmit = function() {
+    // Handle form submission for new comment with validation
+    document.querySelector('form').onsubmit = function(e) {
+        const commentText = quill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
+        if (commentText.length === 0) {
+            e.preventDefault(); // Evitar el envío del formulario
+            alert('Por favor, escribe un comentario antes de enviarlo.'); // Mensaje al usuario (puedes cambiarlo por un elemento HTML)
+            return false;
+        }
         document.querySelector('#hidden-comment-input').value = quill.root.innerHTML;
+        return true;
     };
 
-    document.getElementById('editCommentForm').onsubmit = function() {
+    // Handle form submission for editing comment with validation
+    document.getElementById('editCommentForm').onsubmit = function(e) {
+        const editCommentText = editQuill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
+        if (editCommentText.length === 0) {
+            e.preventDefault(); // Evitar el envío del formulario
+            alert('Por favor, escribe un comentario antes de guardarlo.'); // Mensaje al usuario (puedes cambiarlo por un elemento HTML)
+            return false;
+        }
         document.querySelector('#hidden-edit-comment-input').value = editQuill.root.innerHTML;
+        return true;
     };
 
     // Cargar comentarios inmediatamente

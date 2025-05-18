@@ -1,6 +1,7 @@
 package com.example.unitalk.services;
 
 import com.example.unitalk.exceptions.StorageException;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 @Service
@@ -18,90 +20,109 @@ public class FileStorageService {
     private final Path rootLocation;
     public static Logger log = LoggerFactory.getLogger(FileStorageService.class);
 
-
-
     public FileStorageService() {
-        this.rootLocation = Paths.get("files");
-
-    }
-
-    public String storeFile(MultipartFile file) throws StorageException{
+        
+        this.rootLocation = Paths.get("files").toAbsolutePath().normalize();
         try {
             if (!Files.exists(rootLocation)) {
                 Files.createDirectories(rootLocation);
-                log.info("Directory not found. Creating: {}", rootLocation);
+                log.info("Directory created: {}", rootLocation);
             } else {
                 log.info("Directory already exists: {}", rootLocation);
             }
+        } catch (IOException e) {
+            throw new StorageException("Could not initialize storage directory", e);
+        }
+    }
+
+    public String storeFile(MultipartFile file) throws StorageException {
+        try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
 
+            
             String originalFileName = Objects.requireNonNull(file.getOriginalFilename());
-            Path destinationFile = this.rootLocation.resolve(Paths.get(originalFileName));
+            String sanitizedFileName = FilenameUtils.getName(originalFileName);
 
-            if (!originalFileName.toLowerCase().endsWith(".pdf")) {
+            
+            if (!sanitizedFileName.toLowerCase().endsWith(".pdf")) {
                 throw new StorageException("Only PDF files are allowed.");
             }
 
-            if(Files.exists(rootLocation.resolve(originalFileName))) {
-                throw new StorageException("File already exist.");
-            }
-            if (!originalFileName.matches("[a-zA-Z0-9-_. ]+")){
-                throw new StorageException("Illegal file name. Try with a valid name.");
+            
+            if (!sanitizedFileName.matches("[a-zA-Z0-9-_. ]+")) {
+                throw new StorageException("Illegal file name. Use only alphanumeric characters, spaces, hyphens, or underscores.");
             }
 
-            var filePath = destinationFile.normalize().toAbsolutePath().toString();
-            var pathFolder = this.rootLocation.toAbsolutePath().toString();
-            log.info("path folder: {}, file path: {}", pathFolder,filePath);
-
-            if(filePath.startsWith(pathFolder)) {
-                Files.copy(file.getInputStream(), destinationFile);
-                return originalFileName;
-            }else{
-                throw new StorageException("Failed to store file.");
+            
+            Path destinationFile = this.rootLocation.resolve(sanitizedFileName).normalize();
+            if (!destinationFile.startsWith(this.rootLocation)) {
+                throw new StorageException("Path traversal attempt detected.");
             }
-        } catch (StorageException e){
+
+            
+            if (Files.exists(destinationFile)) {
+                throw new StorageException("File already exists.");
+            }
+
+            
+            Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            log.info("File stored successfully: {}", sanitizedFileName);
+            return sanitizedFileName;
+        } catch (StorageException e) {
             throw e;
-        }
-        catch (Exception e) {
-            throw new StorageException("The file is not legitimate", e);
+        } catch (Exception e) {
+            throw new StorageException("Failed to store file", e);
         }
     }
-    public Resource loadFileAsResource(String fileName) {
-        try {
-            var filepath = this.rootLocation.resolve(fileName).normalize().toAbsolutePath().toString();
-            var pathFolder = this.rootLocation.toAbsolutePath().toString();
-            log.info("path folder: {}, file path: {}", pathFolder,filepath);
 
-            if(!filepath.startsWith(pathFolder)) {
-                throw new StorageException("Failed to store file.");
+    public Resource loadFileAsResource(String fileName) throws StorageException {
+        try {
+            
+            String sanitizedFileName = FilenameUtils.getName(fileName);
+            Path filePath = this.rootLocation.resolve(sanitizedFileName).normalize();
+
+            
+            if (!filePath.startsWith(this.rootLocation)) {
+                throw new StorageException("Path traversal attempt detected.");
             }
-            Path filePath = this.rootLocation.resolve(fileName);
+
             Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists() || resource.isReadable()) {
+            if (resource.exists() && resource.isReadable()) {
+                log.info("File loaded successfully: {}", sanitizedFileName);
                 return resource;
             } else {
-                throw new RuntimeException("File not found " + fileName);
+                throw new StorageException("File not found or not readable: " + sanitizedFileName);
             }
-        } catch (StorageException e){
+        } catch (StorageException e) {
             throw e;
-        }catch (Exception e) {
-            throw new RuntimeException("Error loading file " + fileName, e);
+        } catch (Exception e) {
+            throw new StorageException("Error loading file: " + fileName, e);
         }
     }
 
-    public void deleteFile(String fileName) throws IOException {
-        Path filePath = rootLocation.resolve(fileName).normalize().toAbsolutePath();
-        String filePathStr = filePath.toString();
-        String rootPathStr = rootLocation.toAbsolutePath().toString();
+    public void deleteFile(String fileName) throws StorageException {
+        try {
+            
+            String sanitizedFileName = FilenameUtils.getName(fileName);
+            Path filePath = this.rootLocation.resolve(sanitizedFileName).normalize();
 
-        if (!filePathStr.startsWith(rootPathStr)) {
-            throw new StorageException("Cannot delete file outside of storage directory");
-        }
+            
+            if (!filePath.startsWith(this.rootLocation)) {
+                throw new StorageException("Path traversal attempt detected.");
+            }
 
-        if (Files.exists(filePath)) {
-            Files.delete(filePath);
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                log.info("File deleted successfully: {}", sanitizedFileName);
+            } else {
+                throw new StorageException("File not found: " + sanitizedFileName);
+            }
+        } catch (StorageException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new StorageException("Error deleting file: " + fileName, e);
         }
     }
 }

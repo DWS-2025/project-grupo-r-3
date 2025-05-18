@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -48,7 +49,7 @@ public class PostRestController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam Long subjectId) {
-        List<PostDTO> postDTOs = postService.findByDynamicFilters(subjectId,title, description);
+        List<PostDTO> postDTOs = postService.findByDynamicFilters(subjectId, title, description);
         List<PostRestDTO> postRestDTOs = postService.toRest(postDTOs);
         return new ResponseEntity<>(postRestDTOs, HttpStatus.OK);
     }
@@ -91,8 +92,9 @@ public class PostRestController {
         postService.deletePost(username, subjectDTO, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @GetMapping("/{postId}/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Long postId, @PathVariable String fileName) {
+
+    @GetMapping("/{postId}/files")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long postId, @RequestParam String fileName) {
         Optional<PostDTO> optionalPost = postService.findById(postId);
         if (optionalPost.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -103,13 +105,19 @@ public class PostRestController {
         }
 
         Resource file = fileStorageService.loadFileAsResource(fileName);
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
 
-    @DeleteMapping("/{postId}/{fileName}")
-    public ResponseEntity<?> deleteFile(@PathVariable Long postId, @PathVariable String fileName) {
+
+    @DeleteMapping("/{postId}/files")
+    public ResponseEntity<?> deleteFile(@PathVariable Long postId, @RequestParam String fileName) {
         try {
             Optional<PostDTO> optionalPost = postService.findById(postId);
             if (optionalPost.isEmpty()) {
@@ -125,6 +133,27 @@ public class PostRestController {
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{postId}/files")
+    public ResponseEntity<?> uploadFile(@PathVariable Long postId, @RequestParam("file") MultipartFile file) {
+        try {
+            Optional<PostDTO> optionalPost = postService.findById(postId);
+            if (optionalPost.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            PostDTO post = optionalPost.get();
+
+            // Store the file
+            String fileName = fileStorageService.storeFile(file);
+
+            // Associate the file with the post
+            postService.addFileToPost(postId, fileName);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("File uploaded successfully: " + fileName);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not upload the file: " + e.getMessage());
         }
     }
 }

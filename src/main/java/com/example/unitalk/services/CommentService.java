@@ -17,6 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +65,16 @@ public class CommentService {
         comment.setPost(post);
         user.addComment(comment);
         post.addComment(comment);
+        if (commentInputDTO.imageData() != null && commentInputDTO.imageData().length > 0) {
+            try {
+                byte[] resizedImageData = resizeImage(commentInputDTO.imageData(), 800, 600);
+                // Update the comment entity with resized image data
+                // Assuming Comment entity has a field for imageData
+                comment.setImageData(resizedImageData); // Adjust setter name based on your entity
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to resize image: " + e.getMessage(), e);
+            }
+        }
         Comment savedComment = commentRepository.save(comment);
         return commentMapper.toDTO(savedComment);
     }
@@ -115,4 +131,39 @@ public void deleteComment(UserDTO userDTO, Long commentId, PostDTO postDTO) {
     public List<CommentRestDTO> toRest(List<CommentDTO> commentDTO){
         return commentMapper.toRestDTOs(commentDTO);
     }
+    private byte[] resizeImage(byte[] imageBytes, int maxWidth, int maxHeight) throws IOException {
+        // Read the image from byte array
+        ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+        BufferedImage originalImage = ImageIO.read(bais);
+
+        if (originalImage == null) {
+            throw new IOException("Could not read image data.");
+        }
+
+        // Calculate new dimensions while maintaining aspect ratio
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+        double widthRatio = (double) maxWidth / originalWidth;
+        double heightRatio = (double) maxHeight / originalHeight;
+        double scale = Math.min(widthRatio, heightRatio);
+
+        int newWidth = (int) (originalWidth * scale);
+        int newHeight = (int) (originalHeight * scale);
+
+        // Create a new BufferedImage with the new dimensions
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        // Enable better image quality
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+        g2d.dispose();
+
+        // Write the resized image to a byte array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String formatName = "JPEG"; // Adjust based on your needs (JPEG, PNG, etc.)
+        ImageIO.write(resizedImage, formatName, baos);
+        return baos.toByteArray();
+    }
+
 }

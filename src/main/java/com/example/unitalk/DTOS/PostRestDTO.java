@@ -11,5 +11,6 @@ public record PostRestDTO(
         String description,
         Long subjectId,
         Long userId,
-        List<CommentRestDTO> comments
+        List<CommentRestDTO> comments,
+        List<String> attachedFiles
 ) {}
