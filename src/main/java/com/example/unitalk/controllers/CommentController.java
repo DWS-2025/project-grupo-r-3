@@ -1,6 +1,7 @@
 package com.example.unitalk.controllers;
 
 import com.example.unitalk.DTOS.*;
+import com.example.unitalk.exceptions.StorageException;
 import com.example.unitalk.models.Post;
 import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.example.unitalk.services.FileStorageService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/subjects/{id1}/posts/{id2}")
 public class CommentController {
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Autowired
     private SubjectService subjects;
@@ -131,5 +136,34 @@ public String editComment(
         PostDTO postDTO = optionalPostDTO.get();
         comments.deleteComment(userDTO, commentId, postDTO);
         return "redirect:/subjects/{id1}/posts/{id2}";
+    }
+    @GetMapping("/files")
+    public String showFiles(@PathVariable("id1") Long subjectId,
+                            @PathVariable("id2") Long postId,
+                            Model model, Authentication authentication) {
+        PostDTO post = posts.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        boolean isAdmin = authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("post", post);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("isAdmin", isAdmin);
+        return "postFiles";
+    }
+
+    @PostMapping("/upload")
+    public String uploadFile(@PathVariable("id1") Long subjectId,
+                             @PathVariable("id2") Long postId,
+                             @RequestParam("file") MultipartFile file,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            String fileName = fileStorageService.storeFile(file);
+            posts.addFileToPost(postId, fileName);
+            redirectAttributes.addFlashAttribute("message", "File uploaded correctly");
+        } catch (StorageException e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+        }
+        return "redirect:/subjects/{id1}/posts/{id2}/files";
     }
 }

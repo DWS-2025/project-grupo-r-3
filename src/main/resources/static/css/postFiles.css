@@ -1,5 +1,16 @@
-/* General Layout */
-.files-container {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* General Styling */
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Post Container */
+.post-container {
     width: 80%;
     margin: 40px auto;
     background: #fff;
@@ -8,58 +19,94 @@
     border-radius: 10px;
 }
 
-/* Tabs Navigation */
-.files-tabs {
-    display: flex;
-    border-bottom: 2px solid #ddd;
+/* Post Header */
+.post-header {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-.files-tab {
-    flex: 1;
-    text-align: center;
+.post-title {
+    font-size: 2em;
+    color: #0044cc;
+}
+
+.post-meta {
+    font-size: 1em;
+    color: #666;
+}
+
+/* Tabs Navigation */
+.post-tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
     padding: 10px 0;
-    font-size: 1.2em;
-    cursor: pointer;
+}
+
+/* Style for individual tabs */
+.post-tab {
     text-decoration: none;
-    color: #333;
-    transition: background 0.3s ease, color 0.3s ease;
+    font-size: 1.1em;
+    color: #555;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background: #f4f4f4;
+    transition: background 0.3s, color 0.3s;
 }
 
-.files-tab:hover {
-    background: #f0f0f0;
+.post-tab:hover {
+    background: #ddd;
 }
 
-.files-tab.active {
+.post-tab.active {
     background: #0044cc;
     color: white;
     font-weight: bold;
 }
 
-/* File List */
+/* Files Section */
+.files-section {
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
 .file-list {
-    list-style: none;
-    padding: 0;
+    margin-top: 20px;
 }
 
 .file-item {
-    display: flex;
-    justify-content: space-between;
     background: #f9f9f9;
     padding: 10px;
-    margin-bottom: 10px;
     border-radius: 5px;
+    margin-bottom: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.file-item a {
+.file-link {
     color: #0044cc;
     text-decoration: none;
-    font-weight: bold;
+    font-size: 1.1em;
+    flex-grow: 1;
 }
 
-.file-item a:hover {
+.file-link:hover {
     text-decoration: underline;
+}
+
+.no-files {
+    text-align: center;
+    font-size: 1.2em;
+    color: #666;
+    margin-top: 20px;
 }
 
 /* Upload Form */
@@ -70,24 +117,73 @@
     margin-top: 20px;
 }
 
-.upload-btn {
-    background: #0044cc;
-    color: white;
+.upload-form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
     padding: 10px;
     border: none;
     cursor: pointer;
     font-size: 1em;
     border-radius: 5px;
     transition: background 0.3s ease;
+    font-weight: bold;
 }
 
-.upload-btn:hover {
+.apply {
+    background: #0044cc;
+    color: white;
+}
+
+.apply:hover {
     background: #0033aa;
+}
+
+.delete {
+    background: #e53935;
+    color: white;
+    width: auto;
+    padding: 5px 10px;
+}
+
+.delete:hover {
+    background: #c62828;
+}
+
+/* Alerts */
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-    .files-container {
+    .post-container {
         width: 95%;
+    }
+
+    .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
 }

@@ -6,11 +6,15 @@ import com.example.unitalk.DTOS.PostDTO;
 import com.example.unitalk.DTOS.SubjectDTO;
 import com.example.unitalk.DTOS.UserDTO;
 import com.example.unitalk.exceptions.ResourceNotFoundException;
+import com.example.unitalk.services.FileStorageService;
 import com.example.unitalk.services.PostService;
 import com.example.unitalk.services.SubjectService;
 import com.example.unitalk.services.UserService;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,6 +32,9 @@ public class PostRestController {
     private final PostService postService;
     private final UserService userService;
     private final SubjectService subjectService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Autowired
     public PostRestController(PostService postService, UserService userService, SubjectService subjectService) {
@@ -83,5 +90,41 @@ public class PostRestController {
         SubjectDTO subjectDTO = optionalSubjectDTO.get();
         postService.deletePost(username, subjectDTO, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/{postId}/{fileName}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long postId, @PathVariable String fileName) {
+        Optional<PostDTO> optionalPost = postService.findById(postId);
+        if (optionalPost.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        PostDTO post = optionalPost.get();
+        if (!post.attachedFiles().contains(fileName)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        Resource file = fileStorageService.loadFileAsResource(fileName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
+
+    @DeleteMapping("/{postId}/{fileName}")
+    public ResponseEntity<?> deleteFile(@PathVariable Long postId, @PathVariable String fileName) {
+        try {
+            Optional<PostDTO> optionalPost = postService.findById(postId);
+            if (optionalPost.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            PostDTO post = optionalPost.get();
+            if (!post.attachedFiles().contains(fileName)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("File does not belong to this post");
+            }
+
+            postService.removeFileFromPost(postId, fileName);
+            fileStorageService.deleteFile(fileName);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

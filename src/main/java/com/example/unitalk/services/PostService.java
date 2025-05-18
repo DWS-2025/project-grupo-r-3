@@ -12,6 +12,7 @@ import com.example.unitalk.mappers.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,14 +25,16 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostMapper postMapper;
     private final UserMapper userMapper;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public PostService(PostRepository postRepository, SubjectRepository subjectRepository, UserRepository userRepository, PostMapper postMapper, UserMapper userMapper) {
+    public PostService(PostRepository postRepository, SubjectRepository subjectRepository, UserRepository userRepository, PostMapper postMapper, UserMapper userMapper, FileStorageService fileStorageService) {
         this.postRepository = postRepository;
         this.subjectRepository = subjectRepository;
         this.userRepository = userRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
+        this.fileStorageService = fileStorageService;
     }
 
     public List<PostDTO> findAllBySubject(Long subjectId) {
@@ -96,5 +99,20 @@ public class PostService {
 
         List<Post> posts = postRepository.findBySubjectIdAndDynamicFilters(subjectId, filteredTitle, filteredDescription);
         return postMapper.toDTOs(posts);
+    }
+
+    public void addFileToPost(Long postId, String fileName) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        post.getAttachedFiles().add(fileName);
+        postRepository.save(post);
+    }
+
+    public void removeFileFromPost(Long postId, String fileName) throws IOException {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        post.getAttachedFiles().remove(fileName);
+        postRepository.save(post);
+        fileStorageService.deleteFile(fileName);
     }
 }

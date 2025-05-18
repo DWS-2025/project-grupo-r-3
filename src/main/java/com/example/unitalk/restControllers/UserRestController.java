@@ -13,6 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
@@ -27,9 +30,22 @@ public class UserRestController {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<UserRestDTO> getCurrentUser() {
-        UserRestDTO userRestDTO = userService.getUserRestDTO();
-        return new ResponseEntity<>(userRestDTO, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = authentication.getName();
+        UserDTO userDTO = userService.getUser(username);
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("id", userDTO.id());
+        userData.put("username", userDTO.username());
+        // Determinar si es admin basado en los roles
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        userData.put("isAdmin", isAdmin);
+
+        return ResponseEntity.ok(userData);
     }
 
     @PutMapping("/{id}")

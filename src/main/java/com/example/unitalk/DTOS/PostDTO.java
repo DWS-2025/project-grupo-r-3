@@ -11,5 +11,6 @@ public record PostDTO(
         String description,
         Subject subject,
         User user,
-        List<Comment> comments
+        List<Comment> comments,
+        List<String> attachedFiles
 ) {}

@@ -5,6 +5,7 @@ public record CommentRestDTO(
         Long id,
         String text,
         Long userId,
+        String author,
         Long postId,
         LocalDateTime date,
         String imageName

@@ -18,6 +18,7 @@ public interface CommentMapper {
 
     @Mapping(target = "userId", expression = "java(commentDTO.user() != null ? commentDTO.user().getId() : null)")
     @Mapping(target = "postId", expression = "java(commentDTO.post() != null ? commentDTO.post().getId() : null)")
+    @Mapping(target = "author", expression = "java(commentDTO.user() != null ? commentDTO.user().getUsername() : null)")
     CommentRestDTO toRestDTO(CommentDTO commentDTO);
     List<CommentRestDTO> toRestDTOs(List<CommentDTO> commentsDTO);
 }

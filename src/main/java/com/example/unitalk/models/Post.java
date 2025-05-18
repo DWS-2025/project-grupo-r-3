@@ -21,6 +21,8 @@ public class Post {
     private User user;
     @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+    @ElementCollection
+    private List<String> attachedFiles = new ArrayList<>();
 
     public Post(String title, String description, Subject subject, User user) {
         this.title = title;
@@ -99,5 +101,13 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<String> getAttachedFiles() {
+        return attachedFiles;
+    }
+
+    public void setAttachedFiles(List<String> attachedFiles) {
+        this.attachedFiles = attachedFiles;
     }
 }
