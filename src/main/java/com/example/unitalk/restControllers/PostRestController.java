@@ -56,14 +56,21 @@ public class PostRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PostRestDTO> getPostById(@PathVariable Long id) {
-        Optional<PostDTO> optionalPostDTO = postService.findById(id);
-        if (optionalPostDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Post not found with ID: " + id);
+        try {
+            Optional<PostDTO> optionalPostDTO = postService.findById(id);
+            if (optionalPostDTO.isEmpty()) {
+                throw new ResourceNotFoundException("Post not found with ID: " + id);
+            }
+            PostDTO postDTO = optionalPostDTO.get();
+            PostRestDTO postRestDTO = postService.toRest(postDTO);
+            return new ResponseEntity<>(postRestDTO, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        PostDTO postDTO = optionalPostDTO.get();
-        PostRestDTO postRestDTO = postService.toRest(postDTO);
-        return new ResponseEntity<>(postRestDTO, HttpStatus.OK);
     }
+
 
     @PostMapping
     public ResponseEntity<Void> createPost(@Valid @RequestBody PostInputDTO postInputDTO, @RequestParam Long subjectId) {
@@ -89,9 +96,14 @@ public class PostRestController {
             throw new ResourceNotFoundException("Subject not found with ID: " + subjectId);
         }
         SubjectDTO subjectDTO = optionalSubjectDTO.get();
+        Optional<PostDTO> optionalPostDTO = postService.findById(id);
+        if (optionalPostDTO.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with ID: " + id);
+        }
         postService.deletePost(username, subjectDTO, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
     @GetMapping("/{postId}/files")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long postId, @RequestParam String fileName) {
@@ -129,7 +141,6 @@ public class PostRestController {
             }
 
             postService.removeFileFromPost(postId, fileName);
-            fileStorageService.deleteFile(fileName);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

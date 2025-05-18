@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const quill = new Quill('#editor-container', {
         modules: {
             toolbar: [
-                ['bold', 'italic', 'underline', 'strike'], // Basic text formatting
-                ['blockquote', 'code-block'],              // Block formatting
+                ['bold', 'italic', 'underline'], // Basic text formatting
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Lists
                 [{ 'header': [1, 2, 3, false] }],         // Headers
                 ['clean']                                  // Remove formatting button
@@ -20,27 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 0;
     const postId = commentsList.dataset.postId;
     const subjectId = commentsList.dataset.subjectId;
-
-    // Variable para almacenar información del usuario actual
-    let currentUser = { id: null, isAdmin: false };
-
-    // Cargar información del usuario actual al inicio (sin bloquear la carga de comentarios)
-    fetch('/api/users/current')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch current user');
-            }
-            return response.json();
-        })
-        .then(user => {
-            currentUser = user;
-            // Actualizar los comentarios ya cargados para mostrar botones si corresponde
-            updateCommentActions();
-        })
-        .catch(error => {
-            console.error("Error loading current user:", error);
-            currentUser = { id: null, isAdmin: false };
-        });
 
     function loadMoreComments() {
         if (!postId) return;
@@ -62,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                     currentPage++;
                     loadMoreBtn.style.display = data.content.length === batchSize ? "inline-block" : "none";
+                    updateCommentActions(); // Asegurar que los botones se actualicen
                 }
                 spinner.style.display = "none";
             })
@@ -142,8 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
         editQuill = new Quill('#edit-editor-container', {
             modules: {
                 toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'], // Basic text formatting
-                    ['blockquote', 'code-block'],              // Block formatting
+                    ['bold', 'italic', 'underline'], // Basic text formatting
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Lists
                     [{ 'header': [1, 2, 3, false] }],         // Headers
                     ['clean']                                  // Remove formatting button
@@ -165,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const commentText = quill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
         if (commentText.length === 0) {
             e.preventDefault(); // Evitar el envío del formulario
-            alert('Por favor, escribe un comentario antes de enviarlo.'); // Mensaje al usuario (puedes cambiarlo por un elemento HTML)
+            alert('Por favor, escribe un comentario antes de enviarlo.'); // Mensaje al usuario
             return false;
         }
         document.querySelector('#hidden-comment-input').value = quill.root.innerHTML;
@@ -177,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const editCommentText = editQuill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
         if (editCommentText.length === 0) {
             e.preventDefault(); // Evitar el envío del formulario
-            alert('Por favor, escribe un comentario antes de guardarlo.'); // Mensaje al usuario (puedes cambiarlo por un elemento HTML)
+            alert('Por favor, escribe un comentario antes de guardarlo.'); // Mensaje al usuario
             return false;
         }
         document.querySelector('#hidden-edit-comment-input').value = editQuill.root.innerHTML;
@@ -192,9 +170,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.deleteComment = function (subjectId, postId, commentId) {
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
         fetch(`/subjects/${subjectId}/posts/${postId}/delete-comment`, {
             method: "POST",
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRF-Token": csrfToken
+            },
             body: `commentId=${commentId}`
         }).then(response => {
             if (response.ok) {

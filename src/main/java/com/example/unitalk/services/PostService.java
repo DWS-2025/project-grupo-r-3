@@ -110,7 +110,8 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         post.getAttachedFiles().remove(fileName);
-        postRepository.save(post);
         fileStorageService.deleteFile(fileName);
+        postRepository.save(post);
+
     }
 }

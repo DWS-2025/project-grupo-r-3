@@ -7,6 +7,9 @@ import com.example.unitalk.models.Subject;
 import com.example.unitalk.models.User;
 import com.example.unitalk.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -165,5 +168,74 @@ public String editComment(
             redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
         }
         return "redirect:/subjects/{id1}/posts/{id2}/files";
+    }
+
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<Resource> downloadFile(
+            @PathVariable("id1") Long idSubject,
+            @PathVariable("id2") Long idPost,
+            @PathVariable("fileName") String fileName) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
+
+        Optional<SubjectDTO> optionalSubject = subjects.findById(idSubject);
+        if (optionalSubject.isEmpty()) {
+            throw new RuntimeException("Subject not found");
+        }
+
+        Optional<PostDTO> optionalPost = posts.findById(idPost);
+        if (optionalPost.isEmpty()) {
+            throw new RuntimeException("Post not found");
+        }
+        if (userDTO != null && users.isUserEnrolledInSubject(userDTO, idSubject)) {
+            Resource fileResource = fileStorageService.loadFileAsResource(fileName);
+            if (fileResource == null) {
+                throw new RuntimeException("File not found");
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(fileResource);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @PostMapping("/delete-file/{fileName}")
+    public String deleteFile(
+            @PathVariable("id1") Long idSubject,
+            @PathVariable("id2") Long idPost,
+            @PathVariable("fileName") String fileName,
+            Model model,
+            Authentication authentication) throws IOException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDTO userDTO = users.getUser(username);
+
+        Optional<SubjectDTO> optionalSubject = subjects.findById(idSubject);
+        if (optionalSubject.isEmpty()) {
+            throw new RuntimeException("Subject not found");
+        }
+        Optional<PostDTO> optionalPost = posts.findById(idPost);
+        if (optionalPost.isEmpty()) {
+            throw new RuntimeException("Post not found");
+        }
+        if (userDTO != null && users.isUserEnrolledInSubject(userDTO, idSubject)) {
+            boolean isAdmin = authentication != null &&
+                    authentication.getAuthorities().stream()
+                            .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+            if (isAdmin) {
+                posts.removeFileFromPost(idPost, fileName);
+            }
+            else{
+                model.addAttribute("error", "You do not have permission to delete files");
+            }
+        } else {
+            model.addAttribute("error", "You are not enrolled in this subject");
+        }
+
+        return "redirect:/subjects/" + idSubject + "/posts/" + idPost + "/files";
     }
 }

@@ -25,7 +25,7 @@ public class AdminRestController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-user/{username}")
+    @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteUser(@PathVariable("username") String username) {
         try {
             userService.deleteUser(username);

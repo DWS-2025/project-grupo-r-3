@@ -16,12 +16,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/comments?postId=1&page=0&size=2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/comments?postId=10&page=0&size=2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"comments"
@@ -29,7 +29,7 @@
 							"query": [
 								{
 									"key": "postId",
-									"value": "1"
+									"value": "10"
 								},
 								{
 									"key": "page",
@@ -50,16 +50,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/comments/1",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/comments/53",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"comments",
-								"1"
+								"53"
 							]
 						}
 					},
@@ -71,52 +71,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/comments/51/image",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/comments/53/image",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"comments",
-								"51",
+								"53",
 								"image"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createComment",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"text\":\"holaaaass\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/comments?postId=1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"comments"
-							],
-							"query": [
-								{
-									"key": "postId",
-									"value": "1"
-								}
 							]
 						}
 					},
@@ -137,16 +102,22 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/comments/2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/comments/3?postId=10",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"comments",
-								"2"
+								"3"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -158,12 +129,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/comments/2?userId=1&postId=1",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/comments/2?postId=10",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"comments",
@@ -171,13 +142,48 @@
 							],
 							"query": [
 								{
-									"key": "userId",
-									"value": "1"
+									"key": "postId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createComment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "postman-cloud:///1ef0b09a-317c-4570-a29f-5434fad3fdcb"
 								},
 								{
-									"key": "postId",
-									"value": "1"
+									"key": "commentText",
+									"value": "holaa",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:8443/api/comments/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"comments",
+								"2"
 							]
 						}
 					},
@@ -191,15 +197,18 @@
 				{
 					"name": "getSubjectPosts",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/posts?subjectId=2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/posts?subjectId=1",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"posts"
@@ -207,7 +216,7 @@
 							"query": [
 								{
 									"key": "subjectId",
-									"value": "2"
+									"value": "1"
 								}
 							]
 						}
@@ -220,16 +229,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/posts/1",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/posts/2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"posts",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -250,12 +259,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/posts?subjectId=2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/posts?subjectId=2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"posts"
@@ -285,12 +294,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/posts/1?subjectId=2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/posts/1?subjectId=1",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"posts",
@@ -299,7 +308,7 @@
 							"query": [
 								{
 									"key": "subjectId",
-									"value": "2"
+									"value": "1"
 								}
 							]
 						}
@@ -312,12 +321,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/posts?subjectId=2&title=Post&description=Description 2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/posts?subjectId=1&title=Post&description=Description 2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"posts"
@@ -325,7 +334,7 @@
 							"query": [
 								{
 									"key": "subjectId",
-									"value": "2"
+									"value": "1"
 								},
 								{
 									"key": "title",
@@ -334,6 +343,94 @@
 								{
 									"key": "description",
 									"value": "Description 2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPostFiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/api/posts/1/files?fileName=entrega ej5 fisica.pdf",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"posts",
+								"1",
+								"files"
+							],
+							"query": [
+								{
+									"key": "fileName",
+									"value": "entrega ej5 fisica.pdf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "uploadFile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1f033fc1-9227-4870-8e4d-1d5586b17ea3"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:8443/api/posts/1/files",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"posts",
+								"1",
+								"files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteFile",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/api/posts/1/files?fileName=entrega ej5 fisica.pdf",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"posts",
+								"1",
+								"files"
+							],
+							"query": [
+								{
+									"key": "fileName",
+									"value": "entrega ej5 fisica.pdf"
 								}
 							]
 						}
@@ -351,12 +448,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/subjects",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/subjects",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"subjects"
@@ -371,12 +468,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/subjects/1",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/subjects/1",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"subjects",
@@ -401,12 +498,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/subjects",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/subjects",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"subjects"
@@ -430,16 +527,16 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/subjects/4",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/subjects/2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"subjects",
-								"4"
+								"2"
 							]
 						}
 					},
@@ -451,16 +548,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/subjects/4",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/subjects/2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"subjects",
-								"4"
+								"2"
 							]
 						}
 					},
@@ -469,24 +566,22 @@
 				{
 					"name": "getUserSubjects",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/subjects?userId=1",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/subjects/my",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
-								"subjects"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "1"
-								}
+								"subjects",
+								"my"
 							]
 						}
 					},
@@ -503,12 +598,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/current",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/users/current",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"users",
@@ -524,16 +619,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/1/subjects/2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/users/3/subjects/2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"users",
-								"1",
+								"3",
 								"subjects",
 								"2"
 							]
@@ -544,21 +639,154 @@
 				{
 					"name": "applySubject",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/1/subjects/2",
-							"protocol": "http",
+							"raw": "https://localhost:8443/api/users/3/subjects/2",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "8443",
 							"path": [
 								"api",
 								"users",
-								"1",
+								"3",
 								"subjects",
 								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"admin\", \r\n    \"password\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/api/auth/logout",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/api/auth/refresh",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "getAllUsers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/api/admin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"admin\", \r\n    \"password\":\"admin\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:8443/api/admin/user1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"admin",
+								"user1"
 							]
 						}
 					},

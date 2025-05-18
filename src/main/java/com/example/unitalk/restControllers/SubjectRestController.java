@@ -15,9 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @EnableMethodSecurity
@@ -41,15 +39,30 @@ public class SubjectRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubjectRestDTO> getSubjectById(@PathVariable Long id) {
-        Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(id);
-        if (optionalSubjectDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Subject not found with ID: " + id);
+    public ResponseEntity<Object> getSubjectById(@PathVariable Long id) {
+        try {
+            Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(id);
+            if (optionalSubjectDTO.isEmpty()) {
+                throw new ResourceNotFoundException("Subject not found with ID: " + id);
+            }
+            SubjectDTO subjectDTO = optionalSubjectDTO.get();
+            SubjectRestDTO subjectRestDTO = subjectService.toRest(subjectDTO);
+            return new ResponseEntity<>(subjectRestDTO, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("message", "An unexpected error occurred");
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        SubjectDTO subjectDTO = optionalSubjectDTO.get();
-        SubjectRestDTO subjectRestDTO = subjectService.toRest(subjectDTO);
-        return new ResponseEntity<>(subjectRestDTO, HttpStatus.OK);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Void> createSubject(@Valid @RequestBody SubjectInputDTO subjectInputDTO) {
@@ -59,25 +72,55 @@ public class SubjectRestController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<SubjectRestDTO> updateSubject(@PathVariable Long id, @Valid @RequestBody SubjectInputDTO subjectInputDTO) {
-        SubjectInputDTO modificado = new SubjectInputDTO(id,subjectInputDTO.name());
-        subjectService.modifySubject(modificado);
-        Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(id);
-        if (optionalSubjectDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Subject not found with ID: " + id);
+    public ResponseEntity<Object> updateSubject(@PathVariable Long id, @Valid @RequestBody SubjectInputDTO subjectInputDTO) {
+        try {
+            SubjectInputDTO modificado = new SubjectInputDTO(id, subjectInputDTO.name());
+            subjectService.modifySubject(modificado);
+            Optional<SubjectDTO> optionalSubjectDTO = subjectService.findById(id);
+            if (optionalSubjectDTO.isEmpty()) {
+                throw new ResourceNotFoundException("Subject not found with ID: " + id);
+            }
+            SubjectDTO subjectDTO = optionalSubjectDTO.get();
+            SubjectRestDTO subjectRestDTO = subjectService.toRest(subjectDTO);
+            return new ResponseEntity<>(subjectRestDTO, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("message", "An unexpected error occurred");
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        SubjectDTO subjectDTO = optionalSubjectDTO.get();
-        SubjectRestDTO subjectRestDTO = subjectService.toRest(subjectDTO);
-        return new ResponseEntity<>(subjectRestDTO, HttpStatus.OK);
-    }
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
-        subjectService.deleteSubject(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(params = "userId")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteSubject(@PathVariable Long id) {
+        try {
+            subjectService.deleteSubject(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (ResourceNotFoundException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorResponse.put("message", "An unexpected error occurred");
+            errorResponse.put("timestamp", java.time.LocalDateTime.now());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/my")
     public ResponseEntity<List<SubjectRestDTO>> getUserSubjects() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
