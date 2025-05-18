@@ -96,9 +96,10 @@ project-grupo-r-3/
 - **Ignacio Díez Chacón** (i.diez.2022@alumnos.urjc.es) - [GitHub](https://github.com/netzus1)
 ### Most important commits
 - **Pablo Bardón Alonso** (p.bardon.2022@alumnos.urjc.es) - [GitHub](https://github.com/p4b4al)
+- Bug fixes and errors, REST API, user permissions, README
 ### Most important commits
   - [API Rest Created](https://github.com/DWS-2025/project-grupo-r-3/commit/cdc7e4cadf03c98dfdfb42a20365eb41fdf985c0)
   - [Merge pull request #2 from DWS-2025/Test](https://github.com/DWS-2025/project-grupo-r-3/commit/683c0baf3e542ced2cf84528006d46a9ce594327)
   - [Fix: Solved infinite redirect loop and correctly implemented the login page.](https://github.com/DWS-2025/project-grupo-r-3/commit/e26c955ae696fd6ff9f74588131bdbac11f069f4)
   - [Fixed bug: now when you delete a post, comments are also being deleted from the post and the user](https://github.com/DWS-2025/project-grupo-r-3/commit/c9c296fb430b0ecf7e7e9ebb890e4d5774f70ef3)
-  - [Comment user permisions]([https://github.com/DWS-2025/project-grupo-r-3/commit/f71c6f57f39461024cee06e05348e15afbccbeb0](https://github.com/DWS-2025/project-grupo-r-3/commit/8614af72af8a5e992f8ce95f20352f54b43fea34))
+  - [Comment user permisions](https://github.com/DWS-2025/project-grupo-r-3/commit/8614af72af8a5e992f8ce95f20352f54b43fea34)
