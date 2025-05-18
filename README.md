@@ -93,7 +93,7 @@ project-grupo-r-3/
 
 ## 👨‍💻 Collaborators
 
-- **Ignacio Díez Chacón** (i.diez.2022@alumnos.urjc.es) - [GitHub](https://github.com/netzus1)
+## **Ignacio Díez Chacón** (i.diez.2022@alumnos.urjc.es) - [GitHub](https://github.com/netzus1)
 - Bug and error fixes, vulnerabilities, database, error pages, user authentication
 ### Most important commits
   - [Nearly fully migrated to DB](https://github.com/DWS-2025/project-grupo-r-3/commit/f8668430a848d74fd9310c6875a9a5b53f5d6b5d)
@@ -108,7 +108,7 @@ project-grupo-r-3/
   - UserService.java
   - CommentService.java
   
-- **Pablo Bardón Alonso** (p.bardon.2022@alumnos.urjc.es) - [GitHub](https://github.com/p4b4al)
+## **Pablo Bardón Alonso** (p.bardon.2022@alumnos.urjc.es) - [GitHub](https://github.com/p4b4al)
 - Bug fixes and errors, REST API, user permissions, README
 ### Most important commits
   - [API Rest Created](https://github.com/DWS-2025/project-grupo-r-3/commit/cdc7e4cadf03c98dfdfb42a20365eb41fdf985c0)
