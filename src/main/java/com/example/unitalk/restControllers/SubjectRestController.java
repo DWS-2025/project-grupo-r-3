@@ -78,13 +78,9 @@ public class SubjectRestController {
     }
 
     @GetMapping(params = "userId")
-    public ResponseEntity<List<SubjectRestDTO>> getUserSubjects(@RequestParam Long userId) {
+    public ResponseEntity<List<SubjectRestDTO>> getUserSubjects() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        UserDTO userDTO = userService.getUser(username);
-        if (!userDTO.id().equals(userId)) {
-            throw new ResourceNotFoundException("User ID does not match authenticated user");
-        }
         List<SubjectDTO> userSubjects = subjectService.getUserSubjects(username);
         List<SubjectRestDTO> userSubjectRestDTOs = new ArrayList<>();
         for (SubjectDTO subjectDTO : userSubjects) {
