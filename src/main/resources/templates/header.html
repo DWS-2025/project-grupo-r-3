@@ -18,8 +18,30 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/subjects">Subjects</a></li>
                 <li><a href="/subjects/my">Forum</a></li>
-                <li><a href="/user">Profile</a></li>
-                <li>  <a href="#" onclick="logout()">Logout</a></li>
+                <li>
+                    <a href="#" class="logout-link" onclick="logout()">Logout</a>
+                </li>
+
+                {{#currentUser}}
+                <li class="user-nav">
+                    <a href="/user" class="user-info">
+                        <span class="user-name">{{username}}</span>
+                        {{#profileImage}}
+                        <img src="{{profileImage}}" alt="Profile" class="user-avatar">
+                        {{/profileImage}}
+                        {{^profileImage}}
+                        <img src="/images/default-avatar.png" alt="Profile" class="user-avatar">
+                        {{/profileImage}}
+                    </a>
+                </li>
+                
+                {{/currentUser}}
+
+                {{^currentUser}}
+                <li>
+                    <a href="/login" class="login-link">Login</a>
+                </li>
+                {{/currentUser}}
             </ul>
         </nav>
     </div>

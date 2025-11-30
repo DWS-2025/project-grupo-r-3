@@ -14,6 +14,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String profileImage;
     @ManyToMany
     @JoinTable(name = "user_subject", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> subjects;
@@ -152,5 +153,13 @@ public class User {
 
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         isTwoFactorEnabled = twoFactorEnabled;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

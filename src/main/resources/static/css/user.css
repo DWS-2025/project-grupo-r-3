@@ -95,6 +95,34 @@ body {
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
 }
 
+.profile-photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-image-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-image-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.profile-image-input {
+    font-size: 0.85rem;
+}
+
+.profile-image-button {
+    padding: 6px 14px;
+    font-size: 0.9rem;
+}
+
 .account-actions {
     display: flex;
     justify-content: center;

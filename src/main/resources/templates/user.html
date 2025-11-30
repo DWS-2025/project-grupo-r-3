@@ -7,6 +7,7 @@
             <div class="profile-row">
                 <h1>
                     {{user.username}}
+                    {{#isOwner}}
                     <label class="edit-label" title="Edit username">
                         <a href="/user/modify">
                             <svg class="icon" viewBox="0 0 20 20">
@@ -16,11 +17,13 @@
                             </svg>
                         </a>
                     </label>
+                    {{/isOwner}}
                 </h1>
             </div>
             <div class="profile-row">
                 <p>
                     <strong>Email:</strong> {{user.email}}
+                    {{#isOwner}}
                     <label class="edit-label" title="Edit email">
                         <a href="/user/modify">
                             <svg class="icon" viewBox="0 0 20 20">
@@ -30,20 +33,35 @@
                             </svg>
                         </a>
                     </label>
+                    {{/isOwner}}
                 </p>
             </div>
+
             <div class="profile-row">
                 <p><strong>Posts:</strong> {{user.posts.size}}</p>
                 <p><strong>Comments:</strong> {{user.comments.size}}</p>
             </div>
         </div>
-        {{#user.profileImage}}
-        <div class="profile-image">
-            <img src="{{user.profileImage}}" alt="User Profile Picture">
+        <div class="profile-photo-section">
+            {{#user.profileImage}}
+            <div class="profile-image">
+                <img src="{{user.profileImage}}" alt="User Profile Picture">
+            </div>
+            {{/user.profileImage}}
+
+            {{#isOwner}}
+            <form action="/user/profile-image" method="post" enctype="multipart/form-data" class="profile-image-form">
+                <label class="profile-image-label">Actualizar foto de perfil</label>
+                <input type="file" name="image" accept="image/*" class="profile-image-input">
+                <input type="hidden" name="_csrf" value="{{token}}" />
+                <button type="submit" class="btn profile-image-button">Subir imagen</button>
+            </form>
+            {{/isOwner}}
         </div>
-        {{/user.profileImage}}
+
     </div>
 
+    {{#isOwner}}
     <h2>Security Settings</h2>
     <div class="account-actions">
         <a href="/2fa/setup" class="btn manage-2fa">
@@ -59,18 +77,22 @@
             <input type="hidden" name="_csrf" value="{{token}}" />
         </form>
     </div>
+    {{/isOwner}}
 
     <h2>Enrolled Subjects</h2>
     <div class="subjects-list">
         {{#user.subjects}}
         <div class="subject-card">
             <h3>{{name}}</h3>
+            {{#isOwner}}
             <form action="/user/subjects/unapply" method="post">
                 <input type="hidden" name="_csrf" value="{{token}}" />
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn unenroll">Unenroll</button>
             </form>
+            {{/isOwner}}
         </div>
+
         {{/user.subjects}}
         {{^user.subjects}}
         <p class="no-subjects">You are not enrolled in any subjects.</p>

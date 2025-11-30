@@ -8,6 +8,7 @@ public record UserDTO(
         Long id,
         String username,
         String email,
+        String profileImage,
         List<Subject> subjects,
         List<Comment> comments,
         List<Post> posts

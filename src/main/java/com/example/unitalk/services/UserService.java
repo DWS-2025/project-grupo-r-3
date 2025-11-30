@@ -93,6 +93,9 @@ public class UserService {
             throw new IllegalArgumentException("Invalid email format: " + userDTO.email());
         }
         user.setEmail(Jsoup.clean(userDTO.email(), Safelist.basic()));
+        if (userDTO.profileImage() != null && !userDTO.profileImage().isBlank()) {
+            user.setProfileImage(userDTO.profileImage());
+        }
         userRepository.save(user);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -108,6 +111,7 @@ public class UserService {
     }
 
     public UserDTO newUser(String username, String email, String password) {
+
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already exists: " + username);
         }
@@ -127,6 +131,7 @@ public class UserService {
         user.setEmail(Jsoup.clean(email, Safelist.basic()));
         user.setPassword(encodedPassword);
         user.setRoles(List.of("USER"));
+        user.setProfileImage("/images/default-avatar.png");
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
     }

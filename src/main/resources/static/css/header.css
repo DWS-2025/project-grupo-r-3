@@ -48,11 +48,13 @@ nav {
     padding: 0;
     margin: 0;
     display: flex;
+    align-items: center;
     gap: 20px;
 }
 
 .nav-links li {
-    display: inline-block;
+    display: flex;
+    align-items: center;
 }
 
 .nav-links a {
@@ -65,6 +67,35 @@ nav {
 
 .nav-links a:hover {
     color: #007BFF;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007BFF;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.login-link,
+.logout-link {
+    font-weight: 600;
 }
 
 /* Responsive */
