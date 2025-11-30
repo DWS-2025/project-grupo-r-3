@@ -34,13 +34,12 @@ public interface PostMapper {
                 .map(comment -> commentMapper.toRestDTO(commentMapper.toDTO(comment)))
                 .collect(Collectors.toList());
     }
-}
-
-
-class PostMapperInstance {
+}class PostMapperInstance {
     private static final CommentMapper commentMapper = new CommentMapperImpl(); 
 
     public static CommentMapper commentMapper() {
         return commentMapper;
     }
 }
+
+

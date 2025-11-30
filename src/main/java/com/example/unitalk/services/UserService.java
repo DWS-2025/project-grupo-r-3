@@ -22,7 +22,6 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-
     @Autowired
     public RepositoryUserDetailsService userDetailService;
 
@@ -38,48 +37,52 @@ public class UserService {
         this.subjectRepository = subjectRepository;
     }
 
-    public List<UserDTO> getAllUsers(){
-        List<User> users= userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
         return userMapper.toDTO(users);
     }
 
-    public List<UserRestDTO> getAllUsersRest(){
-        List<User> users= userRepository.findAll();
+    public List<UserRestDTO> getAllUsersRest() {
+        List<User> users = userRepository.findAll();
         return userMapper.toRestDTO(userMapper.toDTO(users));
     }
 
     public UserDTO getUser(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             return userMapper.toDTO(user.get());
-        }
-        else {
+        } else {
             throw new RuntimeException("User not found");
         }
     }
+
     public void deleteUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
     }
+
     public void setUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         user.setUsername(Jsoup.clean(user.getUsername(), Safelist.basic()));
         user.setEmail(Jsoup.clean(user.getEmail(), Safelist.basic()));
         userRepository.save(user);
     }
+
     public boolean isUserEnrolledInSubject(UserDTO userDTO, Long subjectId) {
         User user = userMapper.toEntity(userDTO);
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
         return user.getSubjects().contains(subject);
     }
+
     public UserRestDTO getUserRestDTO() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         UserDTO userDTO = getUser(username);
         return userMapper.toRestDTO(userDTO);
     }
+
     public UserDTO modifyUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.id())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -98,12 +101,12 @@ public class UserService {
             Authentication newAuth = new UsernamePasswordAuthenticationToken(
                     newUserDetails,
                     auth.getCredentials(),
-                    auth.getAuthorities()
-            );
+                    auth.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(newAuth);
         }
         return userMapper.toDTO(user);
     }
+
     public UserDTO newUser(String username, String email, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already exists: " + username);
@@ -126,6 +129,14 @@ public class UserService {
         user.setRoles(List.of("USER"));
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
 }

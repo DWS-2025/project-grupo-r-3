@@ -22,13 +22,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+// @Component - Comentado porque la base de datos ya tiene datos
+// Descomentar solo si necesitas reinicializar la base de datos desde cero
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository; // Asegúrate de tenerlo si usas comentarios
+    private final CommentRepository commentRepository;
     private final UserService userService;
     private final SubjectService subjectService;
     private final PostService postService;
@@ -36,8 +37,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     public DataInitializer(UserRepository userRepository, SubjectRepository subjectRepository,
-                           PostRepository postRepository, CommentRepository commentRepository,
-                           UserService userService, SubjectService subjectService, PostService postService, PasswordEncoder passwordEncoder) {
+            PostRepository postRepository, CommentRepository commentRepository,
+            UserService userService, SubjectService subjectService, PostService postService,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.subjectRepository = subjectRepository;
         this.postRepository = postRepository;
@@ -50,30 +52,36 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Solo inicializar si no hay datos
-        if (userRepository.count() == 0 && subjectRepository.count() == 0 && postRepository.count() == 0) {
+        // Solo inicializar si no hay usuarios en la base de datos
+        if (userRepository.count() == 0) {
             System.out.println("Initializing sample data...");
 
-
-
-
-
+            // Create subjects
             Subject subject1 = new Subject("Initialized Subject");
             Subject subject2 = new Subject("Physics");
             Subject subject3 = new Subject("Mathematics");
 
             subjectRepository.saveAll(List.of(subject1, subject2, subject3));
 
-            User user = new User("user1", passwordEncoder.encode("user"),"user@gmail.com","USER");
-            User user2 = new User("user2", passwordEncoder.encode("user2"),"user2@gmail.com","USER");
-            User user3 = new User("admin", passwordEncoder.encode("admin"),"user2@gmail.com","USER", "ADMIN");
-            user3.setSubjects(List.of(subject1,subject2,subject3));
+            // Create users with 2FA disabled by default
+            User user = new User("user1", passwordEncoder.encode("user"), "user@gmail.com", "USER");
+            User user2 = new User("user2", passwordEncoder.encode("user2"), "user2@gmail.com", "USER");
+            User user3 = new User("admin", passwordEncoder.encode("admin"), "admin@gmail.com", "USER", "ADMIN");
+
+            // Initialize 2FA fields for all users
+            user.setTwoFactorEnabled(false);
+            user2.setTwoFactorEnabled(false);
+            user3.setTwoFactorEnabled(false);
+
+            user3.setSubjects(List.of(subject1, subject2, subject3));
             userRepository.save(user);
             userRepository.save(user2);
             userRepository.save(user3);
 
             user.addSubject(subject1);
             userRepository.save(user);
+
+            // Create posts
             Post post1 = null;
             Post post2 = null;
             for (int i = 1; i <= 10; i++) {
@@ -81,6 +89,7 @@ public class DataInitializer implements CommandLineRunner {
                 postRepository.save(post1);
             }
 
+            // Create comments
             for (int i = 1; i <= 50; i++) {
                 Comment comment = new Comment("Comment " + i, user, post1);
                 commentRepository.save(comment);

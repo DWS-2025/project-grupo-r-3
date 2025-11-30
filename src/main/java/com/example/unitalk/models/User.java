@@ -15,17 +15,20 @@ public class User {
     private String password;
     private String email;
     @ManyToMany
-    @JoinTable(name = "user_subject",joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name="subject_id"))
+    @JoinTable(name = "user_subject", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> subjects;
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
-    public User(String username, String password,  String email, String... roles) {
+    private String twoFactorSecret;
+    private boolean isTwoFactorEnabled;
+
+    public User(String username, String password, String email, String... roles) {
         this.username = username;
         this.password = password;
         this.roles = List.of(roles);
@@ -110,11 +113,12 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public void setSubjects(ArrayList<Subject> subjects) {
         this.subjects = subjects;
     }
 
-    public void deletePostComments(Long postId){
+    public void deletePostComments(Long postId) {
         comments.removeIf(comment -> Objects.equals(comment.getPost().getId(), postId));
     }
 
@@ -132,5 +136,21 @@ public class User {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getTwoFactorSecret() {
+        return twoFactorSecret;
+    }
+
+    public void setTwoFactorSecret(String twoFactorSecret) {
+        this.twoFactorSecret = twoFactorSecret;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return isTwoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        isTwoFactorEnabled = twoFactorEnabled;
     }
 }

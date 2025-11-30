@@ -7,7 +7,7 @@
     --text-main: #222;
     --text-secondary: #555;
     --border-radius: 14px;
-    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
 }
 
 body {
@@ -73,9 +73,11 @@ body {
     transition: opacity 0.2s;
     opacity: 0.7;
 }
+
 .edit-label:hover {
     opacity: 1;
 }
+
 .edit-label .icon {
     width: 18px;
     height: 18px;
@@ -90,13 +92,36 @@ body {
     border: 2.5px solid var(--primary);
     object-fit: cover;
     background: #e6e6e6;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
 }
 
 .account-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: -8px;
+}
+
+.btn.manage-2fa {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+    border: none;
+    cursor: pointer;
+}
+
+.btn.manage-2fa:hover {
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    transform: translateY(-1px);
 }
 
 .btn.delete-account {
@@ -108,11 +133,14 @@ body {
     cursor: pointer;
     font-weight: 500;
     font-size: 1rem;
-    transition: background 0.2s;
-    box-shadow: 0 1px 4px rgba(204,0,0,0.07);
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 4px rgba(204, 0, 0, 0.07);
 }
+
 .btn.delete-account:hover {
     background: var(--danger-dark);
+    box-shadow: 0 2px 8px rgba(204, 0, 0, 0.15);
+    transform: translateY(-1px);
 }
 
 h2 {
@@ -134,7 +162,7 @@ h2 {
     background: var(--background);
     padding: 16px;
     border-radius: 10px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
     text-align: center;
     width: 220px;
     min-height: 140px;
@@ -143,8 +171,9 @@ h2 {
     justify-content: space-between;
     transition: box-shadow 0.2s;
 }
+
 .subject-card:hover {
-    box-shadow: 0 4px 16px rgba(0,123,255,0.09);
+    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.09);
 }
 
 .subject-card h3 {
@@ -168,6 +197,7 @@ h2 {
     font-size: 0.95rem;
     transition: background 0.2s;
 }
+
 .btn.unenroll:hover {
     background: #0056b3;
 }
@@ -184,19 +214,23 @@ h2 {
     .profile-container {
         padding: 16px 6px;
     }
+
     .profile-header {
         flex-direction: column;
         gap: 18px;
         text-align: center;
     }
+
     .profile-image img {
         width: 72px;
         height: 72px;
     }
+
     .subjects-list {
         flex-direction: column;
         align-items: center;
     }
+
     .subject-card {
         width: 95%;
     }

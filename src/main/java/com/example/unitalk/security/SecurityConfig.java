@@ -1,4 +1,5 @@
 package com.example.unitalk.security;
+
 import com.example.unitalk.security.jwt.JwtRequestFilter;
 import com.example.unitalk.security.jwt.UnauthorizedHandlerJwt;
 import com.example.unitalk.services.RepositoryUserDetailsService;
@@ -39,10 +40,17 @@ public class SecurityConfig {
     @Autowired
     private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    @Autowired
+    private TwoFactorAuthenticationFilter twoFactorAuthenticationFilter;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -50,6 +58,7 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -64,15 +73,14 @@ public class SecurityConfig {
         http
                 .securityMatcher("/api/**")
                 .exceptionHandling(handling -> handling
-                .authenticationEntryPoint(unauthorizedHandlerJwt)
-                .accessDeniedHandler(unauthorizedHandlerJwt))
+                        .authenticationEntryPoint(unauthorizedHandlerJwt)
+                        .accessDeniedHandler(unauthorizedHandlerJwt))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/comments", "/api/comments/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+                        .anyRequest().authenticated());
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
 
@@ -97,29 +105,29 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider());
         http
                 .authorizeHttpRequests(authorize -> authorize
-// PUBLIC PAGES
+                        // PUBLIC PAGES
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/error").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/login/signup").permitAll()
-// REST API
-        // SUBJECTS
+                        .requestMatchers("/2fa/verify").permitAll()
+                        // REST API
+                        // SUBJECTS
                         .requestMatchers(HttpMethod.POST, "/api/subjects/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/subjects/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
-// PRIVATE PAGES
+                        // PRIVATE PAGES
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/loginerror")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
+                        .successHandler(customAuthenticationSuccessHandler)
+                        .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        .permitAll()
-                );
+                        .permitAll())
+                .addFilterBefore(twoFactorAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

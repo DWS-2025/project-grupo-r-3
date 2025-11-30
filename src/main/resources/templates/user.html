@@ -9,7 +9,11 @@
                     {{user.username}}
                     <label class="edit-label" title="Edit username">
                         <a href="/user/modify">
-                            <svg class="icon" viewBox="0 0 20 20"><path d="M14.85 2.15a2.5 2.5 0 0 1 3.54 3.54l-9.19 9.19a2 2 0 0 1-.88.51l-3.11.89a.5.5 0 0 1-.62-.62l.89-3.11a2 2 0 0 1 .51-.88l9.19-9.19zm2.12 1.42a1.5 1.5 0 0 0-2.12 0l-1.13 1.13 2.12 2.12 1.13-1.13a1.5 1.5 0 0 0 0-2.12zM3.93 13.5l2.57-.74 7.97-7.97-2.12-2.12-7.97 7.97-.74 2.57z" fill="#007BFF"/></svg>
+                            <svg class="icon" viewBox="0 0 20 20">
+                                <path
+                                    d="M14.85 2.15a2.5 2.5 0 0 1 3.54 3.54l-9.19 9.19a2 2 0 0 1-.88.51l-3.11.89a.5.5 0 0 1-.62-.62l.89-3.11a2 2 0 0 1 .51-.88l9.19-9.19zm2.12 1.42a1.5 1.5 0 0 0-2.12 0l-1.13 1.13 2.12 2.12 1.13-1.13a1.5 1.5 0 0 0 0-2.12zM3.93 13.5l2.57-.74 7.97-7.97-2.12-2.12-7.97 7.97-.74 2.57z"
+                                    fill="#007BFF" />
+                            </svg>
                         </a>
                     </label>
                 </h1>
@@ -19,7 +23,11 @@
                     <strong>Email:</strong> {{user.email}}
                     <label class="edit-label" title="Edit email">
                         <a href="/user/modify">
-                            <svg class="icon" viewBox="0 0 20 20"><path d="M14.85 2.15a2.5 2.5 0 0 1 3.54 3.54l-9.19 9.19a2 2 0 0 1-.88.51l-3.11.89a.5.5 0 0 1-.62-.62l.89-3.11a2 2 0 0 1 .51-.88l9.19-9.19zm2.12 1.42a1.5 1.5 0 0 0-2.12 0l-1.13 1.13 2.12 2.12 1.13-1.13a1.5 1.5 0 0 0 0-2.12zM3.93 13.5l2.57-.74 7.97-7.97-2.12-2.12-7.97 7.97-.74 2.57z" fill="#007BFF"/></svg>
+                            <svg class="icon" viewBox="0 0 20 20">
+                                <path
+                                    d="M14.85 2.15a2.5 2.5 0 0 1 3.54 3.54l-9.19 9.19a2 2 0 0 1-.88.51l-3.11.89a.5.5 0 0 1-.62-.62l.89-3.11a2 2 0 0 1 .51-.88l9.19-9.19zm2.12 1.42a1.5 1.5 0 0 0-2.12 0l-1.13 1.13 2.12 2.12 1.13-1.13a1.5 1.5 0 0 0 0-2.12zM3.93 13.5l2.57-.74 7.97-7.97-2.12-2.12-7.97 7.97-.74 2.57z"
+                                    fill="#007BFF" />
+                            </svg>
                         </a>
                     </label>
                 </p>
@@ -36,10 +44,19 @@
         {{/user.profileImage}}
     </div>
 
+    <h2>Security Settings</h2>
     <div class="account-actions">
-        <form action="/user/delete" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+        <a href="/2fa/setup" class="btn manage-2fa">
+            🔒 Manage Two-Factor Authentication
+        </a>
+    </div>
+
+    <h2>Account Actions</h2>
+    <div class="account-actions">
+        <form action="/user/delete" method="post"
+            onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
             <button type="submit" class="btn delete-account">Delete Account</button>
-            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type="hidden" name="_csrf" value="{{token}}" />
         </form>
     </div>
 
@@ -49,7 +66,7 @@
         <div class="subject-card">
             <h3>{{name}}</h3>
             <form action="/user/subjects/unapply" method="post">
-                <input type="hidden" name="_csrf" value="{{token}}"/>
+                <input type="hidden" name="_csrf" value="{{token}}" />
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn unenroll">Unenroll</button>
             </form>
