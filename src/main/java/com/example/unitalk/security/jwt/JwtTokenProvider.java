@@ -33,29 +33,32 @@ public class JwtTokenProvider {
 	}
 
 	private String tokenStringFromCookies(HttpServletRequest request) {
-		var cookies = request.getCookies();
-		if (cookies == null) {
-			throw new IllegalArgumentException("No cookies found in request");
-		}
+    Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+        return null; // ninguna cookie
+    }
 
-		for (Cookie cookie : cookies) {
-			if (TokenType.ACCESS.cookieName.equals(cookie.getName())) {
-				String accessToken = cookie.getValue();
-				if (accessToken == null) {
-					throw new IllegalArgumentException("Cookie %s has null value".formatted(TokenType.ACCESS.cookieName));
-				}
-
-				return accessToken;
-			}
-		}
-		throw new IllegalArgumentException("No access token cookie found in request");
+    for (Cookie cookie : cookies) {
+        if (TokenType.ACCESS.cookieName.equals(cookie.getName())) {
+            String accessToken = cookie.getValue();
+            if (accessToken == null || accessToken.isBlank()) {
+                return null;
+            }
+            return accessToken;
+        }
+    }
+    return null; // no se encontró cookie de access token
 	}
 
-	public Claims validateToken(HttpServletRequest req, boolean fromCookie){
-		var token = fromCookie?
-				tokenStringFromCookies(req):
-				tokenStringFromHeaders(req);
-		return validateToken(token);
+	public Claims validateToken(HttpServletRequest req, boolean fromCookie) {
+    String token = fromCookie
+            ? tokenStringFromCookies(req)
+            : tokenStringFromHeaders(req);
+
+    if (token == null) {
+        return null; // sin token => sin claims
+    }
+    return validateToken(token);
 	}
 
 	public Claims validateToken(String token) {

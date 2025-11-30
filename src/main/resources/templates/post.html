@@ -62,12 +62,17 @@
     </div>
 </div>
 
+<div id="current-user-data" data-user-id="{{#user}}{{id}}{{/user}}{{^user}}null{{/user}}" data-is-admin="{{isAdmin}}"></div>
 <script>
-    const currentUser = {
-        id: {{#user}}{{id}}{{/user}}{{^user}}null{{/user}},
-    isAdmin: {{isAdmin}}
-    };
-    console.log("Current User:", currentUser); // Para depuración
+    (function() {
+        const el = document.getElementById('current-user-data');
+        const rawId = el.getAttribute('data-user-id');
+        const id = rawId === 'null' ? null : Number(rawId);
+        const isAdmin = el.getAttribute('data-is-admin') === 'true';
+        const currentUser = { id: id, isAdmin: isAdmin };
+        console.log("Current User:", currentUser); // For debugging
+        window.currentUser = currentUser;
+    })();
 </script>
 <script src="/js/post.js"></script>
 {{>footer}}

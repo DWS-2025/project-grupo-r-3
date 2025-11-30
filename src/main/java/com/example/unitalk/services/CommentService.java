@@ -56,30 +56,37 @@ public class CommentService {
     }
 
     public CommentDTO createComment(UserDTO userDTO, CommentInputDTO commentInputDTO, PostDTO postDTO) {
-        if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {
-            throw new IllegalArgumentException("Comment cannot be empty.");
-        }
-        Comment comment = commentMapper.toEntity(commentInputDTO);
-        comment.setText(Jsoup.clean(comment.getText(), Safelist.basic()));
-        User user = userMapper.toEntity(userDTO);
-        Post post = postMapper.toEntity(postDTO);
-        comment.setUser(user);
-        comment.setPost(post);
-        user.addComment(comment);
-        post.addComment(comment);
-        if (commentInputDTO.imageData() != null && commentInputDTO.imageData().length > 0) {
-            try {
-                byte[] resizedImageData = resizeImage(commentInputDTO.imageData(), 800, 600);
-                // Update the comment entity with resized image data
-                // Assuming Comment entity has a field for imageData
-                comment.setImageData(resizedImageData); // Adjust setter name based on your entity
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to resize image: " + e.getMessage(), e);
-            }
-        }
-        Comment savedComment = commentRepository.save(comment);
-        return commentMapper.toDTO(savedComment);
+    if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {
+        throw new IllegalArgumentException("Comment cannot be empty.");
     }
+
+    Comment comment = commentMapper.toEntity(commentInputDTO);
+    comment.setText(Jsoup.clean(comment.getText(), Safelist.basic()));
+
+    // Cargar entidades gestionadas
+    User user = userRepository.findById(userDTO.id())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    Post post = postRepository.findById(postDTO.id())
+            .orElseThrow(() -> new RuntimeException("Post not found"));
+
+    comment.setUser(user);
+    comment.setPost(post);
+    user.addComment(comment);
+    post.addComment(comment);
+
+    if (commentInputDTO.imageData() != null && commentInputDTO.imageData().length > 0) {
+        try {
+            byte[] resizedImageData = resizeImage(commentInputDTO.imageData(), 800, 600);
+            comment.setImageData(resizedImageData);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to resize image: " + e.getMessage(), e);
+        }
+    }
+
+    Comment savedComment = commentRepository.save(comment);
+    return commentMapper.toDTO(savedComment);
+}
+
 
     public CommentDTO editComment(UserDTO userDTO, Long commentId, CommentInputDTO commentInputDTO, PostDTO postDTO) {
     if (commentInputDTO.text() == null || commentInputDTO.text().trim().isEmpty()) {

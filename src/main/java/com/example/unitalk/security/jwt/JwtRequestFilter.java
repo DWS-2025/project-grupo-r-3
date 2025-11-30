@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,23 +32,32 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+protected void doFilterInternal(HttpServletRequest request,
+                                HttpServletResponse response,
+                                FilterChain filterChain)
+        throws ServletException, IOException {
 
-		try {
-			var claims = jwtTokenProvider.validateToken(request, true);
-			var userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+    try {
+        Claims claims = jwtTokenProvider.validateToken(request, true); // ahora puede ser null
 
-			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				
-			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-		} catch (Exception ex) {
-			log.error("Exception processing JWT Token: ", ex);
-		}
+        if (claims != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            var userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 
-		filterChain.doFilter(request, response);
-	}	
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+    } catch (Exception ex) {
+        log.error("Exception processing JWT Token: ", ex);
+        // si quieres, aquí podrías limpiar el contexto o continuar como anónimo
+    }
+
+    filterChain.doFilter(request, response);
+	}
 
 }

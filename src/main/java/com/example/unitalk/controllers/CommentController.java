@@ -88,6 +88,12 @@ public class CommentController {
 
     @PostMapping("/comment")
     public String addComment(@PathVariable("id1") Long idSubject, @PathVariable("id2") Long idPost, @RequestParam("commentText") String commentText, @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+        // Debug logging
+        System.out.println("DEBUG: Received commentText: [" + commentText + "]");
+        System.out.println("DEBUG: commentText length: " + (commentText != null ? commentText.length() : "null"));
+        System.out.println("DEBUG: commentText isEmpty: " + (commentText != null ? commentText.isEmpty() : "null"));
+        System.out.println("DEBUG: commentText trim isEmpty: " + (commentText != null ? commentText.trim().isEmpty() : "null"));
+        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         UserDTO userDTO = users.getUser(username);

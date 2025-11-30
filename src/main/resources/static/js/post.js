@@ -139,26 +139,78 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Handle form submission for new comment with validation
-    document.querySelector('form').onsubmit = function(e) {
-        const commentText = quill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
-        if (commentText.length === 0) {
-            e.preventDefault(); // Evitar el envío del formulario
-            alert('Por favor, escribe un comentario antes de enviarlo.'); // Mensaje al usuario
+    const commentForm = document.querySelector('form[action*="comment"]');
+    if (commentForm) {
+        commentForm.onsubmit = function(e) {
+            const commentText = quill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
+            const commentHtml = quill.root.innerHTML;
+            
+            // Debug logging
+            console.log('Comment text:', commentText);
+            console.log('Comment HTML:', commentHtml);
+            console.log('Text length:', commentText.length);
+            console.log('Quill content:', quill.root.innerHTML);
+            
+            // Check if comment is empty (only whitespace or just newlines)
+            if (commentText.length === 0 || commentText === '\n' || !quill.getText().replace(/\s/g, '').length) {
+                e.preventDefault(); // Evitar el envío del formulario
+                alert('Por favor, escribe un comentario antes de enviarlo.'); // Mensaje al usuario
+                return false;
+            }
+            
+            // Prevent default form submission
+            e.preventDefault();
+            
+            // Create FormData and manually set all fields
+            const formData = new FormData();
+            formData.append('commentText', commentText);
+            
+            // Add image if present
+            const imageInput = document.querySelector('input[name="image"]');
+            if (imageInput && imageInput.files.length > 0) {
+                formData.append('image', imageInput.files[0]);
+            }
+            
+            // Add CSRF token
+            const csrfToken = document.querySelector('input[name="_csrf"]');
+            if (csrfToken) {
+                formData.append('_csrf', csrfToken.value);
+            }
+            
+            console.log('FormData commentText:', formData.get('commentText'));
+            
+            // Submit via fetch
+            fetch(commentForm.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload(); // Reload to show the new comment
+                } else {
+                    alert('Error al crear el comentario. Por favor intenta de nuevo.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Error al crear el comentario. Por favor intenta de nuevo.');
+            });
+            
             return false;
-        }
-        document.querySelector('#hidden-comment-input').value = quill.root.innerHTML;
-        return true;
-    };
+        };
+    } else {
+        console.error('Comment form not found!');
+    }
 
     // Handle form submission for editing comment with validation
     document.getElementById('editCommentForm').onsubmit = function(e) {
         const editCommentText = editQuill.getText().trim(); // Obtener texto plano y eliminar espacios/saltos de línea
-        if (editCommentText.length === 0) {
+        // Check if comment is empty (only whitespace or just newlines)
+        if (editCommentText.length === 0 || editCommentText === '\n' || !editQuill.getText().replace(/\s/g, '').length) {
             e.preventDefault(); // Evitar el envío del formulario
             alert('Por favor, escribe un comentario antes de guardarlo.'); // Mensaje al usuario
             return false;
         }
-        document.querySelector('#hidden-edit-comment-input').value = editQuill.root.innerHTML;
+        // Send plain text, not HTML
+        document.querySelector('#hidden-edit-comment-input').value = editCommentText;
         return true;
     };
 
