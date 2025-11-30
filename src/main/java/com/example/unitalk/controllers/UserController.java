@@ -97,10 +97,14 @@ public class UserController {
         return "redirect:/user";
     }
 
+    public record UserSearchResult(String username, String profileImage) {}
+
     @GetMapping("/search")
     @ResponseBody
-    public List<String> searchUsers(@RequestParam("query") String query) {
-        return users.searchUsernamesByPrefix(query);
+    public List<UserSearchResult> searchUsers(@RequestParam("query") String query) {
+        return users.searchUsersByPrefix(query).stream()
+                .map(u -> new UserSearchResult(u.username(), u.profileImage()))
+                .toList();
     }
 
     @PostMapping("/profile-image")

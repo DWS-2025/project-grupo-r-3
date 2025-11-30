@@ -18,15 +18,6 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/subjects">Subjects</a></li>
                 <li><a href="/subjects/my">Forum</a></li>
-                <li class="search-nav">
-                    <div class="user-search-wrapper">
-                        <form class="user-search-form" onsubmit="return goToUserProfile(event)">
-                            <input type="text" name="username" class="user-search-input" placeholder="Buscar usuario" autocomplete="off" oninput="onUserSearchInput(event)">
-                            <button type="submit" class="user-search-button">Go</button>
-                        </form>
-                        <div class="user-search-results" id="user-search-results"></div>
-                    </div>
-                </li>
                 <li>
                     <a href="#" class="logout-link" onclick="logout()">Logout</a>
                 </li>
@@ -51,6 +42,22 @@
                     <a href="/login" class="login-link">Login</a>
                 </li>
                 {{/currentUser}}
+
+                <li class="search-nav">
+                    <button type="button" class="user-search-toggle" onclick="toggleUserSearch()" aria-label="Buscar usuario">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="11" cy="11" r="6" stroke="#0044cc" stroke-width="2"/>
+                            <line x1="15.5" y1="15.5" x2="20" y2="20" stroke="#0044cc" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <div class="user-search-wrapper" id="user-search-wrapper">
+                        <form class="user-search-form" onsubmit="return goToUserProfile(event)">
+                            <input type="text" name="username" class="user-search-input" placeholder="Buscar usuario" autocomplete="off"
+                                   oninput="onUserSearchInput(event)" onkeydown="onUserSearchKeyDown(event)">
+                        </form>
+                        <div class="user-search-results" id="user-search-results"></div>
+                    </div>
+                </li>
             </ul>
         </nav>
     </div>
@@ -81,6 +88,24 @@
         }
 
         let userSearchTimeout;
+        let userSearchItems = [];
+        let userSearchActiveIndex = -1;
+
+        function toggleUserSearch() {
+            const wrapper = document.getElementById('user-search-wrapper');
+            if (!wrapper) return;
+            const isOpen = wrapper.classList.contains('open');
+            if (isOpen) {
+                wrapper.classList.remove('open');
+                renderUserSearchResults([]);
+            } else {
+                wrapper.classList.add('open');
+                const input = wrapper.querySelector('.user-search-input');
+                if (input) {
+                    input.focus();
+                }
+            }
+        }
 
         function onUserSearchInput(event) {
             const value = event.target.value.trim();
@@ -104,23 +129,79 @@
             if (!container) return;
 
             container.innerHTML = '';
+            userSearchItems = [];
+            userSearchActiveIndex = -1;
 
             if (!usernames || usernames.length === 0) {
                 container.style.display = 'none';
                 return;
             }
 
-            usernames.forEach(username => {
-                const item = document.createElement('div');
+            usernames.forEach((user, index) => {
+                const item = document.createElement('button');
+                item.type = 'button';
                 item.className = 'user-search-result-item';
-                item.textContent = '@' + username;
+                item.setAttribute('data-index', index.toString());
+
+                const avatar = document.createElement('img');
+                avatar.className = 'user-search-avatar';
+                const imgSrc = user.profileImage && user.profileImage.trim() !== ''
+                    ? user.profileImage
+                    : '/images/default-avatar.png';
+                avatar.src = imgSrc;
+                avatar.alt = 'Avatar ' + user.username;
+
+                const label = document.createElement('span');
+                label.className = 'user-search-label';
+                label.textContent = '@' + user.username;
+
+                item.appendChild(avatar);
+                item.appendChild(label);
+
                 item.onclick = () => {
-                    window.location.href = '/user/' + encodeURIComponent(username);
+                    window.location.href = '/user/' + encodeURIComponent(user.username);
                 };
+
                 container.appendChild(item);
+                userSearchItems.push(item);
             });
 
             container.style.display = 'block';
+        }
+
+        function onUserSearchKeyDown(event) {
+            const container = document.getElementById('user-search-results');
+            if (!container || container.style.display === 'none') {
+                return;
+            }
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                if (userSearchItems.length === 0) return;
+                userSearchActiveIndex = (userSearchActiveIndex + 1) % userSearchItems.length;
+                updateUserSearchActiveItem();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                if (userSearchItems.length === 0) return;
+                userSearchActiveIndex = (userSearchActiveIndex - 1 + userSearchItems.length) % userSearchItems.length;
+                updateUserSearchActiveItem();
+            } else if (event.key === 'Enter') {
+                if (userSearchActiveIndex >= 0 && userSearchActiveIndex < userSearchItems.length) {
+                    event.preventDefault();
+                    userSearchItems[userSearchActiveIndex].click();
+                }
+            }
+        }
+
+        function updateUserSearchActiveItem() {
+            userSearchItems.forEach((item, index) => {
+                if (index === userSearchActiveIndex) {
+                    item.classList.add('active');
+                    item.focus();
+                } else {
+                    item.classList.remove('active');
+                }
+            });
         }
     </script>
 

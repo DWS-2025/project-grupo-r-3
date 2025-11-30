@@ -84,14 +84,12 @@ public class UserService {
         return userMapper.toRestDTO(userDTO);
     }
 
-    public List<String> searchUsernamesByPrefix(String prefix) {
+    public List<UserDTO> searchUsersByPrefix(String prefix) {
         if (prefix == null || prefix.isBlank()) {
             return List.of();
         }
-        return userRepository.findByUsernameStartingWithIgnoreCase(prefix)
-                .stream()
-                .map(User::getUsername)
-                .collect(Collectors.toList());
+        List<User> users = userRepository.findByUsernameStartingWithIgnoreCase(prefix);
+        return userMapper.toDTO(users);
     }
 
     public UserDTO modifyUser(UserDTO userDTO) {
