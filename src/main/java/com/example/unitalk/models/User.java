@@ -28,6 +28,7 @@ public class User {
 
     private String twoFactorSecret;
     private boolean isTwoFactorEnabled;
+    private boolean isPro = false;
 
     public User(String username, String password, String email, String... roles) {
         this.username = username;
@@ -161,5 +162,13 @@ public class User {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public boolean isPro() {
+        return isPro;
+    }
+
+    public void setPro(boolean pro) {
+        isPro = pro;
     }
 }
