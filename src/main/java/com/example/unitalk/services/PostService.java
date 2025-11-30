@@ -53,12 +53,28 @@ public class PostService {
         if (!userDTO.subjects().contains(subject)) {
             throw new RuntimeException("User not enrolled in this subject");
         }
-        User user = userMapper.toEntity(userDTO);
+        // Cargar el usuario real desde la BD para tener id y roles correctos
+        User user = userRepository.findByUsername(userDTO.username())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Límite de posts: los usuarios con solo rol USER solo pueden crear 2 posts en total
+        boolean isPro = user.getRoles() != null && user.getRoles().contains("PRO");
+        boolean isUser = user.getRoles() != null && user.getRoles().contains("USER");
+        if (!isPro && isUser) {
+            long totalPosts = postRepository.countByUserId(user.getId());
+            if (totalPosts >= 2) {
+                throw new RuntimeException("Has alcanzado el límite de 2 posts. Necesitas ser PRO para crear más.");
+            }
+        }
+
+        // Crear la entidad Post a partir del DTO de entrada
         Post post = postMapper.toEntity(postDTO);
         post.setUser(user);
         post.setSubject(subject);
+
         post.setTitle(Jsoup.clean(post.getTitle(), Safelist.basic()));
         post.setDescription(Jsoup.clean(post.getDescription(), Safelist.basic()));
+
         user.addPost(post);
         subject.addPost(post);
         postRepository.save(post);

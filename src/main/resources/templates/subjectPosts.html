@@ -2,6 +2,12 @@
 <link rel="stylesheet" href="/css/subjectPosts.css">
 
 <section class="subject-posts-container">
+    {{#status}}
+    <div id="statusToast" class="status-toast">
+        {{status}}
+    </div>
+    {{/status}}
+
     <div class="title-bar">
         <h1 class="subject-title">{{subject.name}} - Forum</h1>
         <button class="btn create-post-btn" onclick="openCreatePostModal()">
