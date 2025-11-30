@@ -18,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -81,6 +82,16 @@ public class UserService {
         String username = auth.getName();
         UserDTO userDTO = getUser(username);
         return userMapper.toRestDTO(userDTO);
+    }
+
+    public List<String> searchUsernamesByPrefix(String prefix) {
+        if (prefix == null || prefix.isBlank()) {
+            return List.of();
+        }
+        return userRepository.findByUsernameStartingWithIgnoreCase(prefix)
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList());
     }
 
     public UserDTO modifyUser(UserDTO userDTO) {

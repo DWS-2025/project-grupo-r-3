@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 @Controller
@@ -94,6 +95,12 @@ public class UserController {
         );
         users.modifyUser(userDTOParam);
         return "redirect:/user";
+    }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public List<String> searchUsers(@RequestParam("query") String query) {
+        return users.searchUsernamesByPrefix(query);
     }
 
     @PostMapping("/profile-image")

@@ -102,6 +102,10 @@ nav {
     min-width: 220px;
 }
 
+.user-search-wrapper {
+    position: relative;
+}
+
 .user-search-form {
     display: flex;
     align-items: center;
@@ -138,6 +142,33 @@ nav {
 
 .user-search-button:hover {
     background-color: #0033aa;
+}
+
+.user-search-results {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+    margin-top: 4px;
+    padding: 4px 0;
+    max-height: 260px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1100;
+}
+
+.user-search-result-item {
+    padding: 6px 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+    color: #1a1a2e;
+}
+
+.user-search-result-item:hover {
+    background-color: #f5f7fb;
 }
 
 /* Responsive */

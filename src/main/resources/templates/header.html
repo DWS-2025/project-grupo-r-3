@@ -19,10 +19,13 @@
                 <li><a href="/subjects">Subjects</a></li>
                 <li><a href="/subjects/my">Forum</a></li>
                 <li class="search-nav">
-                    <form class="user-search-form" onsubmit="return goToUserProfile(event)">
-                        <input type="text" name="username" class="user-search-input" placeholder="Buscar usuario" autocomplete="off">
-                        <button type="submit" class="user-search-button">Go</button>
-                    </form>
+                    <div class="user-search-wrapper">
+                        <form class="user-search-form" onsubmit="return goToUserProfile(event)">
+                            <input type="text" name="username" class="user-search-input" placeholder="Buscar usuario" autocomplete="off" oninput="onUserSearchInput(event)">
+                            <button type="submit" class="user-search-button">Go</button>
+                        </form>
+                        <div class="user-search-results" id="user-search-results"></div>
+                    </div>
                 </li>
                 <li>
                     <a href="#" class="logout-link" onclick="logout()">Logout</a>
@@ -75,6 +78,49 @@
             }
             window.location.href = '/user/' + encodeURIComponent(value);
             return false;
+        }
+
+        let userSearchTimeout;
+
+        function onUserSearchInput(event) {
+            const value = event.target.value.trim();
+            clearTimeout(userSearchTimeout);
+
+            if (!value) {
+                renderUserSearchResults([]);
+                return;
+            }
+
+            userSearchTimeout = setTimeout(() => {
+                fetch('/user/search?query=' + encodeURIComponent(value))
+                    .then(response => response.json())
+                    .then(data => renderUserSearchResults(data))
+                    .catch(() => renderUserSearchResults([]));
+            }, 200);
+        }
+
+        function renderUserSearchResults(usernames) {
+            const container = document.getElementById('user-search-results');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (!usernames || usernames.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            usernames.forEach(username => {
+                const item = document.createElement('div');
+                item.className = 'user-search-result-item';
+                item.textContent = '@' + username;
+                item.onclick = () => {
+                    window.location.href = '/user/' + encodeURIComponent(username);
+                };
+                container.appendChild(item);
+            });
+
+            container.style.display = 'block';
         }
     </script>
 
