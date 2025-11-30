@@ -63,7 +63,7 @@ public class PostService {
         if (!isPro && isUser) {
             long totalPosts = postRepository.countByUserId(user.getId());
             if (totalPosts >= 2) {
-                throw new RuntimeException("Has alcanzado el límite de 2 posts. Necesitas ser PRO para crear más.");
+                throw new RuntimeException("You have reached the limit of 2 posts. Be PRO to create without limits!");
             }
         }
 
